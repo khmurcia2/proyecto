@@ -1,332 +1,255 @@
-1<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIECI - Plantilla Personalizable</title>
+    <title>Repaso de Inglés - Food & Clothes</title>
     <style>
-        /* --- ESTILOS GENERALES --- */
         :root {
-            --primary-color: #004b87; /* Azul corporativo */
-            --secondary-color: #f4f4f4; /* Gris claro */
-            --accent-color: #ff9800; /* Naranja para botones */
-            --text-color: #333333;
-            --font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --primary: #4A90E2;
+            --success: #2ECC71;
+            --danger: #E74C3C;
+            --bg: #F4F7F6;
+            --card: #FFFFFF;
         }
 
         body {
-            font-family: var(--font-family);
-            color: var(--text-color);
-            line-height: 1.6;
-        }
-
-        a {
-            text-decoration: none;
-            color: inherit;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg);
+            margin: 0;
+            padding: 20px;
+            color: #333;
         }
 
         .container {
-            width: 90%;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        /* --- NAVEGACIÓN (HEADER) --- */
-        header {
-            background-color: #ffffff;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .nav-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--primary-color);
-        }
-
-        .nav-links {
-            list-style: none;
-            display: flex;
-            gap: 20px;
-        }
-
-        .nav-links li a {
-            font-weight: 500;
-            transition: color 0.3s;
-        }
-
-        .nav-links li a:hover {
-            color: var(--primary-color);
-        }
-
-        /* --- SECCIÓN HERO (PORTADA) --- */
-        .hero {
-            background-color: var(--primary-color);
-            color: #ffffff;
-            padding: 100px 0;
-            text-align: center;
-        }
-
-        .hero h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
             max-width: 800px;
             margin: 0 auto;
         }
 
-        /* --- SECCIÓN ACERCA DE --- */
-        .about {
-            padding: 80px 0;
-            background-color: #ffffff;
-        }
-
-        .about-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-            align-items: center;
-        }
-
-        .about h2 {
-            color: var(--primary-color);
-            margin-bottom: 20px;
-            font-size: 2rem;
-        }
-
-        .about-image {
-            background-color: var(--secondary-color);
-            height: 300px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #888;
-        }
-
-        /* --- LÍNEAS DE INVESTIGACIÓN --- */
-        .research-lines {
-            padding: 80px 0;
-            background-color: var(--secondary-color);
-        }
-
-        .research-lines h2 {
+        header {
             text-align: center;
-            color: var(--primary-color);
-            margin-bottom: 40px;
-            font-size: 2rem;
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
 
-        .lines-grid {
+        h1 { margin: 0 0 10px 0; font-size: 24px; }
+        p { margin: 0; opacity: 0.9; }
+
+        .section {
+            background: var(--card);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--bg);
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .line-card {
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            text-align: center;
-            border-top: 4px solid var(--primary-color);
-        }
-
-        .line-card h3 {
-            margin-bottom: 15px;
-            color: var(--primary-color);
-        }
-
-        /* --- CONTACTO --- */
-        .contact {
-            padding: 80px 0;
-        }
-
-        .contact-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 40px;
-        }
-
-        .contact-form {
-            display: flex;
-            flex-direction: column;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 15px;
         }
 
-        .contact-form input, 
-        .contact-form textarea {
-            padding: 12px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-family: inherit;
-        }
-
-        .contact-form textarea {
-            resize: vertical;
-            height: 150px;
-        }
-
-        .btn-submit {
-            background-color: var(--primary-color);
-            color: white;
-            padding: 12px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background 0.3s;
-        }
-
-        .btn-submit:hover {
-            background-color: #003366;
-        }
-
-        .contact-info blockquote {
-            font-size: 1.5rem;
-            font-style: italic;
-            color: #555;
-            margin-top: 30px;
-            border-left: 4px solid var(--primary-color);
-            padding-left: 20px;
-        }
-
-        /* --- FOOTER --- */
-        footer {
-            background-color: #222;
-            color: #fff;
-            padding: 40px 0;
+        .item-card {
+            border: 1px solid #E1E8ED;
+            border-radius: 8px;
+            padding: 15px;
             text-align: center;
+            background: #FAFAFA;
         }
 
-        footer a {
-            color: var(--accent-color);
+        .btn-audio {
+            background: #8E44AD;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-left: 8px;
+            transition: background 0.2s;
         }
 
-        /* --- RESPONSIVE DESIGN --- */
-        @media (max-width: 768px) {
-            .nav-container {
-                flex-direction: column;
-                gap: 15px;
-            }
-            .about-grid, .contact-grid {
-                grid-template-columns: 1fr;
-            }
-            .hero h1 {
-                font-size: 2rem;
-            }
+        .btn-audio:hover {
+            background: #9B59B6;
+        }
+
+        .symbol {
+            font-size: 20px;
+            font-weight: bold;
+        }
+        .correct { color: var(--success); }
+        .incorrect { color: var(--danger); }
+
+        .vocab-tag {
+            display: inline-flex;
+            align-items: center;
+            background: #EBF5FB;
+            padding: 8px 15px;
+            border-radius: 20px;
+            margin: 5px;
+            font-weight: bold;
+            color: #2980B9;
+        }
+
+        .sentence-card {
+            background: #FAFAFA;
+            border-left: 4px solid var(--primary);
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            border-radius: 0 8px 8px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sentence-text {
+            font-size: 16px;
         }
     </style>
 </head>
 <body>
 
-    <!-- CABECERA -->
+<div class="container">
     <header>
-        <div class="container nav-container">
-            <div class="logo">GIECI</div>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Proyectos</a></li>
-                    <li><a href="#">Investigadores</a></li>
-                    <li><a href="#">Redes</a></li>
-                    <li><a href="#">Semilleros</a></li>
-                </ul>
-            </nav>
-        </div>
+        <h1>English Area: Review Guide</h1>
+        <p>Colegio Santo Domingo Bilingüe - Food & Clothes</p>
     </header>
 
-    <!-- PORTADA (HERO) -->
-    <section class="hero">
-        <div class="container">
-            <h1>Grupo de Investigación Estrategia, Creatividad e Innovación -GIECI-</h1>
-            <p>Excelencia académica y científica en investigación en Colombia.</p>
-        </div>
-    </section>
-
-    <!-- ACERCA DE -->
-    <section class="about">
-        <div class="container about-grid">
-            <div class="about-text">
-                <h2>Acerca de GIECI</h2>
-                <p>El grupo Estrategia, Creatividad e Innovación – GIECI es un grupo de investigación con <strong>clasificación A</strong>, reconocido por el Sistema Nacional de Ciencia, Tecnología e Innovación.</p>
-                <br>
-                <p>Su labor permite fortalecer la producción investigativa en torno a estrategias, creatividad, innovación y desarrollo tecnológico. Promovemos la toma de decisiones acertadas en diferentes áreas organizacionales, impulsando el uso de mejores prácticas.</p>
+    <!-- SECCIÓN 1 -->
+    <div class="section">
+        <h2>1. Read and Tick (✓) or Cross (X)</h2>
+        <div class="grid">
+            <div class="item-card">
+                <h3>1. Pizza</h3>
+                <p>Imagen: Pizza</p>
+                <span class="symbol correct">✓ (Correct)</span>
+                <button class="btn-audio" onclick="speak('Pizza')">🔊 Escuchar</button>
             </div>
-            <div class="about-image">
-                <p>[ Aquí puedes colocar la imagen de tu equipo ]</p>
+            <div class="item-card">
+                <h3>2. T-shirt</h3>
+                <p>Imagen: Camiseta</p>
+                <span class="symbol correct">✓ (Correct)</span>
+                <button class="btn-audio" onclick="speak('T-shirt')">🔊 Escuchar</button>
+            </div>
+            <div class="item-card">
+                <h3>3. Dress</h3>
+                <p>Imagen: Manzana</p>
+                <span class="symbol incorrect">X (Incorrect)</span>
+                <button class="btn-audio" onclick="speak('Dress')">🔊 Escuchar</button>
+            </div>
+            <div class="item-card">
+                <h3>4. Dress</h3>
+                <p>Imagen: Vestido</p>
+                <span class="symbol correct">✓ (Correct)</span>
+                <button class="btn-audio" onclick="speak('Dress')">🔊 Escuchar</button>
+            </div>
+            <div class="item-card">
+                <h3>5. Carrots</h3>
+                <p>Imagen: Zanahorias</p>
+                <span class="symbol correct">✓ (Correct)</span>
+                <button class="btn-audio" onclick="speak('Carrots')">🔊 Escuchar</button>
+            </div>
+            <div class="item-card">
+                <h3>6. Hat</h3>
+                <p>Imagen: Tenis/Zapatos</p>
+                <span class="symbol incorrect">X (Incorrect)</span>
+                <button class="btn-audio" onclick="speak('Hat')">🔊 Escuchar</button>
+            </div>
+            <div class="item-card">
+                <h3>7. Hat</h3>
+                <p>Imagen: Gorra/Sombrero</p>
+                <span class="symbol correct">✓ (Correct)</span>
+                <button class="btn-audio" onclick="speak('Hat')">🔊 Escuchar</button>
+            </div>
+            <div class="item-card">
+                <h3>8. Orange</h3>
+                <p>Imagen: Naranja</p>
+                <span class="symbol correct">✓ (Correct)</span>
+                <button class="btn-audio" onclick="speak('Orange')">🔊 Escuchar</button>
+            </div>
+            <div class="item-card">
+                <h3>9. Pants</h3>
+                <p>Imagen: Sándwich</p>
+                <span class="symbol incorrect">X (Incorrect)</span>
+                <button class="btn-audio" onclick="speak('Pants')">🔊 Escuchar</button>
+            </div>
+            <div class="item-card">
+                <h3>10. Pants</h3>
+                <p>Imagen: Pantalones</p>
+                <span class="symbol correct">✓ (Correct)</span>
+                <button class="btn-audio" onclick="speak('Pants')">🔊 Escuchar</button>
             </div>
         </div>
-    </section>
+    </div>
 
-    <!-- LÍNEAS DE INVESTIGACIÓN -->
-    <section class="research-lines">
-        <div class="container">
-            <h2>Líneas de Investigación</h2>
-            <div class="lines-grid">
-                <div class="line-card">
-                    <h3>Desarrollo humano sustentable</h3>
-                    <p>Promueve la generación de conocimiento, con prácticas responsables que contribuyan al equilibrio entre el crecimiento y la sostenibilidad.</p>
-                </div>
-                <div class="line-card">
-                    <h3>Tecnologías de la Información (TIC)</h3>
-                    <p>Se centra en el estudio, adaptación y aplicación de herramientas digitales e innovaciones tecnológicas que potencien la gestión empresarial.</p>
-                </div>
-                <div class="line-card">
-                    <h3>Metodologías de educación virtual</h3>
-                    <p>Busca diseñar, implementar y evaluar enfoques pedagógicos innovadores, fomentando procesos de enseñanza más inclusivos y flexibles.</p>
-                </div>
-            </div>
+    <!-- SECCIÓN 2 -->
+    <div class="section">
+        <h2>2. Food Words Vocabulary</h2>
+        <div>
+            <div class="vocab-tag">Pizza <button class="btn-audio" onclick="speak('Pizza')">🔊</button></div>
+            <div class="vocab-tag">Apple <button class="btn-audio" onclick="speak('Apple')">🔊</button></div>
+            <div class="vocab-tag">Carrots <button class="btn-audio" onclick="speak('Carrots')">🔊</button></div>
+            <div class="vocab-tag">Orange <button class="btn-audio" onclick="speak('Orange')">🔊</button></div>
+            <div class="vocab-tag">Sandwiches <button class="btn-audio" onclick="speak('Sandwiches')">🔊</button></div>
+            <div class="vocab-tag">Cakes <button class="btn-audio" onclick="speak('Cakes')">🔊</button></div>
         </div>
-    </section>
+    </div>
 
-    <!-- CONTACTO -->
-    <section class="contact">
-        <div class="container contact-grid">
-            <div class="contact-info">
-                <h2>Contáctanos</h2>
-                <p>Estamos aquí para resolver tus dudas sobre el grupo de investigación y nuestros proyectos académicos.</p>
-                
-                <blockquote>
-                    “En algún lugar, algo increíble está esperando a ser descubierto.” <br> 
-                    <small>— Carl Sagan</small>
-                </blockquote>
-            </div>
-            <form class="contact-form">
-                <input type="text" placeholder="Nombre completo" required>
-                <input type="email" placeholder="Correo electrónico" required>
-                <textarea placeholder="Escribe tu mensaje aquí..." required></textarea>
-                <button type="submit" class="btn-submit">Enviar Mensaje</button>
-            </form>
+    <!-- SECCIÓN 3 -->
+    <div class="section">
+        <h2>3. Look at the pictures and write</h2>
+        
+        <div class="sentence-card">
+            <div class="sentence-text">1. There <strong>is one pizza</strong>.</div>
+            <button class="btn-audio" onclick="speak('There is one pizza')">🔊 Escuchar</button>
         </div>
-    </section>
 
-    <!-- PIE DE PÁGINA -->
-    <footer>
-        <div class="container">
-            <p><strong>Grupo -GIECI-</strong></p>
-            <p>Grupo de investigación estrategia, creatividad e innovación.</p>
-            <p><a href="#">Política de privacidad</a> | © 2026. Todos los derechos reservados.</p>
+        <div class="sentence-card">
+            <div class="sentence-text">2. There <strong>are three carrots</strong>.</div>
+            <button class="btn-audio" onclick="speak('There are three carrots')">🔊 Escuchar</button>
         </div>
-    </footer>
+
+        <div class="sentence-card">
+            <div class="sentence-text">3. There <strong>are two cakes</strong>.</div>
+            <button class="btn-audio" onclick="speak('There are two cakes')">🔊 Escuchar</button>
+        </div>
+
+        <div class="sentence-card">
+            <div class="sentence-text">4. There <strong>is one orange</strong>.</div>
+            <button class="btn-audio" onclick="speak('There is one orange')">🔊 Escuchar</button>
+        </div>
+
+        <div class="sentence-card">
+            <div class="sentence-text">5. There <strong>are five sandwiches</strong>.</div>
+            <button class="btn-audio" onclick="speak('There are five sandwiches')">🔊 Escuchar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function speak(text) {
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel(); // Detener audios anteriores
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.85; // Velocidad pausada para facilitarle la escucha
+            window.speechSynthesis.speak(utterance);
+        } else {
+            alert('Tu navegador no soporta la reproducción de voz.');
+        }
+    }
+</script>
 
 </body>
 </html>
