@@ -22,7 +22,7 @@
         }
 
         .container {
-            max-width: 800px;
+            max-width: 900px;
             margin: 0 auto;
         }
 
@@ -66,18 +66,28 @@
             padding: 15px;
             text-align: center;
             background: #FAFAFA;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .emoji-img {
+            font-size: 60px; /* Tamaño grande para relacionar la imagen */
+            margin: 10px 0;
         }
 
         .btn-audio {
             background: #8E44AD;
             color: white;
             border: none;
-            padding: 6px 12px;
+            padding: 8px 15px;
             border-radius: 20px;
             cursor: pointer;
             font-size: 14px;
-            margin-left: 8px;
+            margin-top: 10px;
             transition: background 0.2s;
+            width: 100%;
         }
 
         .btn-audio:hover {
@@ -85,8 +95,9 @@
         }
 
         .symbol {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: bold;
+            margin-top: 5px;
         }
         .correct { color: var(--success); }
         .incorrect { color: var(--danger); }
@@ -105,16 +116,27 @@
         .sentence-card {
             background: #FAFAFA;
             border-left: 4px solid var(--primary);
-            padding: 12px 15px;
-            margin-bottom: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
             border-radius: 0 8px 8px 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
+        .sentence-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .sentence-emoji {
+            font-size: 40px;
+            letter-spacing: 5px;
+        }
+
         .sentence-text {
-            font-size: 16px;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -132,62 +154,62 @@
         <div class="grid">
             <div class="item-card">
                 <h3>1. Pizza</h3>
-                <p>Imagen: Pizza</p>
-                <span class="symbol correct">✓ (Correct)</span>
+                <div class="emoji-img">🍕</div>
+                <span class="symbol correct">✓ Correcto</span>
                 <button class="btn-audio" onclick="speak('Pizza')">🔊 Escuchar</button>
             </div>
             <div class="item-card">
                 <h3>2. T-shirt</h3>
-                <p>Imagen: Camiseta</p>
-                <span class="symbol correct">✓ (Correct)</span>
+                <div class="emoji-img">👕</div>
+                <span class="symbol correct">✓ Correcto</span>
                 <button class="btn-audio" onclick="speak('T-shirt')">🔊 Escuchar</button>
             </div>
             <div class="item-card">
                 <h3>3. Dress</h3>
-                <p>Imagen: Manzana</p>
-                <span class="symbol incorrect">X (Incorrect)</span>
+                <div class="emoji-img">🍎</div> <!-- Imagen de manzana, palabra vestido -->
+                <span class="symbol incorrect">X Incorrecto</span>
                 <button class="btn-audio" onclick="speak('Dress')">🔊 Escuchar</button>
             </div>
             <div class="item-card">
                 <h3>4. Dress</h3>
-                <p>Imagen: Vestido</p>
-                <span class="symbol correct">✓ (Correct)</span>
+                <div class="emoji-img">👗</div>
+                <span class="symbol correct">✓ Correcto</span>
                 <button class="btn-audio" onclick="speak('Dress')">🔊 Escuchar</button>
             </div>
             <div class="item-card">
                 <h3>5. Carrots</h3>
-                <p>Imagen: Zanahorias</p>
-                <span class="symbol correct">✓ (Correct)</span>
+                <div class="emoji-img">🥕</div>
+                <span class="symbol correct">✓ Correcto</span>
                 <button class="btn-audio" onclick="speak('Carrots')">🔊 Escuchar</button>
             </div>
             <div class="item-card">
                 <h3>6. Hat</h3>
-                <p>Imagen: Tenis/Zapatos</p>
-                <span class="symbol incorrect">X (Incorrect)</span>
+                <div class="emoji-img">👟</div> <!-- Imagen de tenis, palabra sombrero -->
+                <span class="symbol incorrect">X Incorrecto</span>
                 <button class="btn-audio" onclick="speak('Hat')">🔊 Escuchar</button>
             </div>
             <div class="item-card">
                 <h3>7. Hat</h3>
-                <p>Imagen: Gorra/Sombrero</p>
-                <span class="symbol correct">✓ (Correct)</span>
+                <div class="emoji-img">🧢</div>
+                <span class="symbol correct">✓ Correcto</span>
                 <button class="btn-audio" onclick="speak('Hat')">🔊 Escuchar</button>
             </div>
             <div class="item-card">
                 <h3>8. Orange</h3>
-                <p>Imagen: Naranja</p>
-                <span class="symbol correct">✓ (Correct)</span>
+                <div class="emoji-img">🍊</div>
+                <span class="symbol correct">✓ Correcto</span>
                 <button class="btn-audio" onclick="speak('Orange')">🔊 Escuchar</button>
             </div>
             <div class="item-card">
                 <h3>9. Pants</h3>
-                <p>Imagen: Sándwich</p>
-                <span class="symbol incorrect">X (Incorrect)</span>
+                <div class="emoji-img">🥪</div> <!-- Imagen de sándwich, palabra pantalón -->
+                <span class="symbol incorrect">X Incorrecto</span>
                 <button class="btn-audio" onclick="speak('Pants')">🔊 Escuchar</button>
             </div>
             <div class="item-card">
                 <h3>10. Pants</h3>
-                <p>Imagen: Pantalones</p>
-                <span class="symbol correct">✓ (Correct)</span>
+                <div class="emoji-img">👖</div>
+                <span class="symbol correct">✓ Correcto</span>
                 <button class="btn-audio" onclick="speak('Pants')">🔊 Escuchar</button>
             </div>
         </div>
@@ -197,12 +219,12 @@
     <div class="section">
         <h2>2. Food Words Vocabulary</h2>
         <div>
-            <div class="vocab-tag">Pizza <button class="btn-audio" onclick="speak('Pizza')">🔊</button></div>
-            <div class="vocab-tag">Apple <button class="btn-audio" onclick="speak('Apple')">🔊</button></div>
-            <div class="vocab-tag">Carrots <button class="btn-audio" onclick="speak('Carrots')">🔊</button></div>
-            <div class="vocab-tag">Orange <button class="btn-audio" onclick="speak('Orange')">🔊</button></div>
-            <div class="vocab-tag">Sandwiches <button class="btn-audio" onclick="speak('Sandwiches')">🔊</button></div>
-            <div class="vocab-tag">Cakes <button class="btn-audio" onclick="speak('Cakes')">🔊</button></div>
+            <div class="vocab-tag">🍕 Pizza <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Pizza')">🔊</button></div>
+            <div class="vocab-tag">🍎 Apple <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Apple')">🔊</button></div>
+            <div class="vocab-tag">🥕 Carrots <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Carrots')">🔊</button></div>
+            <div class="vocab-tag">🍊 Orange <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Orange')">🔊</button></div>
+            <div class="vocab-tag">🥪 Sandwiches <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Sandwiches')">🔊</button></div>
+            <div class="vocab-tag">🧁 Cakes <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Cakes')">🔊</button></div>
         </div>
     </div>
 
@@ -211,28 +233,43 @@
         <h2>3. Look at the pictures and write</h2>
         
         <div class="sentence-card">
-            <div class="sentence-text">1. There <strong>is one pizza</strong>.</div>
-            <button class="btn-audio" onclick="speak('There is one pizza')">🔊 Escuchar</button>
+            <div class="sentence-content">
+                <div class="sentence-emoji">🍕</div>
+                <div class="sentence-text">1. There <strong>is one pizza</strong>.</div>
+            </div>
+            <button class="btn-audio" style="width:auto;" onclick="speak('There is one pizza')">🔊 Escuchar</button>
         </div>
 
         <div class="sentence-card">
-            <div class="sentence-text">2. There <strong>are three carrots</strong>.</div>
-            <button class="btn-audio" onclick="speak('There are three carrots')">🔊 Escuchar</button>
+            <div class="sentence-content">
+                <div class="sentence-emoji">🥕🥕🥕</div>
+                <div class="sentence-text">2. There <strong>are three carrots</strong>.</div>
+            </div>
+            <button class="btn-audio" style="width:auto;" onclick="speak('There are three carrots')">🔊 Escuchar</button>
         </div>
 
         <div class="sentence-card">
-            <div class="sentence-text">3. There <strong>are two cakes</strong>.</div>
-            <button class="btn-audio" onclick="speak('There are two cakes')">🔊 Escuchar</button>
+            <div class="sentence-content">
+                <div class="sentence-emoji">🧁🧁</div>
+                <div class="sentence-text">3. There <strong>are two cakes</strong>.</div>
+            </div>
+            <button class="btn-audio" style="width:auto;" onclick="speak('There are two cakes')">🔊 Escuchar</button>
         </div>
 
         <div class="sentence-card">
-            <div class="sentence-text">4. There <strong>is one orange</strong>.</div>
-            <button class="btn-audio" onclick="speak('There is one orange')">🔊 Escuchar</button>
+            <div class="sentence-content">
+                <div class="sentence-emoji">🍊</div>
+                <div class="sentence-text">4. There <strong>is one orange</strong>.</div>
+            </div>
+            <button class="btn-audio" style="width:auto;" onclick="speak('There is one orange')">🔊 Escuchar</button>
         </div>
 
         <div class="sentence-card">
-            <div class="sentence-text">5. There <strong>are five sandwiches</strong>.</div>
-            <button class="btn-audio" onclick="speak('There are five sandwiches')">🔊 Escuchar</button>
+            <div class="sentence-content">
+                <div class="sentence-emoji">🥪🥪🥪🥪🥪</div>
+                <div class="sentence-text">5. There <strong>are five sandwiches</strong>.</div>
+            </div>
+            <button class="btn-audio" style="width:auto;" onclick="speak('There are five sandwiches')">🔊 Escuchar</button>
         </div>
     </div>
 </div>
@@ -240,10 +277,10 @@
 <script>
     function speak(text) {
         if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel(); // Detener audios anteriores
+            window.speechSynthesis.cancel();
             const utterance = new SpeechSynthesisUtterance(text);
             utterance.lang = 'en-US';
-            utterance.rate = 0.85; // Velocidad pausada para facilitarle la escucha
+            utterance.rate = 0.85; 
             window.speechSynthesis.speak(utterance);
         } else {
             alert('Tu navegador no soporta la reproducción de voz.');
