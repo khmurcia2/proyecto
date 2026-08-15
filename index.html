@@ -3,290 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repaso de Inglés - Food & Clothes</title>
+    <title>Inscripción - Torneo de Billar 3 Bandas</title>
     <style>
-        :root {
-            --primary: #4A90E2;
-            --success: #2ECC71;
-            --danger: #E74C3C;
-            --bg: #F4F7F6;
-            --card: #FFFFFF;
+        /* Estilos generales */
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #f4f7f6; 
+            color: #333; 
+            max-width: 800px; 
+            margin: 0 auto; 
+            padding: 20px; 
         }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg);
-            margin: 0;
-            padding: 20px;
-            color: #333;
+        h1, h2 { color: #2c3e50; text-align: center; }
+        
+        /* Estilos de las tarjetas y formulario */
+        .card { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+            margin-bottom: 20px; 
         }
-
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #34495e; }
+        input, select { 
+            width: 100%; 
+            padding: 12px; 
+            border: 1px solid #ccc; 
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            font-size: 16px;
         }
-
-        header {
-            text-align: center;
-            background: var(--primary);
-            color: white;
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        }
-
-        h1 { margin: 0 0 10px 0; font-size: 24px; }
-        p { margin: 0; opacity: 0.9; }
-
-        .section {
-            background: var(--card);
-            padding: 20px;
-            border-radius: 12px;
-            margin-bottom: 25px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        h2 {
-            color: var(--primary);
-            border-bottom: 2px solid var(--bg);
-            padding-bottom: 10px;
-            margin-top: 0;
-        }
-
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-            gap: 15px;
-        }
-
-        .item-card {
-            border: 1px solid #E1E8ED;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            background: #FAFAFA;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .emoji-img {
-            font-size: 60px; /* Tamaño grande para relacionar la imagen */
-            margin: 10px 0;
-        }
-
-        .btn-audio {
-            background: #8E44AD;
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            margin-top: 10px;
-            transition: background 0.2s;
-            width: 100%;
-        }
-
-        .btn-audio:hover {
-            background: #9B59B6;
-        }
-
-        .symbol {
-            font-size: 18px;
+        button { 
+            width: 100%; 
+            padding: 12px; 
+            background-color: #27ae60; 
+            color: white; 
+            border: none; 
+            border-radius: 4px; 
+            font-size: 16px; 
             font-weight: bold;
-            margin-top: 5px;
+            cursor: pointer; 
+            transition: background 0.3s; 
         }
-        .correct { color: var(--success); }
-        .incorrect { color: var(--danger); }
-
-        .vocab-tag {
-            display: inline-flex;
-            align-items: center;
-            background: #EBF5FB;
-            padding: 8px 15px;
-            border-radius: 20px;
-            margin: 5px;
-            font-weight: bold;
-            color: #2980B9;
+        button:hover { background-color: #219150; }
+        
+        /* Estilos de la tabla de resultados */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
+        th { background-color: #2c3e50; color: white; }
+        
+        /* Etiquetas visuales para las categorías */
+        .badge { 
+            padding: 5px 10px; 
+            border-radius: 12px; 
+            font-size: 13px; 
+            font-weight: bold; 
+            color: white; 
         }
-
-        .sentence-card {
-            background: #FAFAFA;
-            border-left: 4px solid var(--primary);
-            padding: 15px;
-            margin-bottom: 15px;
-            border-radius: 0 8px 8px 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .sentence-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .sentence-emoji {
-            font-size: 40px;
-            letter-spacing: 5px;
-        }
-
-        .sentence-text {
-            font-size: 18px;
-        }
+        .bg-master { background-color: #e74c3c; } /* Rojo */
+        .bg-intermedio { background-color: #f39c12; } /* Naranja */
+        .bg-amateur { background-color: #3498db; } /* Azul */
     </style>
 </head>
 <body>
 
-<div class="container">
-    <header>
-        <h1>English Area: Review Guide</h1>
-        <p>Colegio Santo Domingo Bilingüe - Food & Clothes</p>
-    </header>
+    <h1>Torneo de Billar a 3 Bandas</h1>
 
-    <!-- SECCIÓN 1 -->
-    <div class="section">
-        <h2>1. Read and Tick (✓) or Cross (X)</h2>
-        <div class="grid">
-            <div class="item-card">
-                <h3>1. Pizza</h3>
-                <div class="emoji-img">🍕</div>
-                <span class="symbol correct">✓ Correcto</span>
-                <button class="btn-audio" onclick="speak('Pizza')">🔊 Escuchar</button>
+    <!-- Sección del Formulario -->
+    <div class="card">
+        <h2>Registro de Participantes</h2>
+        <form id="registroForm">
+            <div class="form-group">
+                <label for="nombre">Nombre del Jugador</label>
+                <input type="text" id="nombre" placeholder="Ingresa el nombre del participante" required>
             </div>
-            <div class="item-card">
-                <h3>2. T-shirt</h3>
-                <div class="emoji-img">👕</div>
-                <span class="symbol correct">✓ Correcto</span>
-                <button class="btn-audio" onclick="speak('T-shirt')">🔊 Escuchar</button>
+            <div class="form-group">
+                <label for="categoria">Categoría</label>
+                <select id="categoria" required>
+                    <option value="">Selecciona una categoría...</option>
+                    <option value="Master">Master</option>
+                    <option value="Intermedio">Intermedio</option>
+                    <option value="Amateur">Amateur</option>
+                </select>
             </div>
-            <div class="item-card">
-                <h3>3. Dress</h3>
-                <div class="emoji-img">🍎</div> <!-- Imagen de manzana, palabra vestido -->
-                <span class="symbol incorrect">X Incorrecto</span>
-                <button class="btn-audio" onclick="speak('Dress')">🔊 Escuchar</button>
-            </div>
-            <div class="item-card">
-                <h3>4. Dress</h3>
-                <div class="emoji-img">👗</div>
-                <span class="symbol correct">✓ Correcto</span>
-                <button class="btn-audio" onclick="speak('Dress')">🔊 Escuchar</button>
-            </div>
-            <div class="item-card">
-                <h3>5. Carrots</h3>
-                <div class="emoji-img">🥕</div>
-                <span class="symbol correct">✓ Correcto</span>
-                <button class="btn-audio" onclick="speak('Carrots')">🔊 Escuchar</button>
-            </div>
-            <div class="item-card">
-                <h3>6. Hat</h3>
-                <div class="emoji-img">👟</div> <!-- Imagen de tenis, palabra sombrero -->
-                <span class="symbol incorrect">X Incorrecto</span>
-                <button class="btn-audio" onclick="speak('Hat')">🔊 Escuchar</button>
-            </div>
-            <div class="item-card">
-                <h3>7. Hat</h3>
-                <div class="emoji-img">🧢</div>
-                <span class="symbol correct">✓ Correcto</span>
-                <button class="btn-audio" onclick="speak('Hat')">🔊 Escuchar</button>
-            </div>
-            <div class="item-card">
-                <h3>8. Orange</h3>
-                <div class="emoji-img">🍊</div>
-                <span class="symbol correct">✓ Correcto</span>
-                <button class="btn-audio" onclick="speak('Orange')">🔊 Escuchar</button>
-            </div>
-            <div class="item-card">
-                <h3>9. Pants</h3>
-                <div class="emoji-img">🥪</div> <!-- Imagen de sándwich, palabra pantalón -->
-                <span class="symbol incorrect">X Incorrecto</span>
-                <button class="btn-audio" onclick="speak('Pants')">🔊 Escuchar</button>
-            </div>
-            <div class="item-card">
-                <h3>10. Pants</h3>
-                <div class="emoji-img">👖</div>
-                <span class="symbol correct">✓ Correcto</span>
-                <button class="btn-audio" onclick="speak('Pants')">🔊 Escuchar</button>
-            </div>
-        </div>
+            <button type="submit">Inscribir Jugador</button>
+        </form>
     </div>
 
-    <!-- SECCIÓN 2 -->
-    <div class="section">
-        <h2>2. Food Words Vocabulary</h2>
-        <div>
-            <div class="vocab-tag">🍕 Pizza <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Pizza')">🔊</button></div>
-            <div class="vocab-tag">🍎 Apple <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Apple')">🔊</button></div>
-            <div class="vocab-tag">🥕 Carrots <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Carrots')">🔊</button></div>
-            <div class="vocab-tag">🍊 Orange <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Orange')">🔊</button></div>
-            <div class="vocab-tag">🥪 Sandwiches <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Sandwiches')">🔊</button></div>
-            <div class="vocab-tag">🧁 Cakes <button class="btn-audio" style="margin:0; padding:4px 8px;" onclick="speak('Cakes')">🔊</button></div>
-        </div>
+    <!-- Sección de la Tabla de Inscritos -->
+    <div class="card">
+        <h2>Lista de Inscritos (Total: <span id="contador">0</span>)</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Categoría</th>
+                    <th>Meta (Carambolas)</th>
+                </tr>
+            </thead>
+            <tbody id="listaJugadores">
+                <!-- Los jugadores se agregarán aquí dinámicamente -->
+            </tbody>
+        </table>
     </div>
 
-    <!-- SECCIÓN 3 -->
-    <div class="section">
-        <h2>3. Look at the pictures and write</h2>
-        
-        <div class="sentence-card">
-            <div class="sentence-content">
-                <div class="sentence-emoji">🍕</div>
-                <div class="sentence-text">1. There <strong>is one pizza</strong>.</div>
-            </div>
-            <button class="btn-audio" style="width:auto;" onclick="speak('There is one pizza')">🔊 Escuchar</button>
-        </div>
+    <!-- Lógica de la Aplicación -->
+    <script>
+        // Definición de las reglas del torneo
+        const reglas = {
+            "Master": { meta: 25, color: "bg-master" },
+            "Intermedio": { meta: 20, color: "bg-intermedio" },
+            "Amateur": { meta: 12, color: "bg-amateur" }
+        };
 
-        <div class="sentence-card">
-            <div class="sentence-content">
-                <div class="sentence-emoji">🥕🥕🥕</div>
-                <div class="sentence-text">2. There <strong>are three carrots</strong>.</div>
-            </div>
-            <button class="btn-audio" style="width:auto;" onclick="speak('There are three carrots')">🔊 Escuchar</button>
-        </div>
+        // Arreglo en memoria para guardar a los participantes
+        let inscritos = [];
 
-        <div class="sentence-card">
-            <div class="sentence-content">
-                <div class="sentence-emoji">🧁🧁</div>
-                <div class="sentence-text">3. There <strong>are two cakes</strong>.</div>
-            </div>
-            <button class="btn-audio" style="width:auto;" onclick="speak('There are two cakes')">🔊 Escuchar</button>
-        </div>
+        // Escuchar el evento de envío del formulario
+        document.getElementById('registroForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Evita que la página se recargue al enviar el formulario
 
-        <div class="sentence-card">
-            <div class="sentence-content">
-                <div class="sentence-emoji">🍊</div>
-                <div class="sentence-text">4. There <strong>is one orange</strong>.</div>
-            </div>
-            <button class="btn-audio" style="width:auto;" onclick="speak('There is one orange')">🔊 Escuchar</button>
-        </div>
+            // Obtener los valores ingresados
+            const nombre = document.getElementById('nombre').value;
+            const categoria = document.getElementById('categoria').value;
+            
+            // Obtener la meta y el color según la categoría seleccionada
+            const meta = reglas[categoria].meta;
+            const claseColor = reglas[categoria].color;
 
-        <div class="sentence-card">
-            <div class="sentence-content">
-                <div class="sentence-emoji">🥪🥪🥪🥪🥪</div>
-                <div class="sentence-text">5. There <strong>are five sandwiches</strong>.</div>
-            </div>
-            <button class="btn-audio" style="width:auto;" onclick="speak('There are five sandwiches')">🔊 Escuchar</button>
-        </div>
-    </div>
-</div>
+            // Guardar el jugador en el arreglo
+            inscritos.push({ 
+                nombre: nombre, 
+                categoria: categoria, 
+                meta: meta, 
+                claseColor: claseColor 
+            });
 
-<script>
-    function speak(text) {
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(text);
-            utterance.lang = 'en-US';
-            utterance.rate = 0.85; 
-            window.speechSynthesis.speak(utterance);
-        } else {
-            alert('Tu navegador no soporta la reproducción de voz.');
+            // Limpiar los campos del formulario para el siguiente registro
+            this.reset();
+
+            // Refrescar la tabla para mostrar el nuevo jugador
+            actualizarTabla();
+        });
+
+        // Función para renderizar los datos en la tabla HTML
+        function actualizarTabla() {
+            const tbody = document.getElementById('listaJugadores');
+            const contador = document.getElementById('contador');
+            
+            // Limpiar la tabla antes de volver a dibujar
+            tbody.innerHTML = ''; 
+            
+            // Recorrer el arreglo y crear una fila (tr) por cada jugador
+            inscritos.forEach(jugador => {
+                const fila = document.createElement('tr');
+                fila.innerHTML = `
+                    <td>${jugador.nombre}</td>
+                    <td><span class="badge ${jugador.claseColor}">${jugador.categoria}</span></td>
+                    <td><strong>${jugador.meta}</strong></td>
+                `;
+                tbody.appendChild(fila);
+            });
+
+            // Actualizar el contador total de jugadores
+            contador.textContent = inscritos.length;
         }
-    }
-</script>
+    </script>
+</body>
+</html>
 
 </body>
 </html>
