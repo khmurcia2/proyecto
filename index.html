@@ -1,162 +1,76 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inscripción - Torneo de Billar 3 Bandas</title>
-    <style>
-        /* Estilos generales */
-        body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            background-color: #f4f7f6; 
-            color: #333; 
-            max-width: 800px; 
-            margin: 0 auto; 
-            padding: 20px; 
-        }
-        h1, h2 { color: #2c3e50; text-align: center; }
-        
-        /* Estilos de las tarjetas y formulario */
-        .card { 
-            background: white; 
-            padding: 25px; 
-            border-radius: 8px; 
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-            margin-bottom: 20px; 
-        }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; color: #34495e; }
-        input, select { 
-            width: 100%; 
-            padding: 12px; 
-            border: 1px solid #ccc; 
-            border-radius: 4px; 
-            box-sizing: border-box; 
-            font-size: 16px;
-        }
-        button { 
-            width: 100%; 
-            padding: 12px; 
-            background-color: #27ae60; 
-            color: white; 
-            border: none; 
-            border-radius: 4px; 
-            font-size: 16px; 
-            font-weight: bold;
-            cursor: pointer; 
-            transition: background 0.3s; 
-        }
-        button:hover { background-color: #219150; }
-        
-        /* Estilos de la tabla de resultados */
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #ddd; }
-        th { background-color: #2c3e50; color: white; }
-        
-        /* Etiquetas visuales para las categorías */
-        .badge { 
-            padding: 5px 10px; 
-            border-radius: 12px; 
-            font-size: 13px; 
-            font-weight: bold; 
-            color: white; 
-        }
-        .bg-master { background-color: #e74c3c; } /* Rojo */
-        .bg-intermedio { background-color: #f39c12; } /* Naranja */
-        .bg-amateur { background-color: #3498db; } /* Azul */
-    </style>
-</head>
-<body>
+<!-- Scripts de Firebase usando Módulos (Estándar moderno) -->
+    <script type="module">
+        // 1. Importar las funciones necesarias de Firebase directamente desde la web
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-    <h1>Torneo de Billar a 3 Bandas</h1>
+        // 2. TU CONFIGURACIÓN EXACTA DE FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyB10yXxA6Oyvz-xDyJuX7RKj7QhNju85mo",
+            authDomain: "mansioncarambola.firebaseapp.com",
+            projectId: "mansioncarambola",
+            storageBucket: "mansioncarambola.firebasestorage.app",
+            messagingSenderId: "782227033522",
+            appId: "1:782227033522:web:70f029b38617dfff21a8ab",
+            measurementId: "G-MKBCHYQ86T"
+        };
 
-    <!-- Sección del Formulario -->
-    <div class="card">
-        <h2>Registro de Participantes</h2>
-        <form id="registroForm">
-            <div class="form-group">
-                <label for="nombre">Nombre del Jugador</label>
-                <input type="text" id="nombre" placeholder="Ingresa el nombre del participante" required>
-            </div>
-            <div class="form-group">
-                <label for="categoria">Categoría</label>
-                <select id="categoria" required>
-                    <option value="">Selecciona una categoría...</option>
-                    <option value="Master">Master</option>
-                    <option value="Intermedio">Intermedio</option>
-                    <option value="Amateur">Amateur</option>
-                </select>
-            </div>
-            <button type="submit">Inscribir Jugador</button>
-        </form>
-    </div>
+        // 3. Inicializar Firebase y Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    <!-- Sección de la Tabla de Inscritos -->
-    <div class="card">
-        <h2>Lista de Inscritos (Total: <span id="contador">0</span>)</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Nombre</th>
-                    <th>Categoría</th>
-                    <th>Meta (Carambolas)</th>
-                </tr>
-            </thead>
-            <tbody id="listaJugadores">
-                <!-- Los jugadores se agregarán aquí dinámicamente -->
-            </tbody>
-        </table>
-    </div>
-
-    <!-- Lógica de la Aplicación -->
-    <script>
-        // Definición de las reglas del torneo
         const reglas = {
             "Master": { meta: 25, color: "bg-master" },
             "Intermedio": { meta: 20, color: "bg-intermedio" },
             "Amateur": { meta: 12, color: "bg-amateur" }
         };
 
-        // Arreglo en memoria para guardar a los participantes
-        let inscritos = [];
+        // 4. Lógica para guardar un jugador en la base de datos
+        document.getElementById('registroForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btnGuardar = document.getElementById('btnGuardar');
+            btnGuardar.disabled = true; // Desactivar botón mientras guarda
+            btnGuardar.textContent = 'Guardando...';
 
-        // Escuchar el evento de envío del formulario
-        document.getElementById('registroForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Evita que la página se recargue al enviar el formulario
-
-            // Obtener los valores ingresados
             const nombre = document.getElementById('nombre').value;
             const categoria = document.getElementById('categoria').value;
-            
-            // Obtener la meta y el color según la categoría seleccionada
             const meta = reglas[categoria].meta;
             const claseColor = reglas[categoria].color;
 
-            // Guardar el jugador en el arreglo
-            inscritos.push({ 
-                nombre: nombre, 
-                categoria: categoria, 
-                meta: meta, 
-                claseColor: claseColor 
-            });
-
-            // Limpiar los campos del formulario para el siguiente registro
-            this.reset();
-
-            // Refrescar la tabla para mostrar el nuevo jugador
-            actualizarTabla();
+            try {
+                // Guardar en la colección "jugadores"
+                await addDoc(collection(db, "jugadores"), {
+                    nombre: nombre,
+                    categoria: categoria,
+                    meta: meta,
+                    claseColor: claseColor,
+                    fechaRegistro: new Date() // Para ordenar la lista
+                });
+                
+                this.reset(); // Limpiar formulario
+            } catch (error) {
+                console.error("Error al guardar: ", error);
+                alert("Hubo un error al guardar el jugador.");
+            } finally {
+                btnGuardar.disabled = false;
+                btnGuardar.textContent = 'Inscribir Jugador';
+            }
         });
 
-        // Función para renderizar los datos en la tabla HTML
-        function actualizarTabla() {
+        // 5. Lógica para leer los datos en tiempo real (Realtime Listener)
+        const q = query(collection(db, "jugadores"), orderBy("fechaRegistro", "desc"));
+        
+        onSnapshot(q, (snapshot) => {
             const tbody = document.getElementById('listaJugadores');
             const contador = document.getElementById('contador');
             
-            // Limpiar la tabla antes de volver a dibujar
-            tbody.innerHTML = ''; 
-            
-            // Recorrer el arreglo y crear una fila (tr) por cada jugador
-            inscritos.forEach(jugador => {
+            tbody.innerHTML = ''; // Limpiar tabla
+            let totalJugadores = 0;
+
+            snapshot.forEach((doc) => {
+                const jugador = doc.data();
+                totalJugadores++;
+                
                 const fila = document.createElement('tr');
                 fila.innerHTML = `
                     <td>${jugador.nombre}</td>
@@ -166,12 +80,6 @@
                 tbody.appendChild(fila);
             });
 
-            // Actualizar el contador total de jugadores
-            contador.textContent = inscritos.length;
-        }
+            contador.textContent = totalJugadores;
+        });
     </script>
-</body>
-</html>
-
-</body>
-</html>
