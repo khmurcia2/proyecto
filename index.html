@@ -3,138 +3,252 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Simulación del Torneo - Billar 3 Bandas</title>
+    <title>Torneo de Billar 3 Bandas</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e272e; color: #fff; margin: 0; padding: 20px; }
-        h1, h2 { text-align: center; color: #0fb9b1; }
-        .controls { text-align: center; margin-bottom: 30px; }
-        button { padding: 12px 24px; font-size: 16px; font-weight: bold; cursor: pointer; border: none; border-radius: 5px; margin: 0 10px; transition: transform 0.2s; }
-        .btn-sorteo { background-color: #f39c12; color: white; }
-        .btn-simular { background-color: #e74c3c; color: white; display: none; }
-        button:hover { transform: scale(1.05); }
-
-        /* Estilos de los Grupos */
-        .fase-grupos { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-        .grupo { background-color: #2f3640; border: 2px solid #0fb9b1; border-radius: 10px; padding: 15px; width: 300px; }
-        .grupo h3 { margin-top: 0; color: #f1c40f; text-align: center; border-bottom: 1px solid #555; padding-bottom: 10px; }
-        .tabla-posiciones { width: 100%; border-collapse: collapse; margin-bottom: 15px; font-size: 14px; }
-        .tabla-posiciones th, .tabla-posiciones td { text-align: left; padding: 5px; border-bottom: 1px solid #444; }
+        /* Estilos Generales y Tema Oscuro (Billar) */
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e272e; color: #d2dae2; margin: 0; padding: 0; }
+        h1, h2, h3 { text-align: center; color: #0fb9b1; }
         
-        /* Diseño de la Mesa de Billar para los enfrentamientos */
+        /* Navegación (Pestañas) */
+        .navbar { background-color: #000; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); margin-bottom: 20px; }
+        .tab-btn { background-color: #2f3640; color: white; border: 2px solid #0fb9b1; padding: 10px 20px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 5px; margin: 0 10px; transition: 0.3s; }
+        .tab-btn.active, .tab-btn:hover { background-color: #0fb9b1; color: #000; }
+
+        /* Contenedores de las Secciones */
+        .seccion { display: none; padding: 20px; max-width: 900px; margin: 0 auto; }
+        .seccion.activa { display: block; }
+
+        /* Estilos de Formularios y Tablas (Inscripción) */
+        .card { background: #2f3640; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; color: #d2dae2; }
+        input, select { width: 100%; padding: 12px; border: 1px solid #555; background-color: #1e272e; color: white; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+        button.btn-accion { width: 100%; padding: 12px; background-color: #20bf6b; color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
+        button.btn-accion:hover { background-color: #26de81; color: #000; }
+        
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; background-color: #1e272e; border-radius: 5px; overflow: hidden; }
+        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #444; }
+        th { background-color: #0fb9b1; color: #000; font-weight: bold; }
+        
+        .badge { padding: 5px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; color: white; }
+        .bg-master { background-color: #e74c3c; }
+        .bg-intermedio { background-color: #f39c12; }
+        .bg-amateur { background-color: #3498db; }
+
+        /* Estilos del Torneo y Mesas de Billar */
+        .controls { text-align: center; margin-bottom: 30px; }
+        .btn-sorteo { background-color: #f39c12; color: #000; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; margin-right: 10px; transition: 0.3s; }
+        .btn-sorteo:hover { background-color: #f1c40f; transform: scale(1.05); }
+        .btn-simular { background-color: #e74c3c; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; display: none; transition: 0.3s; }
+
+        .fase-grupos { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
+        .grupo { background-color: #2f3640; border: 2px solid #0fb9b1; border-radius: 10px; padding: 15px; width: 320px; }
+        .grupo h3 { margin-top: 0; color: #f1c40f; border-bottom: 1px solid #555; padding-bottom: 10px; }
+        .tabla-posiciones th { background-color: transparent; color: #d2dae2; border-bottom: 2px solid #555; }
+        
         .mesa-billar { 
-            background-color: #006266; /* Paño verde */
-            border: 8px solid #8b4513; /* Borde de madera */
+            background-color: #006266; 
+            border: 8px solid #8b4513; 
             border-radius: 8px; 
             padding: 15px; 
             margin-bottom: 10px; 
             position: relative;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
             text-align: center;
         }
-        /* Detalles visuales de la mesa (bolas de billar) */
-        .mesa-billar::before { content: ''; position: absolute; top: 5px; left: 10px; width: 10px; height: 10px; background: white; border-radius: 50%; box-shadow: 20px 5px 0 #f1c40f, 10px 20px 0 white; }
-        
-        .jugador { font-weight: bold; font-size: 14px; margin: 5px 0; background: rgba(0,0,0,0.3); padding: 5px; border-radius: 4px; }
-        .vs { font-size: 12px; color: #ffcccc; font-weight: bold; margin: 5px 0; }
-        .marcador { color: #f1c40f; font-size: 16px; font-weight: bold; margin-top: 5px; }
-        
-        .badge { font-size: 11px; padding: 2px 6px; border-radius: 10px; float: right; }
-        .bg-master { background-color: #e74c3c; }
-        .bg-intermedio { background-color: #f39c12; }
-        .bg-amateur { background-color: #3498db; }
+        .mesa-billar::before { content: ''; position: absolute; top: 8px; left: 12px; width: 10px; height: 10px; background: white; border-radius: 50%; box-shadow: 25px 8px 0 #f1c40f, 15px 25px 0 white; }
+        .jugador { font-weight: bold; font-size: 15px; margin: 5px 0; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
+        .vs { font-size: 13px; color: #ffcccc; font-weight: bold; margin: 5px 0; }
+        .marcador { color: #f1c40f; font-size: 18px; font-weight: bold; margin-top: 5px; letter-spacing: 2px; }
     </style>
 </head>
 <body>
 
-    <h1>Fase de Grupos - Torneo de Billar</h1>
-    
-    <div class="controls">
-        <button class="btn-sorteo" id="btnSorteo">1. Realizar Sorteo de Grupos</button>
-        <button class="btn-simular" id="btnSimular">2. Simular Partidas (Fase de Grupos)</button>
+    <!-- Navegación Superior -->
+    <div class="navbar">
+        <button class="tab-btn activa" onclick="cambiarPestana('inscripcion', this)">📝 Fase de Inscripción</button>
+        <button class="tab-btn" onclick="cambiarPestana('torneo', this)">🎱 Sorteo y Torneo</button>
     </div>
 
-    <div class="fase-grupos" id="contenedorGrupos">
-        <!-- Los grupos y mesas de billar aparecerán aquí -->
+    <!-- SECCIÓN 1: INSCRIPCIÓN -->
+    <div id="seccion-inscripcion" class="seccion activa">
+        <h1>Registro de Jugadores</h1>
+        <div class="card">
+            <form id="registroForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre del Jugador</label>
+                    <input type="text" id="nombre" placeholder="Ingresa el nombre del participante" required>
+                </div>
+                <div class="form-group">
+                    <label for="categoria">Categoría</label>
+                    <select id="categoria" required>
+                        <option value="">Selecciona una categoría...</option>
+                        <option value="Master">Master</option>
+                        <option value="Intermedio">Intermedio</option>
+                        <option value="Amateur">Amateur</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn-accion" id="btnGuardar">Inscribir Jugador</button>
+            </form>
+        </div>
+
+        <div class="card">
+            <h2>Lista de Inscritos (Total: <span id="contador">0</span>)</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Meta (Carambolas)</th>
+                    </tr>
+                </thead>
+                <tbody id="listaJugadores">
+                    <!-- Jugadores de Firebase -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <!-- Scripts de Firebase -->
+    <!-- SECCIÓN 2: TORNEO Y SORTEO -->
+    <div id="seccion-torneo" class="seccion">
+        <h1>Fase de Grupos</h1>
+        <div class="controls">
+            <button class="btn-sorteo" id="btnSorteo">1. Realizar Sorteo Aleatorio</button>
+            <button class="btn-simular" id="btnSimular">2. Simular Partidas</button>
+        </div>
+        <div class="fase-grupos" id="contenedorGrupos">
+            <p style="text-align: center; color: #888; width: 100%;">Los grupos aparecerán aquí después del sorteo.</p>
+        </div>
+    </div>
+
+    <!-- Scripts (Navegación, Firebase y Lógica) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // ¡REEMPLAZA ESTO CON TU CONFIGURACIÓN EXACTA DE FIREBASE!
+        // Configuración exacta de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyB10yXxA6Oyvz-xDyJuX7RKj7QhNju85mo",
             authDomain: "mansioncarambola.firebaseapp.com",
             projectId: "mansioncarambola",
             storageBucket: "mansioncarambola.firebasestorage.app",
             messagingSenderId: "782227033522",
-            appId: "1:782227033522:web:70f029b38617dfff21a8ab"
+            appId: "1:782227033522:web:70f029b38617dfff21a8ab",
+            measurementId: "G-MKBCHYQ86T"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        let jugadoresInscritos = [];
+        // Variables Globales
+        const reglas = {
+            "Master": { meta: 25, color: "bg-master" },
+            "Intermedio": { meta: 20, color: "bg-intermedio" },
+            "Amateur": { meta: 12, color: "bg-amateur" }
+        };
+        let inscritosGlobal = [];
         let grupos = [];
 
-        // Obtener jugadores al cargar
-        async function cargarJugadores() {
-            const querySnapshot = await getDocs(collection(db, "jugadores"));
-            querySnapshot.forEach((doc) => {
-                jugadoresInscritos.push({ id: doc.id, ...doc.data(), puntos: 0, carambolas: 0 });
-            });
-        }
-        cargarJugadores();
+        // --- LÓGICA DE PESTAÑAS (Navegación) ---
+        window.cambiarPestana = function(idSeccion, botonRef) {
+            document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('activa'));
+            
+            document.getElementById(`seccion-${idSeccion}`).classList.add('activa');
+            botonRef.classList.add('activa');
+        };
 
-        // Mezclar arreglo (Algoritmo Fisher-Yates)
-        function mezclarArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+        // --- LÓGICA DE INSCRIPCIÓN Y LECTURA EN TIEMPO REAL ---
+        document.getElementById('registroForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btnGuardar');
+            btn.disabled = true; btn.textContent = 'Guardando...';
+
+            const nombre = document.getElementById('nombre').value;
+            const categoria = document.getElementById('categoria').value;
+
+            try {
+                await addDoc(collection(db, "jugadores"), {
+                    nombre: nombre,
+                    categoria: categoria,
+                    meta: reglas[categoria].meta,
+                    claseColor: reglas[categoria].color,
+                    fechaRegistro: new Date()
+                });
+                this.reset();
+            } catch (error) {
+                alert("Error al guardar."); console.error(error);
+            } finally {
+                btn.disabled = false; btn.textContent = 'Inscribir Jugador';
             }
-            return array;
-        }
+        });
 
-        // Lógica del Sorteo
+        // Escuchar base de datos en tiempo real y actualizar tabla global
+        const q = query(collection(db, "jugadores"), orderBy("fechaRegistro", "desc"));
+        onSnapshot(q, (snapshot) => {
+            const tbody = document.getElementById('listaJugadores');
+            tbody.innerHTML = '';
+            inscritosGlobal = []; // Limpiar arreglo global para actualizarlo
+
+            snapshot.forEach((doc) => {
+                const data = doc.data();
+                // Añadir propiedades para el torneo (puntos y carambolas en 0 al iniciar)
+                inscritosGlobal.push({ id: doc.id, ...data, puntos: 0, carambolas: 0 });
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${data.nombre}</td>
+                        <td><span class="badge ${data.claseColor}">${data.categoria}</span></td>
+                        <td><strong>${data.meta}</strong></td>
+                    </tr>`;
+            });
+            document.getElementById('contador').textContent = inscritosGlobal.length;
+        });
+
+        // --- LÓGICA DEL SORTEO ---
         document.getElementById('btnSorteo').addEventListener('click', () => {
-            if (jugadoresInscritos.length < 4) {
-                alert("Necesitas al menos 4 jugadores inscritos para hacer un grupo.");
+            if (inscritosGlobal.length < 4) {
+                alert("Necesitas al menos 4 jugadores inscritos para armar los grupos.");
                 return;
             }
 
-            let mezclados = mezclarArray([...jugadoresInscritos]);
+            // Algoritmo para mezclar aleatoriamente
+            let mezclados = [...inscritosGlobal];
+            for (let i = mezclados.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [mezclados[i], mezclados[j]] = [mezclados[j], mezclados[i]];
+            }
+
             grupos = [];
-            
-            // Dividir en grupos de 4
+            // Crear los grupos de 4 en 4
             for (let i = 0; i < mezclados.length; i += 4) {
+                let participantesGrupo = mezclados.slice(i, i + 4);
                 grupos.push({
-                    nombre: `Grupo ${String.fromCharCode(65 + (i/4))}`, // Grupo A, B, C...
-                    participantes: mezclados.slice(i, i + 4),
-                    partidos: []
+                    nombre: `Grupo ${String.fromCharCode(65 + (i/4))}`,
+                    participantes: participantesGrupo,
+                    partidos: generarEnfrentamientos(participantesGrupo)
                 });
             }
 
-            // Generar enfrentamientos por grupo (Todos contra todos)
-            grupos.forEach(grupo => {
-                const p = grupo.participantes;
-                if(p.length >= 2) grupo.partidos.push({ j1: p[0], j2: p[1], jugado: false });
-                if(p.length >= 4) {
-                    grupo.partidos.push({ j1: p[2], j2: p[3], jugado: false });
-                    grupo.partidos.push({ j1: p[0], j2: p[2], jugado: false });
-                    grupo.partidos.push({ j1: p[1], j2: p[3], jugado: false });
-                    grupo.partidos.push({ j1: p[0], j2: p[3], jugado: false });
-                    grupo.partidos.push({ j1: p[1], j2: p[2], jugado: false });
-                }
-            });
-
-            renderizarGrupos();
-            document.getElementById('btnSorteo').style.display = 'none';
+            renderizarTorneo();
             document.getElementById('btnSimular').style.display = 'inline-block';
         });
 
-        // Dibujar las mesas de billar y los grupos
-        function renderizarGrupos() {
+        function generarEnfrentamientos(p) {
+            let partidos = [];
+            if(p.length >= 2) partidos.push({ j1: p[0], j2: p[1] });
+            if(p.length >= 3) partidos.push({ j1: p[0], j2: p[2] }, { j1: p[1], j2: p[2] });
+            if(p.length === 4) {
+                partidos = [
+                    { j1: p[0], j2: p[1] }, { j1: p[2], j2: p[3] }, // Ronda 1
+                    { j1: p[0], j2: p[2] }, { j1: p[1], j2: p[3] }, // Ronda 2
+                    { j1: p[0], j2: p[3] }, { j1: p[1], j2: p[2] }  // Ronda 3
+                ];
+            }
+            return partidos;
+        }
+
+        function renderizarTorneo() {
             const contenedor = document.getElementById('contenedorGrupos');
             contenedor.innerHTML = '';
 
@@ -142,21 +256,21 @@
                 let html = `<div class="grupo"><h3>${grupo.nombre}</h3>`;
                 
                 // Tabla de posiciones
-                html += `<table class="tabla-posiciones">
+                html += `<table class="tabla-posiciones" style="margin-bottom:20px;">
                     <tr><th>Jugador</th><th>Pts</th><th>Car</th></tr>`;
                 grupo.participantes.forEach(p => {
                     html += `<tr><td>${p.nombre}</td><td>${p.puntos}</td><td>${p.carambolas}</td></tr>`;
                 });
-                html += `</table><h4>Enfrentamientos:</h4>`;
+                html += `</table>`;
 
-                // Mesas de billar (Partidos)
+                // Mesas de billar con partidos
                 grupo.partidos.forEach((partido, index) => {
                     html += `
-                    <div class="mesa-billar" id="${grupo.nombre}-P${index}">
+                    <div class="mesa-billar">
                         <div class="jugador">${partido.j1.nombre} <span class="badge ${partido.j1.claseColor}">${partido.j1.meta}</span></div>
                         <div class="vs">VS</div>
                         <div class="jugador">${partido.j2.nombre} <span class="badge ${partido.j2.claseColor}">${partido.j2.meta}</span></div>
-                        <div class="marcador">- : -</div>
+                        <div class="marcador">0 - 0</div>
                     </div>`;
                 });
 
