@@ -1,105 +1,213 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Torneo de Billar 3 Bandas</title>
+    <title>Torneo de Billar 3 Bandas Pro</title>
+    <!-- Fuente moderna y profesional -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        /* Estilos Generales y Tema Oscuro (Billar) */
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #1e272e; color: #d2dae2; margin: 0; padding: 0; }
-        h1, h2, h3 { text-align: center; color: #0fb9b1; }
+        /* ==========================================================================
+           TEMA GLOBAL Y FONDOS
+           ========================================================================== */
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            /* Fondo de salón de billar oscuro con capa para oscurecer y mejorar lectura */
+            background: linear-gradient(rgba(10, 15, 20, 0.85), rgba(10, 15, 20, 0.95)), 
+                        url('https://images.unsplash.com/photo-1599566219227-2efe0c9b7f5f?q=80&w=2000&auto=format&fit=crop') no-repeat center center fixed;
+            background-size: cover;
+            color: #ecf0f1; 
+            margin: 0; 
+            padding: 0; 
+            min-height: 100vh;
+        }
         
-        /* Navegación (Pestañas) */
-        .navbar { background-color: #000; padding: 15px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); margin-bottom: 20px; }
-        .tab-btn { background-color: #2f3640; color: white; border: 2px solid #0fb9b1; padding: 10px 20px; font-size: 16px; font-weight: bold; cursor: pointer; border-radius: 5px; margin: 0 10px; transition: 0.3s; }
-        .tab-btn.active, .tab-btn:hover { background-color: #0fb9b1; color: #000; }
+        h1, h2, h3 { text-align: center; color: #00d8d6; text-transform: uppercase; letter-spacing: 2px; }
+        
+        /* ==========================================================================
+           NAVEGACIÓN (PESTAÑAS)
+           ========================================================================== */
+        .navbar { 
+            background: rgba(0, 0, 0, 0.7); 
+            backdrop-filter: blur(10px);
+            padding: 20px; 
+            text-align: center; 
+            box-shadow: 0 4px 15px rgba(0,d8,d6,0.2); 
+            margin-bottom: 30px; 
+            border-bottom: 1px solid rgba(0, 216, 214, 0.3);
+        }
+        .tab-btn { 
+            background-color: transparent; 
+            color: #ecf0f1; 
+            border: 2px solid #00d8d6; 
+            padding: 12px 25px; 
+            font-size: 16px; 
+            font-weight: 600; 
+            cursor: pointer; 
+            border-radius: 30px; 
+            margin: 0 10px; 
+            transition: all 0.3s ease; 
+        }
+        .tab-btn.activa, .tab-btn:hover { 
+            background-color: #00d8d6; 
+            color: #1e272e; 
+            box-shadow: 0 0 15px rgba(0, 216, 214, 0.6);
+        }
 
-        /* Contenedores de las Secciones */
-        .seccion { display: none; padding: 20px; max-width: 900px; margin: 0 auto; }
+        /* ==========================================================================
+           CONTENEDORES PRINCIPALES (Efecto Cristal / Glassmorphism)
+           ========================================================================== */
+        .seccion { display: none; padding: 20px; max-width: 1000px; margin: 0 auto; animation: fadeIn 0.5s ease-in-out; }
         .seccion.activa { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* Estilos de Formularios y Tablas (Inscripción) */
-        .card { background: #2f3640; padding: 25px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); margin-bottom: 20px; }
-        .form-group { margin-bottom: 15px; }
-        label { display: block; font-weight: bold; margin-bottom: 5px; color: #d2dae2; }
-        input, select { width: 100%; padding: 12px; border: 1px solid #555; background-color: #1e272e; color: white; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
-        button.btn-accion { width: 100%; padding: 12px; background-color: #20bf6b; color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        button.btn-accion:hover { background-color: #26de81; color: #000; }
-        
-        table { width: 100%; border-collapse: collapse; margin-top: 15px; background-color: #1e272e; border-radius: 5px; overflow: hidden; }
-        th, td { text-align: left; padding: 12px; border-bottom: 1px solid #444; }
-        th { background-color: #0fb9b1; color: #000; font-weight: bold; }
-        
-        .badge { padding: 5px 10px; border-radius: 12px; font-size: 13px; font-weight: bold; color: white; }
-        .bg-master { background-color: #e74c3c; }
-        .bg-intermedio { background-color: #f39c12; }
-        .bg-amateur { background-color: #3498db; }
+        .card { 
+            background: rgba(30, 39, 46, 0.75); 
+            backdrop-filter: blur(15px);
+            padding: 35px; 
+            border-radius: 15px; 
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+            margin-bottom: 30px; 
+        }
 
-        /* Estilos del Torneo y Mesas de Billar */
-        .controls { text-align: center; margin-bottom: 30px; }
-        .btn-sorteo { background-color: #f39c12; color: #000; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; margin-right: 10px; transition: 0.3s; }
-        .btn-sorteo:hover { background-color: #f1c40f; transform: scale(1.05); }
-        .btn-simular { background-color: #e74c3c; color: white; border: none; padding: 12px 24px; font-size: 16px; font-weight: bold; border-radius: 5px; cursor: pointer; display: none; transition: 0.3s; }
-
-        .fase-grupos { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; }
-        .grupo { background-color: #2f3640; border: 2px solid #0fb9b1; border-radius: 10px; padding: 15px; width: 320px; }
-        .grupo h3 { margin-top: 0; color: #f1c40f; border-bottom: 1px solid #555; padding-bottom: 10px; }
-        .tabla-posiciones th { background-color: transparent; color: #d2dae2; border-bottom: 2px solid #555; }
+        /* ==========================================================================
+           FORMULARIOS Y BOTONES
+           ========================================================================== */
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; color: #00d8d6; font-size: 14px; text-transform: uppercase; }
+        input, select { 
+            width: 100%; padding: 15px; border: 1px solid rgba(255,255,255,0.2); 
+            background-color: rgba(0,0,0,0.5); color: white; border-radius: 8px; 
+            box-sizing: border-box; font-size: 16px; transition: border 0.3s;
+            font-family: 'Montserrat', sans-serif;
+        }
+        input:focus, select:focus { outline: none; border-color: #00d8d6; box-shadow: 0 0 10px rgba(0,216,214,0.3); }
         
+        button.btn-accion { 
+            width: 100%; padding: 15px; 
+            background: linear-gradient(45deg, #05c46b, #0be881);
+            color: #000; border: none; border-radius: 8px; font-size: 18px; 
+            font-weight: 800; text-transform: uppercase; cursor: pointer; 
+            transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(11, 232, 129, 0.4);
+        }
+        button.btn-accion:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(11, 232, 129, 0.6); }
+
+        /* ==========================================================================
+           TABLAS
+           ========================================================================== */
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; border-radius: 10px; overflow: hidden; background: rgba(0,0,0,0.4); }
+        th, td { text-align: left; padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        th { background-color: rgba(0, 216, 214, 0.2); color: #00d8d6; text-transform: uppercase; font-size: 14px; }
+        tr:hover td { background-color: rgba(255,255,255,0.05); }
+
+        .badge { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 1px; }
+        .bg-master { background: linear-gradient(45deg, #ff3f34, #ff5e57); box-shadow: 0 2px 5px rgba(255,63,52,0.5); }
+        .bg-intermedio { background: linear-gradient(45deg, #ffa801, #ffc048); box-shadow: 0 2px 5px rgba(255,168,1,0.5); }
+        .bg-amateur { background: linear-gradient(45deg, #0fbcf9, #4bcffa); box-shadow: 0 2px 5px rgba(15,188,249,0.5); }
+
+        /* ==========================================================================
+           TORNEO, GRUPOS Y MESAS DE BILLAR REALISTAS
+           ========================================================================== */
+        .controls { text-align: center; margin-bottom: 40px; }
+        .btn-sorteo { background: linear-gradient(45deg, #ffa801, #ffd32a); color: #000; border: none; padding: 15px 30px; font-size: 16px; font-weight: 800; text-transform: uppercase; border-radius: 30px; cursor: pointer; transition: 0.3s; box-shadow: 0 5px 15px rgba(255, 168, 1, 0.4); }
+        .btn-sorteo:hover { transform: scale(1.05); }
+        .btn-simular { background: linear-gradient(45deg, #ff3f34, #ff5e57); color: white; border: none; padding: 15px 30px; font-size: 16px; font-weight: 800; text-transform: uppercase; border-radius: 30px; cursor: pointer; display: none; transition: 0.3s; box-shadow: 0 5px 15px rgba(255, 63, 52, 0.4); }
+        .btn-simular:hover { transform: scale(1.05); }
+
+        .fase-grupos { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 30px; }
+        
+        .grupo { 
+            background: rgba(20, 25, 30, 0.8); 
+            border: 1px solid rgba(0, 216, 214, 0.3); 
+            border-top: 4px solid #00d8d6;
+            border-radius: 12px; 
+            padding: 20px; 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        .grupo h3 { margin-top: 0; color: #ffd32a; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 15px; font-size: 22px; }
+        .tabla-posiciones th { background-color: transparent; border-bottom: 2px solid rgba(255,255,255,0.2); }
+        
+        /* Efecto 3D para la mesa de billar */
         .mesa-billar { 
-            background-color: #006266; 
-            border: 8px solid #8b4513; 
-            border-radius: 8px; 
+            background: 
+                url('https://www.transparenttextures.com/patterns/felt.png'), /* Textura de paño */
+                linear-gradient(to bottom, #006266, #004d40); /* Color verde oscuro */
+            border: 14px solid #5c2c16; /* Borde simulando madera */
+            border-radius: 10px; 
             padding: 15px; 
-            margin-bottom: 10px; 
+            margin-bottom: 15px; 
             position: relative;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+            box-shadow: 
+                0 15px 25px rgba(0,0,0,0.6), /* Sombra exterior */
+                inset 0 0 25px rgba(0,0,0,0.8), /* Sombra interior (profundidad) */
+                inset 0 0 5px rgba(0,0,0,0.5);
             text-align: center;
         }
-        .mesa-billar::before { content: ''; position: absolute; top: 8px; left: 12px; width: 10px; height: 10px; background: white; border-radius: 50%; box-shadow: 25px 8px 0 #f1c40f, 15px 25px 0 white; }
-        .jugador { font-weight: bold; font-size: 15px; margin: 5px 0; background: rgba(0,0,0,0.4); padding: 8px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; }
-        .vs { font-size: 13px; color: #ffcccc; font-weight: bold; margin: 5px 0; }
-        .marcador { color: #f1c40f; font-size: 18px; font-weight: bold; margin-top: 5px; letter-spacing: 2px; }
+        
+        /* Bolas de billar decorativas en la mesa */
+        .mesa-billar::before { 
+            content: ''; position: absolute; top: 12px; left: 15px; width: 12px; height: 12px; 
+            background: radial-gradient(circle at 30% 30%, #fff, #ddd); 
+            border-radius: 50%; 
+            box-shadow: 
+                30px 10px 0 #f1c40f, /* Bola amarilla */
+                15px 30px 0 #e74c3c; /* Bola roja */
+        }
+        
+        .jugador { 
+            font-weight: 600; font-size: 15px; margin: 8px 0; 
+            background: rgba(0,0,0,0.6); padding: 10px; 
+            border-radius: 6px; display: flex; justify-content: space-between; align-items: center; 
+            border-left: 3px solid #00d8d6;
+        }
+        .vs { font-size: 14px; color: #ff5e57; font-weight: 800; margin: 5px 0; letter-spacing: 1px; }
+        .marcador { 
+            color: #ffd32a; font-size: 22px; font-weight: 800; 
+            margin-top: 10px; letter-spacing: 3px; 
+            text-shadow: 0 2px 5px rgba(0,0,0,0.8);
+        }
     </style>
 </head>
 <body>
 
-    <!-- Navegación Superior -->
+    <!-- NAVEGACIÓN -->
     <div class="navbar">
-        <button class="tab-btn activa" onclick="cambiarPestana('inscripcion', this)">📝 Fase de Inscripción</button>
-        <button class="tab-btn" onclick="cambiarPestana('torneo', this)">🎱 Sorteo y Torneo</button>
+        <button class="tab-btn activa" onclick="cambiarPestana('inscripcion', this)">📝 Registro Oficial</button>
+        <button class="tab-btn" onclick="cambiarPestana('torneo', this)">🎱 Fase de Grupos</button>
     </div>
 
     <!-- SECCIÓN 1: INSCRIPCIÓN -->
     <div id="seccion-inscripcion" class="seccion activa">
-        <h1>Registro de Jugadores</h1>
+        <h1>Inscripción al Torneo</h1>
         <div class="card">
             <form id="registroForm">
                 <div class="form-group">
-                    <label for="nombre">Nombre del Jugador</label>
-                    <input type="text" id="nombre" placeholder="Ingresa el nombre del participante" required>
+                    <label for="nombre">Nombre Completo del Jugador</label>
+                    <input type="text" id="nombre" placeholder="Ej: Torbjörn Blomdahl" required>
                 </div>
                 <div class="form-group">
-                    <label for="categoria">Categoría</label>
+                    <label for="categoria">Categoría Asignada</label>
                     <select id="categoria" required>
-                        <option value="">Selecciona una categoría...</option>
-                        <option value="Master">Master</option>
-                        <option value="Intermedio">Intermedio</option>
-                        <option value="Amateur">Amateur</option>
+                        <option value="">Selecciona el nivel...</option>
+                        <option value="Master">⭐ Master (Meta: 25)</option>
+                        <option value="Intermedio">⚡ Intermedio (Meta: 20)</option>
+                        <option value="Amateur">🎯 Amateur (Meta: 12)</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-accion" id="btnGuardar">Inscribir Jugador</button>
+                <button type="submit" class="btn-accion" id="btnGuardar">Registrar Competidor</button>
             </form>
         </div>
 
         <div class="card">
-            <h2>Lista de Inscritos (Total: <span id="contador">0</span>)</h2>
+            <h2 style="color: #ecf0f1;">Participantes Confirmados (<span id="contador" style="color: #00d8d6;">0</span>)</h2>
             <table>
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Categoría</th>
-                        <th>Meta (Carambolas)</th>
+                        <th>Jugador</th>
+                        <th>Nivel</th>
+                        <th>Objetivo</th>
                     </tr>
                 </thead>
                 <tbody id="listaJugadores">
@@ -109,24 +217,27 @@
         </div>
     </div>
 
-    <!-- SECCIÓN 2: TORNEO Y SORTEO -->
+    <!-- SECCIÓN 2: TORNEO -->
     <div id="seccion-torneo" class="seccion">
-        <h1>Fase de Grupos</h1>
+        <h1>Cuadro del Torneo</h1>
         <div class="controls">
-            <button class="btn-sorteo" id="btnSorteo">1. Realizar Sorteo Aleatorio</button>
-            <button class="btn-simular" id="btnSimular">2. Simular Partidas</button>
+            <button class="btn-sorteo" id="btnSorteo">🎲 Generar Sorteo Oficial</button>
+            <button class="btn-simular" id="btnSimular">▶ Iniciar Simulación de Partidas</button>
         </div>
         <div class="fase-grupos" id="contenedorGrupos">
-            <p style="text-align: center; color: #888; width: 100%;">Los grupos aparecerán aquí después del sorteo.</p>
+            <div class="card" style="width: 100%; text-align: center; border: none; background: rgba(0,0,0,0.4);">
+                <h3 style="color: #888;">Pendiente de Sorteo</h3>
+                <p style="color: #aaa;">Registra al menos 4 jugadores para organizar los cuadrangulares.</p>
+            </div>
         </div>
     </div>
 
-    <!-- Scripts (Navegación, Firebase y Lógica) -->
+    <!-- Scripts (Lógica y Firebase) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
-        // Configuración exacta de Firebase
+        // Configuración de Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyB10yXxA6Oyvz-xDyJuX7RKj7QhNju85mo",
             authDomain: "mansioncarambola.firebaseapp.com",
@@ -140,7 +251,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Variables Globales
         const reglas = {
             "Master": { meta: 25, color: "bg-master" },
             "Intermedio": { meta: 20, color: "bg-intermedio" },
@@ -149,20 +259,19 @@
         let inscritosGlobal = [];
         let grupos = [];
 
-        // --- LÓGICA DE PESTAÑAS (Navegación) ---
+        // Navegación
         window.cambiarPestana = function(idSeccion, botonRef) {
             document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('activa'));
-            
             document.getElementById(`seccion-${idSeccion}`).classList.add('activa');
             botonRef.classList.add('activa');
         };
 
-        // --- LÓGICA DE INSCRIPCIÓN Y LECTURA EN TIEMPO REAL ---
+        // Guardar Jugador
         document.getElementById('registroForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar');
-            btn.disabled = true; btn.textContent = 'Guardando...';
+            btn.disabled = true; btn.textContent = 'PROCESANDO...';
 
             const nombre = document.getElementById('nombre').value;
             const categoria = document.getElementById('categoria').value;
@@ -177,42 +286,40 @@
                 });
                 this.reset();
             } catch (error) {
-                alert("Error al guardar."); console.error(error);
+                alert("Error de conexión. Intenta de nuevo."); console.error(error);
             } finally {
-                btn.disabled = false; btn.textContent = 'Inscribir Jugador';
+                btn.disabled = false; btn.textContent = 'Registrar Competidor';
             }
         });
 
-        // Escuchar base de datos en tiempo real y actualizar tabla global
+        // Leer Jugadores en tiempo real
         const q = query(collection(db, "jugadores"), orderBy("fechaRegistro", "desc"));
         onSnapshot(q, (snapshot) => {
             const tbody = document.getElementById('listaJugadores');
             tbody.innerHTML = '';
-            inscritosGlobal = []; // Limpiar arreglo global para actualizarlo
+            inscritosGlobal = []; 
 
             snapshot.forEach((doc) => {
                 const data = doc.data();
-                // Añadir propiedades para el torneo (puntos y carambolas en 0 al iniciar)
                 inscritosGlobal.push({ id: doc.id, ...data, puntos: 0, carambolas: 0 });
                 
                 tbody.innerHTML += `
                     <tr>
-                        <td>${data.nombre}</td>
+                        <td><strong>${data.nombre}</strong></td>
                         <td><span class="badge ${data.claseColor}">${data.categoria}</span></td>
-                        <td><strong>${data.meta}</strong></td>
+                        <td>${data.meta}</td>
                     </tr>`;
             });
             document.getElementById('contador').textContent = inscritosGlobal.length;
         });
 
-        // --- LÓGICA DEL SORTEO ---
+        // Sorteo Aleatorio
         document.getElementById('btnSorteo').addEventListener('click', () => {
             if (inscritosGlobal.length < 4) {
-                alert("Necesitas al menos 4 jugadores inscritos para armar los grupos.");
+                alert("Atención: Necesitas al menos 4 jugadores registrados.");
                 return;
             }
 
-            // Algoritmo para mezclar aleatoriamente
             let mezclados = [...inscritosGlobal];
             for (let i = mezclados.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -220,11 +327,10 @@
             }
 
             grupos = [];
-            // Crear los grupos de 4 en 4
             for (let i = 0; i < mezclados.length; i += 4) {
                 let participantesGrupo = mezclados.slice(i, i + 4);
                 grupos.push({
-                    nombre: `Grupo ${String.fromCharCode(65 + (i/4))}`,
+                    nombre: `GRUPO ${String.fromCharCode(65 + (i/4))}`,
                     participantes: participantesGrupo,
                     partidos: generarEnfrentamientos(participantesGrupo)
                 });
@@ -240,9 +346,9 @@
             if(p.length >= 3) partidos.push({ j1: p[0], j2: p[2] }, { j1: p[1], j2: p[2] });
             if(p.length === 4) {
                 partidos = [
-                    { j1: p[0], j2: p[1] }, { j1: p[2], j2: p[3] }, // Ronda 1
-                    { j1: p[0], j2: p[2] }, { j1: p[1], j2: p[3] }, // Ronda 2
-                    { j1: p[0], j2: p[3] }, { j1: p[1], j2: p[2] }  // Ronda 3
+                    { j1: p[0], j2: p[1] }, { j1: p[2], j2: p[3] }, 
+                    { j1: p[0], j2: p[2] }, { j1: p[1], j2: p[3] }, 
+                    { j1: p[0], j2: p[3] }, { j1: p[1], j2: p[2] }  
                 ];
             }
             return partidos;
@@ -255,16 +361,14 @@
             grupos.forEach(grupo => {
                 let html = `<div class="grupo"><h3>${grupo.nombre}</h3>`;
                 
-                // Tabla de posiciones
-                html += `<table class="tabla-posiciones" style="margin-bottom:20px;">
+                html += `<table class="tabla-posiciones" style="margin-bottom:25px;">
                     <tr><th>Jugador</th><th>Pts</th><th>Car</th></tr>`;
                 grupo.participantes.forEach(p => {
-                    html += `<tr><td>${p.nombre}</td><td>${p.puntos}</td><td>${p.carambolas}</td></tr>`;
+                    html += `<tr><td><strong>${p.nombre}</strong></td><td>${p.puntos}</td><td>${p.carambolas}</td></tr>`;
                 });
                 html += `</table>`;
 
-                // Mesas de billar con partidos
-                grupo.partidos.forEach((partido, index) => {
+                grupo.partidos.forEach((partido) => {
                     html += `
                     <div class="mesa-billar">
                         <div class="jugador">${partido.j1.nombre} <span class="badge ${partido.j1.claseColor}">${partido.j1.meta}</span></div>
