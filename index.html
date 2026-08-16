@@ -26,6 +26,11 @@
         label { display: block; font-weight: 600; margin-bottom: 5px; color: #00d8d6; font-size: 13px; text-transform: uppercase; }
         input, select { width: 100%; padding: 12px; border: 1px solid rgba(255,255,255,0.2); background-color: rgba(0,0,0,0.5); color: white; border-radius: 8px; box-sizing: border-box; font-size: 15px; font-family: 'Montserrat', sans-serif; }
         input[type="time"] { cursor: pointer; }
+        
+        .checkbox-container { display: flex; align-items: center; background: rgba(0,0,0,0.4); padding: 15px; border-radius: 8px; border: 1px solid rgba(0,216,214,0.3); cursor: pointer; }
+        .checkbox-container input { width: auto; margin-right: 15px; transform: scale(1.5); cursor: pointer; }
+        .checkbox-container label { margin-bottom: 0; font-size: 15px; color: #0be881; cursor: pointer; }
+
         button.btn-accion { width: 100%; padding: 15px; background: linear-gradient(45deg, #05c46b, #0be881); color: #000; border: none; border-radius: 8px; font-size: 16px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; }
         button.btn-accion:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(11, 232, 129, 0.6); }
 
@@ -90,14 +95,21 @@
                         <option value="Amateur">🎯 Amateur (Meta: 12)</option>
                     </select>
                 </div>
-                <button type="submit" class="btn-accion" id="btnGuardar">Registrar y Crear Avatar Automático</button>
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="pagado">
+                        <label for="pagado">Inscripción Pagada (Al día)</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn-accion" id="btnGuardar">Registrar Jugador</button>
             </form>
         </div>
 
         <div class="card">
-            <h2>Participantes (<span id="contador" style="color: #00d8d6;">0</span>)</h2>
+            <h2>Participantes Registrados (<span id="contador" style="color: #00d8d6;">0</span>)</h2>
+            <p style="text-align: center; color: #aaa; font-size: 14px;">Aptos para el sorteo: <strong id="contadorAptos" style="color:#0be881;">0</strong></p>
             <table>
-                <thead><tr><th>Jugador</th><th>Nivel</th><th>Meta</th></tr></thead>
+                <thead><tr><th>Jugador</th><th>Nivel</th><th>Meta</th><th style="text-align: center;">Estado</th></tr></thead>
                 <tbody id="listaJugadores"></tbody>
             </table>
         </div>
@@ -111,7 +123,7 @@
                 <label>Hora de Inicio (Grupos)</label>
                 <input type="time" id="horaInicio" value="18:00">
             </div>
-            <button class="btn-sorteo" id="btnSorteo">🎲 Generar Sorteo e Iniciar Torneo</button>
+            <button class="btn-sorteo" id="btnSorteo">🎲 Generar Sorteo (Solo Admin)</button>
             <button class="btn-terminar" id="btnTerminarTorneo" onclick="terminarTorneoOficial()">🛑 Finalizar Torneo Actual</button>
         </div>
         <div class="fase-grupos" id="contenedorGrupos"></div>
@@ -173,40 +185,33 @@
                         window.grupos = data.grupos || [];
                         window.faseEliminacion = data.faseEliminacion || { rondas: [], rondaActiva: 0 };
                         
-                        // BLOQUEAR CONTROLES PARA EVITAR BORRADOS ACCIDENTALES
                         document.getElementById('btnSorteo').style.display = 'none';
                         document.getElementById('divHoraInicio').style.display = 'none';
                         document.getElementById('btnTerminarTorneo').style.display = 'inline-block';
                         
-                        // RENDERIZAR DATOS GUARDADOS
                         if (window.grupos.length > 0) { 
                             renderizarGrupos(); 
-                            // Solo mostrar botón de finales si no se han generado aún
                             if(window.faseEliminacion.rondas.length === 0) {
                                 document.getElementById('btnGenerarFinales').style.display = 'block';
                             } else {
                                 document.getElementById('btnGenerarFinales').style.display = 'none';
                             }
                         }
-                        if (window.faseEliminacion.rondas.length > 0) { 
-                            renderizarFaseFinal(); 
-                        }
+                        if (window.faseEliminacion.rondas.length > 0) { renderizarFaseFinal(); }
                     }
                 }
             } catch (error) { console.error("Error al cargar torneo:", error); }
         }
-        
-        // Ejecutar carga de estado al entrar a la página
         cargarEstadoTorneo();
 
         // Botón de Reset Oficial
         window.terminarTorneoOficial = async function() {
-            if(confirm("¡ATENCIÓN! ¿Estás completamente seguro de finalizar y borrar el torneo actual? Esto limpiará los grupos y eliminatorias para iniciar un nuevo evento.")) {
+            if(confirm("¡ATENCIÓN! ¿Estás completamente seguro de finalizar y borrar el torneo actual? Esto limpiará los grupos y eliminatorias.")) {
                 window.torneoActivo = false;
                 window.grupos = [];
                 window.faseEliminacion = { rondas: [], rondaActiva: 0 };
                 await guardarEstadoTorneo();
-                location.reload(); // Recargar página para restaurar la interfaz
+                location.reload(); 
             }
         };
 
@@ -226,34 +231,44 @@
 
             const nombre = document.getElementById('nombre').value;
             const categoria = document.getElementById('categoria').value;
+            const pagado = document.getElementById('pagado').checked; // Toma el estado del checkbox
             const semilla = encodeURIComponent(nombre + Math.random());
             const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${semilla}`;
 
             try {
                 await addDoc(collection(db, "jugadores"), {
-                    nombre, categoria, foto: avatarUrl,
+                    nombre, categoria, pagado, foto: avatarUrl,
                     meta: reglas[categoria].meta, claseColor: reglas[categoria].color,
                     fechaRegistro: new Date()
                 });
                 this.reset();
             } catch (error) { alert("Error al guardar."); } 
-            finally { btn.disabled = false; btn.textContent = 'Registrar y Crear Avatar Automático'; }
+            finally { btn.disabled = false; btn.textContent = 'Registrar Jugador'; }
         });
 
         // Leer datos
         onSnapshot(query(collection(db, "jugadores"), orderBy("fechaRegistro", "desc")), (snapshot) => {
             const tbody = document.getElementById('listaJugadores');
             tbody.innerHTML = ''; window.inscritosGlobal = []; 
+            let aptosParaSorteo = 0;
+
             snapshot.forEach((doc) => {
                 const data = doc.data();
                 window.inscritosGlobal.push({ id: doc.id, ...data });
+                
+                if (data.pagado) aptosParaSorteo++;
+                
+                const iconoEstado = data.pagado ? '<span style="color: #0be881; font-size: 20px;" title="Inscripción al día">✅</span>' : '<span style="color: #ff3f34; font-size: 20px;" title="Pendiente de pago">❌</span>';
+
                 tbody.innerHTML += `<tr>
                     <td><div style="display:flex; align-items:center;"><img src="${data.foto}" class="avatar"> <strong>${data.nombre}</strong></div></td>
                     <td><span class="badge ${data.claseColor}">${data.categoria}</span></td>
                     <td>${data.meta}</td>
+                    <td style="text-align: center;">${iconoEstado}</td>
                 </tr>`;
             });
             document.getElementById('contador').textContent = window.inscritosGlobal.length;
+            document.getElementById('contadorAptos').textContent = aptosParaSorteo;
         });
 
         function calcularHora(horaInicio, indice) {
@@ -264,13 +279,26 @@
 
         // --- FASE DE GRUPOS ---
         document.getElementById('btnSorteo').addEventListener('click', async () => {
-            if (window.inscritosGlobal.length < 4) { alert("Mínimo 4 jugadores."); return; }
-            if (confirm("Al generar el sorteo, la fase de grupos quedará bloqueada y activa en el sistema. ¿Continuar?")) {
-                
-                window.torneoActivo = true; // Bloqueo activado
+            // VERIFICACIÓN DE CONTRASEÑA ADMINISTRATIVA
+            const password = prompt("Seguridad del Sistema:\nIngrese la contraseña de administrador para generar el sorteo:");
+            if (password !== "2026*") {
+                alert("❌ Contraseña incorrecta. Solo los administradores pueden generar el sorteo.");
+                return;
+            }
+
+            // FILTRAR SOLO A LOS QUE ESTÁN AL DÍA
+            const jugadoresAptos = window.inscritosGlobal.filter(jugador => jugador.pagado === true);
+
+            if (jugadoresAptos.length < 4) { 
+                alert(`Mínimo 4 jugadores con inscripción pagada (al día) para armar grupos.\nActualmente solo hay ${jugadoresAptos.length} aptos.`); 
+                return; 
+            }
+            
+            if (confirm(`Se realizará el sorteo con ${jugadoresAptos.length} jugadores aptos. El torneo quedará bloqueado. ¿Continuar?`)) {
+                window.torneoActivo = true; 
                 
                 const horaInicio = document.getElementById('horaInicio').value;
-                let mezclados = [...window.inscritosGlobal].sort(() => Math.random() - 0.5);
+                let mezclados = [...jugadoresAptos].sort(() => Math.random() - 0.5);
                 window.grupos = [];
                 window.faseEliminacion = { rondas: [], rondaActiva: 0 };
 
@@ -364,7 +392,7 @@
             });
         }
 
-        // --- LÓGICA DE FASE FINAL (MUERTE SÚBITA CON HORARIOS) ---
+        // --- LÓGICA DE FASE FINAL ---
         window.generarFaseFinal = async function() {
             let clasificados = [];
             window.grupos.forEach(grupo => {
