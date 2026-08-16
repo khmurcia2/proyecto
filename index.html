@@ -243,17 +243,22 @@
             botonRef.classList.add('activa');
         };
 
-        // --- SISTEMA DE GUARDADO PERSISTENTE ---
+        // --- SISTEMA DE GUARDADO BLINDADO CONTRA ERRORES ---
         async function guardarEstadoTorneo() {
             try { 
-                await setDoc(doc(db, "torneos", "actual"), { 
+                // LIMPIEZA PROFUNDA: Esta línea mágica previene que Firebase cancele el guardado si falta un dato
+                const datosLimpios = JSON.parse(JSON.stringify({ 
                     activo: window.torneoActivo, 
                     grupos: window.grupos, 
                     faseEliminacion: window.faseEliminacion, 
                     premiacion: window.premiacion, 
                     ultimaHora: window.ultimaHoraGlobal
-                }); 
-            } catch (error) { console.error("Error al guardar estado de Firebase:", error); }
+                }));
+                
+                await setDoc(doc(db, "torneos", "actual"), datosLimpios); 
+            } catch (error) { 
+                console.error("Error al guardar estado en Firebase:", error); 
+            }
         }
 
         async function cargarEstadoTorneo() {
@@ -402,7 +407,7 @@
             const jugadoresAptos = window.inscritosGlobal.filter(j => j.pagado === true);
             if (jugadoresAptos.length < 4) { alert(`Mínimo 4 jugadores pagados.`); return; }
             
-            if (confirm(`Torneo con ${jugadoresAptos.length} jugadores. Se asignarán 5 mesas en paralelo. ¿Continuar?`)) {
+            if (confirm(`Torneo con ${jugadoresAptos.length} jugadores. El sistema asignará 5 mesas en paralelo. ¿Continuar?`)) {
                 window.torneoActivo = true; 
                 window.premiacion.primero = document.getElementById('inPremio1').value || "Trofeo y Efectivo";
                 window.premiacion.segundo = document.getElementById('inPremio2').value || "Efectivo";
@@ -542,10 +547,14 @@
             if(s1 === s2) { alert("Sin empates. Determine un ganador."); return; }
 
             let partido = window.faseEliminacion.rondas[rIdx][pIdx];
-            partido.s1 = s1; partido.s2 = s2; partido.jugado = true;
+            partido.s1 = s1;
+            partido.s2 = s2;
+            partido.jugado = true;
             partido.ganador = (s1 > s2) ? partido.j1 : partido.j2;
 
-            verificarAvanceRonda(rIdx); renderizarFaseFinal(); await guardarEstadoTorneo(); 
+            verificarAvanceRonda(rIdx); 
+            renderizarFaseFinal(); 
+            await guardarEstadoTorneo(); 
         };
 
         function verificarAvanceRonda(rIdx) {
@@ -563,9 +572,8 @@
                 for(let i=0; i < rondaActual.length; i+=2) {
                     let lote = Math.floor((i/2) / 5);
                     
-                    // Aseguramos que siempre haya objeto, si alguien pasó sin jugar
                     let objJ1 = rondaActual[i]?.ganador || null;
-                    let objJ2 = rondaActual[i+1]?.ganador || { nombre: 'LIBRE (Avanza)', foto: 'https://api.dicebear.com/7.x/adventurer/svg?seed=libre', meta: '0', claseColor: 'bg-amateur' };
+                    let objJ2 = rondaActual[i+1]?.ganador || null;
 
                     siguienteRonda.push({
                         j1: objJ1, j2: objJ2,
