@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Torneo de Billar 3 Bandas Pro</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         /* TEMA GLOBAL */
         body { font-family: 'Montserrat', sans-serif; background: linear-gradient(rgba(10, 15, 20, 0.85), rgba(10, 15, 20, 0.95)), url('https://images.unsplash.com/photo-1599566219227-2efe0c9b7f5f?q=80&w=2000&auto=format&fit=crop') no-repeat center center fixed; background-size: cover; color: #ecf0f1; margin: 0; padding: 0; min-height: 100vh; }
@@ -81,7 +81,15 @@
         .caja-premios h3 { color: #fff; margin: 5px 0; font-size: 20px; }
         .caja-premios span { color: #0be881; font-weight: 800; }
         
-        /* ESTADO CAMPEÓN */
+        /* PANTALLA DE SORTEO EN VIVO (CINE) */
+        #cineSorteo { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #1e272e 0%, #000 100%); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; color: white; }
+        .cine-mesa-titulo { font-size: 45px; color: #ffd32a; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 20px rgba(255, 211, 42, 0.5); opacity: 0; transform: translateY(-30px); transition: all 1s; }
+        .cine-hora { font-size: 24px; color: #00d8d6; margin-bottom: 40px; opacity: 0; transition: all 1s; }
+        .cine-jugador { display: flex; align-items: center; gap: 30px; font-size: 40px; font-weight: 800; background: rgba(0,0,0,0.6); padding: 20px 40px; border-radius: 15px; border-left: 5px solid #00d8d6; opacity: 0; transform: translateX(-50px); transition: all 1s; width: 600px; }
+        .cine-vs { font-size: 50px; color: #ff5e57; font-weight: 900; margin: 20px 0; opacity: 0; text-shadow: 0 0 20px rgba(255, 94, 87, 0.6); transition: all 1s; }
+        .cine-jugador-2 { transform: translateX(50px); border-left: none; border-right: 5px solid #0be881; flex-direction: row-reverse; }
+        .cine-avatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+
         .campeon-box { background: linear-gradient(45deg, #05c46b, #0be881); padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center; color: #000; font-size: 24px; font-weight: 900; box-shadow: 0 0 25px rgba(11,232,129,0.8); animation: latido 1.5s infinite; }
         @keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
     </style>
@@ -92,6 +100,24 @@
         <button class="tab-btn activa" id="tab-inscripcion" onclick="cambiarPestana('inscripcion', this)">📝 Registro Oficial</button>
         <button class="tab-btn" id="tab-torneo" onclick="cambiarPestana('torneo', this)">🎱 Fase de Grupos</button>
         <button class="tab-btn" id="tab-finales" onclick="cambiarPestana('finales', this)">🏆 Gran Final</button>
+    </div>
+
+    <!-- PANTALLA CINE SORTEO EN VIVO -->
+    <div id="cineSorteo">
+        <div class="cine-mesa-titulo" id="cineMesa">MESA 1</div>
+        <div class="cine-hora" id="cineHora">🕒 18:00 PM</div>
+        
+        <div class="cine-jugador" id="cineJ1">
+            <img src="" class="cine-avatar" id="cineImg1">
+            <span id="cineNombre1">Jugador 1</span>
+        </div>
+        
+        <div class="cine-vs" id="cineVs">VS</div>
+        
+        <div class="cine-jugador cine-jugador-2" id="cineJ2">
+            <img src="" class="cine-avatar" id="cineImg2">
+            <span id="cineNombre2">Jugador 2</span>
+        </div>
     </div>
 
     <!-- MODAL DE EDICIÓN DE JUGADORES -->
@@ -235,18 +261,11 @@
         window.premiacion = { primero: "", segundo: "" };
         window.ultimaHoraGlobal = "18:00";
 
-        // --- NAVEGACIÓN ---
-        window.cambiarPestana = function(idSeccion, botonRef) {
-            document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('activa'));
-            document.getElementById(`seccion-${idSeccion}`).classList.add('activa');
-            botonRef.classList.add('activa');
-        };
-
         // --- SISTEMA DE GUARDADO BLINDADO CONTRA ERRORES ---
+        // Firebase prohíbe Arrays anidados. Al envolver los partidos en un objeto ({ partidos: [...] }),
+        // Firebase lo acepta sin rechazar el guardado.
         async function guardarEstadoTorneo() {
             try { 
-                // LIMPIEZA PROFUNDA: Esta línea mágica previene que Firebase cancele el guardado si falta un dato
                 const datosLimpios = JSON.parse(JSON.stringify({ 
                     activo: window.torneoActivo, 
                     grupos: window.grupos, 
@@ -254,11 +273,8 @@
                     premiacion: window.premiacion, 
                     ultimaHora: window.ultimaHoraGlobal
                 }));
-                
                 await setDoc(doc(db, "torneos", "actual"), datosLimpios); 
-            } catch (error) { 
-                console.error("Error al guardar estado en Firebase:", error); 
-            }
+            } catch (error) { console.error("Error al guardar estado en Firebase:", error); }
         }
 
         async function cargarEstadoTorneo() {
@@ -301,18 +317,19 @@
         // --- FINALIZAR TORNEO CON CLAVE ---
         window.terminarTorneoOficial = async function() {
             const password = prompt("Seguridad del Sistema:\nIngrese la contraseña de administrador para finalizar el torneo:");
-            if (password !== "2026*") {
-                alert("❌ Contraseña incorrecta. Operación cancelada.");
-                return;
-            }
-
+            if (password !== "2026*") { alert("❌ Contraseña incorrecta. Operación cancelada."); return; }
             if(confirm("¡ATENCIÓN! ¿Seguro que deseas finalizar el torneo? Esto limpiará el cuadro por completo para un nuevo evento.")) {
-                window.torneoActivo = false; 
-                window.grupos = []; 
-                window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
-                await guardarEstadoTorneo(); 
-                location.reload(); 
+                window.torneoActivo = false; window.grupos = []; window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
+                await guardarEstadoTorneo(); location.reload(); 
             }
+        };
+
+        // --- NAVEGACIÓN ---
+        window.cambiarPestana = function(idSeccion, botonRef) {
+            document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('activa'));
+            document.getElementById(`seccion-${idSeccion}`).classList.add('activa');
+            botonRef.classList.add('activa');
         };
 
         // --- MANEJO DE INSCRITOS Y EDICIÓN ---
@@ -340,9 +357,7 @@
             document.getElementById('modalEdicion').style.display = 'flex';
         };
 
-        window.cerrarModalEdicion = function() {
-            document.getElementById('modalEdicion').style.display = 'none';
-        };
+        window.cerrarModalEdicion = function() { document.getElementById('modalEdicion').style.display = 'none'; };
 
         document.getElementById('formEdicion').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -350,12 +365,8 @@
             const nombre = document.getElementById('editNombre').value;
             const categoria = document.getElementById('editCategoria').value;
             const pagado = document.getElementById('editPagado').checked;
-
             try {
-                await updateDoc(doc(db, "jugadores", id), {
-                    nombre: nombre, categoria: categoria, pagado: pagado,
-                    meta: reglas[categoria].meta, claseColor: reglas[categoria].color
-                });
+                await updateDoc(doc(db, "jugadores", id), { nombre, categoria, pagado, meta: reglas[categoria].meta, claseColor: reglas[categoria].color });
                 cerrarModalEdicion();
             } catch(error) { alert("Error al actualizar la información."); }
         });
@@ -382,7 +393,9 @@
             document.getElementById('contadorAptos').textContent = aptosParaSorteo;
         });
 
-        // --- FUNCIONES DE TIEMPO ---
+        // --- FUNCIONES DE TIEMPO Y ANIMACIÓN ---
+        const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+        
         function sumarMinutos(hora24, minutos) {
             if(!hora24) hora24 = "18:00";
             const [h, m] = hora24.split(':').map(Number);
@@ -397,17 +410,17 @@
             return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
         }
 
-        // --- SORTEO ---
+        // --- EL GRAN SORTEO EN VIVO (CINE MODE) ---
         document.getElementById('btnSorteo').addEventListener('click', async () => {
             if(window.torneoActivo) { alert("Ya hay un torneo en curso."); return; }
 
-            const password = prompt("Ingrese clave de administrador:");
+            const password = prompt("Ingrese clave de administrador para iniciar sorteo:");
             if (password !== "2026*") { alert("❌ Clave incorrecta."); return; }
 
             const jugadoresAptos = window.inscritosGlobal.filter(j => j.pagado === true);
             if (jugadoresAptos.length < 4) { alert(`Mínimo 4 jugadores pagados.`); return; }
             
-            if (confirm(`Torneo con ${jugadoresAptos.length} jugadores. El sistema asignará 5 mesas en paralelo. ¿Continuar?`)) {
+            if (confirm(`Se iniciará la transmisión en vivo del sorteo con ${jugadoresAptos.length} jugadores. ¿Todo listo en la pantalla principal?`)) {
                 window.torneoActivo = true; 
                 window.premiacion.primero = document.getElementById('inPremio1').value || "Trofeo y Efectivo";
                 window.premiacion.segundo = document.getElementById('inPremio2').value || "Efectivo";
@@ -417,6 +430,8 @@
                 window.grupos = []; window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
 
                 let globalIndex = 0;
+                let partidosParaAnimar = []; 
+
                 for (let i = 0; i < mezclados.length; i += 4) {
                     let p = mezclados.slice(i, i + 4).map(j => ({ ...j, pts: 0, car: 0, pj: 0 }));
                     let partidosGrupo = [];
@@ -434,6 +449,8 @@
                         let lote = Math.floor(globalIndex / 5); 
                         partido.horaInt = sumarMinutos(horaInicioStr, lote * 45); 
                         partido.mesa = (globalIndex % 5) + 1; 
+                        
+                        if(lote === 0) { partidosParaAnimar.push({ ...partido, nombreGrupo: `GRUPO ${String.fromCharCode(65 + (i/4))}` }); }
                         globalIndex++;
                     });
                     window.grupos.push({ nombre: `GRUPO ${String.fromCharCode(65 + (i/4))}`, participantes: p, partidos: partidosGrupo });
@@ -442,13 +459,46 @@
                 let totalLotes = Math.ceil(globalIndex / 5);
                 window.ultimaHoraGlobal = sumarMinutos(horaInicioStr, totalLotes * 45);
 
+                // ANIMACIÓN DE CINE
+                const cine = document.getElementById('cineSorteo');
+                cine.style.display = 'flex';
+                
+                for(let i=0; i < partidosParaAnimar.length; i++) {
+                    let p = partidosParaAnimar[i];
+                    document.getElementById('cineMesa').style.opacity = '0'; document.getElementById('cineMesa').style.transform = 'translateY(-30px)';
+                    document.getElementById('cineHora').style.opacity = '0'; document.getElementById('cineJ1').style.opacity = '0';
+                    document.getElementById('cineJ1').style.transform = 'translateX(-50px)'; document.getElementById('cineVs').style.opacity = '0';
+                    document.getElementById('cineJ2').style.opacity = '0'; document.getElementById('cineJ2').style.transform = 'translateX(50px)';
+                    await sleep(500);
+
+                    document.getElementById('cineMesa').innerHTML = `ASIGNANDO MESA ${p.mesa} <br><span style="font-size:20px; color:#fff;">${p.nombreGrupo}</span>`;
+                    document.getElementById('cineHora').innerHTML = `🕒 Inicio: ${formatoAMPM(p.horaInt)}`;
+                    document.getElementById('cineMesa').style.opacity = '1'; document.getElementById('cineMesa').style.transform = 'translateY(0)';
+                    document.getElementById('cineHora').style.opacity = '1';
+                    await sleep(2000);
+
+                    document.getElementById('cineImg1').src = p.j1.foto; document.getElementById('cineNombre1').innerHTML = p.j1.nombre;
+                    document.getElementById('cineJ1').style.opacity = '1'; document.getElementById('cineJ1').style.transform = 'translateX(0)';
+                    await sleep(2500);
+
+                    document.getElementById('cineVs').style.opacity = '1';
+                    await sleep(1500);
+
+                    document.getElementById('cineImg2').src = p.j2.foto; document.getElementById('cineNombre2').innerHTML = p.j2.nombre;
+                    document.getElementById('cineJ2').style.opacity = '1'; document.getElementById('cineJ2').style.transform = 'translateX(0)';
+                    await sleep(4000);
+                }
+
+                document.getElementById('cineMesa').innerHTML = `¡SORTEO FINALIZADO! 🎱<br><span style="font-size:20px; color:#fff;">El torneo ha comenzado. Que gane el mejor.</span>`;
+                document.getElementById('cineHora').style.opacity = '0'; document.getElementById('cineJ1').style.opacity = '0';
+                document.getElementById('cineVs').style.opacity = '0'; document.getElementById('cineJ2').style.opacity = '0';
+                await sleep(3000); cine.style.display = 'none';
+                
                 document.getElementById('panelConfiguracion').style.display = 'none';
                 document.getElementById('btnTerminarTorneo').style.display = 'inline-block';
                 document.getElementById('btnGenerarFinales').style.display = 'block';
 
-                mostrarPremiacion();
-                renderizarGrupos();
-                await guardarEstadoTorneo();
+                mostrarPremiacion(); renderizarGrupos(); await guardarEstadoTorneo();
             }
         });
 
@@ -508,7 +558,7 @@
             });
         }
 
-        // --- FASE FINAL DE ELIMINACIÓN ---
+        // --- FASE FINAL DE ELIMINACIÓN BLINDADA ---
         window.generarFaseFinal = async function() {
             let clasificados = [];
             window.grupos.forEach(grupo => {
@@ -531,7 +581,8 @@
             }
 
             window.ultimaHoraGlobal = sumarMinutos(window.ultimaHoraGlobal, Math.ceil(partidosRonda1.length / 5) * 45);
-            window.faseEliminacion.rondas = [partidosRonda1];
+            // ENVOLVEMOS EL ARRAY DE PARTIDOS EN UN OBJETO PARA QUE FIREBASE NO FALLE
+            window.faseEliminacion.rondas = [ { partidos: partidosRonda1 } ];
             window.faseEliminacion.rondaActiva = 0;
             window.faseEliminacion.campeon = null;
 
@@ -546,7 +597,8 @@
             const s2 = parseInt(document.getElementById(`f_r${rIdx}p${pIdx}s2`).value) || 0;
             if(s1 === s2) { alert("Sin empates. Determine un ganador."); return; }
 
-            let partido = window.faseEliminacion.rondas[rIdx][pIdx];
+            // LECTURA DEL NUEVO FORMATO DE OBJETO
+            let partido = window.faseEliminacion.rondas[rIdx].partidos[pIdx];
             partido.s1 = s1;
             partido.s2 = s2;
             partido.jugado = true;
@@ -558,10 +610,10 @@
         };
 
         function verificarAvanceRonda(rIdx) {
-            let rondaActual = window.faseEliminacion.rondas[rIdx];
+            let rondaActual = window.faseEliminacion.rondas[rIdx].partidos;
+            
             if(rondaActual.every(p => p.jugado)) {
                 
-                // Si la ronda actual solo tiene 1 partido, es la final.
                 if(rondaActual.length === 1) { 
                     window.faseEliminacion.campeon = rondaActual[0].ganador;
                     alert(`🎉 ¡CAMPEÓN: ${window.faseEliminacion.campeon.nombre}! 🎉`); 
@@ -571,9 +623,8 @@
                 let siguienteRonda = [];
                 for(let i=0; i < rondaActual.length; i+=2) {
                     let lote = Math.floor((i/2) / 5);
-                    
                     let objJ1 = rondaActual[i]?.ganador || null;
-                    let objJ2 = rondaActual[i+1]?.ganador || null;
+                    let objJ2 = rondaActual[i+1]?.ganador || { nombre: 'LIBRE (Avanza)', foto: 'https://api.dicebear.com/7.x/adventurer/svg?seed=libre', meta: '0', claseColor: 'bg-amateur' };
 
                     siguienteRonda.push({
                         j1: objJ1, j2: objJ2,
@@ -583,7 +634,7 @@
                     });
                 }
                 window.ultimaHoraGlobal = sumarMinutos(window.ultimaHoraGlobal, Math.ceil(siguienteRonda.length / 5) * 45);
-                window.faseEliminacion.rondas.push(siguienteRonda);
+                window.faseEliminacion.rondas.push({ partidos: siguienteRonda });
                 window.faseEliminacion.rondaActiva++;
             }
         }
@@ -591,7 +642,6 @@
         function renderizarFaseFinal() {
             const contenedor = document.getElementById('contenedorFinales'); contenedor.innerHTML = '';
             
-            // Si hay un campeón, mostrar placa gigante
             if (window.faseEliminacion.campeon) {
                 contenedor.innerHTML = `<div class="campeon-box">
                     🏆 ¡GRAN CAMPEÓN DEL TORNEO! 🏆<br>
@@ -600,7 +650,8 @@
                 </div>`;
             }
 
-            window.faseEliminacion.rondas.forEach((ronda, rIdx) => {
+            window.faseEliminacion.rondas.forEach((rondaObj, rIdx) => {
+                let ronda = rondaObj.partidos;
                 let nombreRonda = ronda.length === 1 ? "🏆 GRAN FINAL" : (ronda.length === 2 ? "SEMIFINALES" : "ELIMINATORIAS");
                 let html = `<div style="width: 100%; margin-top: 20px; border-bottom: 2px solid #ff5e57;"><h2 style="color: #ff5e57;">${nombreRonda}</h2></div><div class="fase-grupos">`;
 
@@ -617,7 +668,6 @@
                         </div>`;
 
                     if(!partido.jugado) {
-                        // Desactivar botones si no hay jugadores definidos aún
                         if(partido.j1 && partido.j2 && partido.j1.nombre !== 'Esperando' && partido.j2.nombre !== 'Esperando') {
                             html += `<div class="inputs-marcador"><input type="number" id="f_r${rIdx}p${pIdx}s1" class="input-score" placeholder="Pts"><input type="number" id="f_r${rIdx}p${pIdx}s2" class="input-score" placeholder="Pts"></div><button class="btn-guardar-score" style="background: linear-gradient(45deg, #ff3f34, #ff5e57);" onclick="guardarMarcadorFinal(${rIdx}, ${pIdx})">💾 Guardar y Avanzar</button>`;
                         } else {
