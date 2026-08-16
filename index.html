@@ -38,12 +38,19 @@
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: rgba(0,0,0,0.4); border-radius: 8px; overflow: hidden; }
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
         th { background-color: rgba(0, 216, 214, 0.2); color: #00d8d6; text-transform: uppercase; font-size: 12px; }
-        .avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #00d8d6; margin-right: 10px; vertical-align: middle; background-color: #2f3640; }
         
+        .avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #00d8d6; margin-right: 10px; vertical-align: middle; background-color: #2f3640; }
+        .avatar-clic { cursor: pointer; transition: all 0.3s; }
+        .avatar-clic:hover { transform: scale(1.2); box-shadow: 0 0 15px #0be881; border-color: #0be881; }
+
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; color: white; text-transform: uppercase; }
         .bg-master { background: linear-gradient(45deg, #ff3f34, #ff5e57); }
         .bg-intermedio { background: linear-gradient(45deg, #ffa801, #ffc048); }
         .bg-amateur { background: linear-gradient(45deg, #0fbcf9, #4bcffa); }
+
+        /* MODAL DE EDICIÓN */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { width: 90%; max-width: 450px; position: relative; }
 
         /* TORNEO Y MESAS */
         .controls-torneo { display: flex; gap: 15px; justify-content: center; align-items: flex-end; margin-bottom: 30px; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px; flex-wrap: wrap; }
@@ -73,6 +80,10 @@
         .caja-premios h2 { color: #ffd32a; margin: 0 0 15px 0; font-size: 26px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
         .caja-premios h3 { color: #fff; margin: 5px 0; font-size: 20px; }
         .caja-premios span { color: #0be881; font-weight: 800; }
+        
+        /* ESTADO CAMPEÓN */
+        .campeon-box { background: linear-gradient(45deg, #05c46b, #0be881); padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center; color: #000; font-size: 24px; font-weight: 900; box-shadow: 0 0 25px rgba(11,232,129,0.8); animation: latido 1.5s infinite; }
+        @keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
     </style>
 </head>
 <body>
@@ -81,6 +92,38 @@
         <button class="tab-btn activa" id="tab-inscripcion" onclick="cambiarPestana('inscripcion', this)">📝 Registro Oficial</button>
         <button class="tab-btn" id="tab-torneo" onclick="cambiarPestana('torneo', this)">🎱 Fase de Grupos</button>
         <button class="tab-btn" id="tab-finales" onclick="cambiarPestana('finales', this)">🏆 Gran Final</button>
+    </div>
+
+    <!-- MODAL DE EDICIÓN DE JUGADORES -->
+    <div id="modalEdicion" class="modal-overlay">
+        <div class="card modal-content">
+            <h2 style="margin-top: 0; color: #ffd32a;">✏️ Editar Jugador</h2>
+            <form id="formEdicion">
+                <input type="hidden" id="editId">
+                <div class="form-group">
+                    <label>Nombre Completo</label>
+                    <input type="text" id="editNombre" required>
+                </div>
+                <div class="form-group">
+                    <label>Categoría</label>
+                    <select id="editCategoria" required>
+                        <option value="Master">⭐ Master (Meta: 25)</option>
+                        <option value="Intermedio">⚡ Intermedio (Meta: 20)</option>
+                        <option value="Amateur">🎯 Amateur (Meta: 12)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox-container">
+                        <input type="checkbox" id="editPagado">
+                        <label for="editPagado">Inscripción Pagada (Al día)</label>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <button type="submit" class="btn-accion">💾 Guardar</button>
+                    <button type="button" class="btn-accion" style="background: #e74c3c; box-shadow: none;" onclick="cerrarModalEdicion()">❌ Cancelar</button>
+                </div>
+            </form>
+        </div>
     </div>
 
     <!-- SECCIÓN 1: INSCRIPCIÓN -->
@@ -113,7 +156,7 @@
 
         <div class="card">
             <h2>Participantes Registrados (<span id="contador" style="color: #00d8d6;">0</span>)</h2>
-            <p style="text-align: center; color: #aaa; font-size: 14px;">Aptos para el sorteo: <strong id="contadorAptos" style="color:#0be881;">0</strong></p>
+            <p style="text-align: center; color: #aaa; font-size: 14px;">Aptos para el sorteo: <strong id="contadorAptos" style="color:#0be881;">0</strong><br><em>(Haz clic en la foto de un jugador para editar sus datos o pago)</em></p>
             <table>
                 <thead><tr><th>Jugador</th><th>Nivel</th><th>Meta</th><th style="text-align: center;">Estado</th></tr></thead>
                 <tbody id="listaJugadores"></tbody>
@@ -168,7 +211,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // ¡RECUERDA PONER TUS CLAVES EXACTAS DE FIREBASE AQUÍ!
         const firebaseConfig = {
@@ -187,11 +230,11 @@
         const reglas = { "Master": { meta: 25, color: "bg-master" }, "Intermedio": { meta: 20, color: "bg-intermedio" }, "Amateur": { meta: 12, color: "bg-amateur" } };
         window.inscritosGlobal = [];
         window.grupos = [];
-        window.faseEliminacion = { rondas: [], rondaActiva: 0 };
+        window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
         window.torneoActivo = false;
         window.premiacion = { primero: "", segundo: "" };
         window.ultimaHoraGlobal = "18:00";
-        
+
         // --- NAVEGACIÓN ---
         window.cambiarPestana = function(idSeccion, botonRef) {
             document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
@@ -204,10 +247,13 @@
         async function guardarEstadoTorneo() {
             try { 
                 await setDoc(doc(db, "torneos", "actual"), { 
-                    activo: window.torneoActivo, grupos: window.grupos, 
-                    faseEliminacion: window.faseEliminacion, premiacion: window.premiacion, ultimaHora: window.ultimaHoraGlobal
+                    activo: window.torneoActivo, 
+                    grupos: window.grupos, 
+                    faseEliminacion: window.faseEliminacion, 
+                    premiacion: window.premiacion, 
+                    ultimaHora: window.ultimaHoraGlobal
                 }); 
-            } catch (error) { console.error("Error al guardar:", error); }
+            } catch (error) { console.error("Error al guardar estado de Firebase:", error); }
         }
 
         async function cargarEstadoTorneo() {
@@ -219,7 +265,7 @@
                     
                     if(window.torneoActivo) {
                         window.grupos = data.grupos || [];
-                        window.faseEliminacion = data.faseEliminacion || { rondas: [], rondaActiva: 0 };
+                        window.faseEliminacion = data.faseEliminacion || { rondas: [], rondaActiva: 0, campeon: null };
                         window.premiacion = data.premiacion || { primero: "", segundo: "" };
                         window.ultimaHoraGlobal = data.ultimaHora || "18:00";
                         
@@ -227,34 +273,44 @@
                         document.getElementById('btnTerminarTorneo').style.display = 'inline-block';
                         mostrarPremiacion();
 
-                        let tieneFinales = window.faseEliminacion.rondas.length > 0;
+                        let tieneFinales = window.faseEliminacion.rondas && window.faseEliminacion.rondas.length > 0;
 
                         if (window.grupos.length > 0) { 
                             renderizarGrupos(); 
                             document.getElementById('btnGenerarFinales').style.display = tieneFinales ? 'none' : 'block';
                         }
                         
-                        // Si hay datos, restaurar la vista donde estábamos
+                        // Retraso seguro para forzar el cambio de pestaña después de pintar el DOM
                         if (tieneFinales) { 
                             renderizarFaseFinal(); 
-                            cambiarPestana('finales', document.getElementById('tab-finales'));
+                            setTimeout(() => { cambiarPestana('finales', document.getElementById('tab-finales')); }, 200);
                         } else if (window.grupos.length > 0) {
-                            cambiarPestana('torneo', document.getElementById('tab-torneo'));
+                            setTimeout(() => { cambiarPestana('torneo', document.getElementById('tab-torneo')); }, 200);
                         }
                     }
                 }
-            } catch (error) { console.error("Error crítico al cargar:", error); }
+            } catch (error) { console.error("Error crítico al cargar torneo:", error); }
         }
-        cargarEstadoTorneo(); // Carga de emergencia al iniciar la página
+        cargarEstadoTorneo();
 
+        // --- FINALIZAR TORNEO CON CLAVE ---
         window.terminarTorneoOficial = async function() {
+            const password = prompt("Seguridad del Sistema:\nIngrese la contraseña de administrador para finalizar el torneo:");
+            if (password !== "2026*") {
+                alert("❌ Contraseña incorrecta. Operación cancelada.");
+                return;
+            }
+
             if(confirm("¡ATENCIÓN! ¿Seguro que deseas finalizar el torneo? Esto limpiará el cuadro por completo para un nuevo evento.")) {
-                window.torneoActivo = false; window.grupos = []; window.faseEliminacion = { rondas: [], rondaActiva: 0 };
-                await guardarEstadoTorneo(); location.reload(); 
+                window.torneoActivo = false; 
+                window.grupos = []; 
+                window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
+                await guardarEstadoTorneo(); 
+                location.reload(); 
             }
         };
 
-        // --- MANEJO DE INSCRITOS ---
+        // --- MANEJO DE INSCRITOS Y EDICIÓN ---
         document.getElementById('registroForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar'); btn.disabled = true; btn.textContent = 'Guardando...';
@@ -269,14 +325,53 @@
             } catch (error) { alert("Error."); } finally { btn.disabled = false; btn.textContent = 'Registrar Jugador'; }
         });
 
+        window.abrirModalEdicion = function(id) {
+            const jugador = window.inscritosGlobal.find(j => j.id === id);
+            if (!jugador) return;
+            document.getElementById('editId').value = jugador.id;
+            document.getElementById('editNombre').value = jugador.nombre;
+            document.getElementById('editCategoria').value = jugador.categoria;
+            document.getElementById('editPagado').checked = jugador.pagado || false;
+            document.getElementById('modalEdicion').style.display = 'flex';
+        };
+
+        window.cerrarModalEdicion = function() {
+            document.getElementById('modalEdicion').style.display = 'none';
+        };
+
+        document.getElementById('formEdicion').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const id = document.getElementById('editId').value;
+            const nombre = document.getElementById('editNombre').value;
+            const categoria = document.getElementById('editCategoria').value;
+            const pagado = document.getElementById('editPagado').checked;
+
+            try {
+                await updateDoc(doc(db, "jugadores", id), {
+                    nombre: nombre, categoria: categoria, pagado: pagado,
+                    meta: reglas[categoria].meta, claseColor: reglas[categoria].color
+                });
+                cerrarModalEdicion();
+            } catch(error) { alert("Error al actualizar la información."); }
+        });
+
         onSnapshot(query(collection(db, "jugadores"), orderBy("fechaRegistro", "desc")), (snapshot) => {
             const tbody = document.getElementById('listaJugadores'); tbody.innerHTML = ''; window.inscritosGlobal = []; 
             let aptosParaSorteo = 0;
             snapshot.forEach((doc) => {
                 const data = doc.data(); window.inscritosGlobal.push({ id: doc.id, ...data });
                 if (data.pagado) aptosParaSorteo++;
-                const iconoEstado = data.pagado ? '<span style="color: #0be881; font-size: 20px;">✅</span>' : '<span style="color: #ff3f34; font-size: 20px;">❌</span>';
-                tbody.innerHTML += `<tr><td><div style="display:flex; align-items:center;"><img src="${data.foto}" class="avatar"> <strong>${data.nombre}</strong></div></td><td><span class="badge ${data.claseColor}">${data.categoria}</span></td><td>${data.meta}</td><td style="text-align: center;">${iconoEstado}</td></tr>`;
+                const iconoEstado = data.pagado ? '<span style="color: #0be881; font-size: 20px;" title="Pagado">✅</span>' : '<span style="color: #ff3f34; font-size: 20px;" title="Debe inscripción">❌</span>';
+                
+                tbody.innerHTML += `<tr>
+                    <td><div style="display:flex; align-items:center;">
+                        <img src="${data.foto}" class="avatar avatar-clic" onclick="abrirModalEdicion('${doc.id}')" title="Clic para editar"> 
+                        <strong>${data.nombre}</strong>
+                    </div></td>
+                    <td><span class="badge ${data.claseColor}">${data.categoria}</span></td>
+                    <td>${data.meta}</td>
+                    <td style="text-align: center;">${iconoEstado}</td>
+                </tr>`;
             });
             document.getElementById('contador').textContent = window.inscritosGlobal.length;
             document.getElementById('contadorAptos').textContent = aptosParaSorteo;
@@ -299,20 +394,22 @@
 
         // --- SORTEO ---
         document.getElementById('btnSorteo').addEventListener('click', async () => {
+            if(window.torneoActivo) { alert("Ya hay un torneo en curso."); return; }
+
             const password = prompt("Ingrese clave de administrador:");
             if (password !== "2026*") { alert("❌ Clave incorrecta."); return; }
 
             const jugadoresAptos = window.inscritosGlobal.filter(j => j.pagado === true);
             if (jugadoresAptos.length < 4) { alert(`Mínimo 4 jugadores pagados.`); return; }
             
-            if (confirm(`Se realizará el sorteo y se bloqueará el sistema en Modo Torneo. ¿Continuar?`)) {
+            if (confirm(`Torneo con ${jugadoresAptos.length} jugadores. Se asignarán 5 mesas en paralelo. ¿Continuar?`)) {
                 window.torneoActivo = true; 
                 window.premiacion.primero = document.getElementById('inPremio1').value || "Trofeo y Efectivo";
                 window.premiacion.segundo = document.getElementById('inPremio2').value || "Efectivo";
                 
                 const horaInicioStr = document.getElementById('horaInicio').value; 
                 let mezclados = [...jugadoresAptos].sort(() => Math.random() - 0.5);
-                window.grupos = []; window.faseEliminacion = { rondas: [], rondaActiva: 0 };
+                window.grupos = []; window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
 
                 let globalIndex = 0;
                 for (let i = 0; i < mezclados.length; i += 4) {
@@ -406,7 +503,7 @@
             });
         }
 
-        // --- FASE FINAL ---
+        // --- FASE FINAL DE ELIMINACIÓN ---
         window.generarFaseFinal = async function() {
             let clasificados = [];
             window.grupos.forEach(grupo => {
@@ -431,10 +528,11 @@
             window.ultimaHoraGlobal = sumarMinutos(window.ultimaHoraGlobal, Math.ceil(partidosRonda1.length / 5) * 45);
             window.faseEliminacion.rondas = [partidosRonda1];
             window.faseEliminacion.rondaActiva = 0;
+            window.faseEliminacion.campeon = null;
 
             document.getElementById('btnGenerarFinales').style.display = 'none';
             renderizarFaseFinal();
-            document.getElementById('tab-finales').click();
+            cambiarPestana('finales', document.getElementById('tab-finales'));
             await guardarEstadoTorneo();
         };
 
@@ -453,15 +551,21 @@
         function verificarAvanceRonda(rIdx) {
             let rondaActual = window.faseEliminacion.rondas[rIdx];
             if(rondaActual.every(p => p.jugado)) {
-                if(rondaActual.length === 1) { alert(`🎉 ¡CAMPEÓN: ${rondaActual[0].ganador.nombre}! 🎉`); return; }
+                
+                // Si la ronda actual solo tiene 1 partido, es la final.
+                if(rondaActual.length === 1) { 
+                    window.faseEliminacion.campeon = rondaActual[0].ganador;
+                    alert(`🎉 ¡CAMPEÓN: ${window.faseEliminacion.campeon.nombre}! 🎉`); 
+                    return; 
+                }
 
                 let siguienteRonda = [];
                 for(let i=0; i < rondaActual.length; i+=2) {
                     let lote = Math.floor((i/2) / 5);
                     
-                    // Defensa por si el cuadro queda impar
+                    // Aseguramos que siempre haya objeto, si alguien pasó sin jugar
                     let objJ1 = rondaActual[i]?.ganador || null;
-                    let objJ2 = rondaActual[i+1]?.ganador || { nombre: 'LIBRE (Avanza)', foto: '', meta: '0', claseColor: '' };
+                    let objJ2 = rondaActual[i+1]?.ganador || { nombre: 'LIBRE (Avanza)', foto: 'https://api.dicebear.com/7.x/adventurer/svg?seed=libre', meta: '0', claseColor: 'bg-amateur' };
 
                     siguienteRonda.push({
                         j1: objJ1, j2: objJ2,
@@ -478,6 +582,16 @@
 
         function renderizarFaseFinal() {
             const contenedor = document.getElementById('contenedorFinales'); contenedor.innerHTML = '';
+            
+            // Si hay un campeón, mostrar placa gigante
+            if (window.faseEliminacion.campeon) {
+                contenedor.innerHTML = `<div class="campeon-box">
+                    🏆 ¡GRAN CAMPEÓN DEL TORNEO! 🏆<br>
+                    <img src="${window.faseEliminacion.campeon.foto}" class="avatar" style="width:80px;height:80px;margin-top:15px;border:3px solid #000;">
+                    <br>${window.faseEliminacion.campeon.nombre}
+                </div>`;
+            }
+
             window.faseEliminacion.rondas.forEach((ronda, rIdx) => {
                 let nombreRonda = ronda.length === 1 ? "🏆 GRAN FINAL" : (ronda.length === 2 ? "SEMIFINALES" : "ELIMINATORIAS");
                 let html = `<div style="width: 100%; margin-top: 20px; border-bottom: 2px solid #ff5e57;"><h2 style="color: #ff5e57;">${nombreRonda}</h2></div><div class="fase-grupos">`;
@@ -489,13 +603,18 @@
                     html += `<div class="mesa-billar" style="border-color: #ff3f34; max-width: 450px; margin: 0 auto 15px;">
                         <div class="horario" style="background: #ff3f34; color: white; border: 1px solid #ff3f34; border-top: none;">MESA ${partido.mesa} | 🕒 ${horaInicioAmPm} - 🏁 ${horaFin}</div>
                         <div style="margin-top: 15px;">
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="avatar">${partido.j1?.nombre || 'Esperando'}</div><span class="badge ${partido.j1?.claseColor || ''}">${partido.j1?.meta || ''}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j1?.nombre || 'Esperando'}</div><span class="badge ${partido.j1?.claseColor || ''}">${partido.j1?.meta || ''}</span></div>
                             <div style="color: #ff5e57; font-weight: bold; margin: 5px 0;">VS</div>
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || 'https://cdn-icons-png.flaticon.com/512/149/149071.png'}" class="avatar">${partido.j2?.nombre || 'Esperando'}</div><span class="badge ${partido.j2?.claseColor || ''}">${partido.j2?.meta || ''}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j2?.nombre || 'Esperando'}</div><span class="badge ${partido.j2?.claseColor || ''}">${partido.j2?.meta || ''}</span></div>
                         </div>`;
 
                     if(!partido.jugado) {
-                        html += `<div class="inputs-marcador"><input type="number" id="f_r${rIdx}p${pIdx}s1" class="input-score" placeholder="Pts"><input type="number" id="f_r${rIdx}p${pIdx}s2" class="input-score" placeholder="Pts"></div><button class="btn-guardar-score" style="background: linear-gradient(45deg, #ff3f34, #ff5e57);" onclick="guardarMarcadorFinal(${rIdx}, ${pIdx})">💾 Guardar y Avanzar</button>`;
+                        // Desactivar botones si no hay jugadores definidos aún
+                        if(partido.j1 && partido.j2 && partido.j1.nombre !== 'Esperando' && partido.j2.nombre !== 'Esperando') {
+                            html += `<div class="inputs-marcador"><input type="number" id="f_r${rIdx}p${pIdx}s1" class="input-score" placeholder="Pts"><input type="number" id="f_r${rIdx}p${pIdx}s2" class="input-score" placeholder="Pts"></div><button class="btn-guardar-score" style="background: linear-gradient(45deg, #ff3f34, #ff5e57);" onclick="guardarMarcadorFinal(${rIdx}, ${pIdx})">💾 Guardar y Avanzar</button>`;
+                        } else {
+                            html += `<div style="color: #aaa; margin-top:10px;">Esperando resultados anteriores...</div>`;
+                        }
                     } else {
                         html += `<div style="color: #ffd32a; font-size: 24px; font-weight: bold; margin-top: 15px;">${partido.s1} - ${partido.s2}</div><div style="color: #0be881; font-size: 16px; margin-top: 5px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 5px;">⭐ Avanza: ${partido.ganador?.nombre || 'N/A'}</div>`;
                     }
