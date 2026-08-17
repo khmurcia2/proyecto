@@ -4,30 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- ========================================== -->
-    <!-- OPTIMIZACIÓN SEO LOCAL (LA MANSIÓN DE LA CARAMBOLA) -->
-    <!-- ========================================== -->
+    <!-- OPTIMIZACIÓN SEO LOCAL -->
     <title>La Mansión de la Carambola | Club de Billar 3 Bandas en Funza</title>
     <meta name="description" content="El mejor club de billar a 3 bandas en Funza, Cundinamarca. Únete a nuestros torneos profesionales y aficionados. Visítanos en Cl 13 # 8-45.">
     <meta name="keywords" content="billar, billar 3 bandas, torneos de billar, club de billar, Funza, Cundinamarca, carambola, La Mansión de la Carambola, billar Funza">
     <meta name="author" content="La Mansión de la Carambola">
     <meta name="robots" content="index, follow">
     
-    <!-- Etiquetas Open Graph (Para compartir bonito en WhatsApp/Facebook) -->
     <meta property="og:title" content="La Mansión de la Carambola | Torneos de Billar 3 Bandas">
     <meta property="og:description" content="Únete al torneo. El mejor nivel de billar a 3 bandas en Funza, Cundinamarca. Cl 13 # 8-45.">
     <meta property="og:image" content="https://raw.githubusercontent.com/khmurcia2/proyecto/main/la%20mansion%20logo.jpg">
     <meta property="og:url" content="https://www.instagram.com/lamansiondelacarambola/">
     <meta property="og:type" content="website">
 
-    <!-- Datos Estructurados Schema.org (Para Google Maps y Búsqueda Local) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "SportsClub",
       "name": "La Mansión de la Carambola",
       "image": "https://raw.githubusercontent.com/khmurcia2/proyecto/main/la%20mansion%20logo.jpg",
-      "@id": "",
       "url": "https://www.instagram.com/lamansiondelacarambola/",
       "telephone": "+573002158036",
       "address": {
@@ -43,7 +38,6 @@
       "sport": "Billar a 3 Bandas"
     }
     </script>
-    <!-- ========================================== -->
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
@@ -126,6 +120,7 @@
         .input-score { width: 45%; text-align: center; font-size: 18px; font-weight: bold; background: rgba(255,255,255,0.9); color: #000; border-radius: 5px; border:none; }
         .btn-guardar-score { background: #05c46b; border: none; color: white; width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
         .btn-guardar-score:hover { filter: brightness(1.1); box-shadow: 0 0 10px #05c46b; }
+        .btn-fase-final { background: linear-gradient(45deg, #ff3f34, #ff5e57); color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; display: none; box-shadow: 0 5px 15px rgba(255, 63, 52, 0.4); text-transform: uppercase; }
         
         /* PLACA DE PREMIACIÓN */
         .caja-premios { background: linear-gradient(45deg, rgba(255,215,0,0.1), rgba(255,215,0,0.3)); border: 2px solid #ffd32a; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; display: none; box-shadow: 0 0 20px rgba(255,215,0,0.2); }
@@ -133,7 +128,7 @@
         .caja-premios h3 { color: #fff; margin: 5px 0; font-size: 20px; }
         .caja-premios span { color: #0be881; font-weight: 800; }
         
-        /* RULETA FÍSICA ESTILO CASINO */
+        /* --- RULETA FÍSICA ESTILO CASINO --- */
         #ruletaSorteo { 
             display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; 
             background: radial-gradient(circle at center, #1e272e 0%, #050505 100%); 
@@ -543,7 +538,7 @@
             const pagado = document.getElementById('pagado').checked; 
             const avatarUrl = generarAvatarBillar(nombre);
             try {
-                await addDoc(collection(db, "jugadores"), { nombre, categoria, pagado, foto: avatarUrl, meta: reglas[categoria].meta, claseColor: colorClases[categoria], fechaRegistro: new Date() });
+                await addDoc(collection(db, "jugadores"), { nombre, categoria, pagado, foto: avatarUrl, meta: getMeta(categoria), claseColor: colorClases[categoria], fechaRegistro: new Date() });
                 this.reset();
             } catch (error) { alert("Error."); } finally { btn.disabled = false; btn.textContent = 'Registrar Jugador'; }
         });
@@ -568,7 +563,7 @@
             const pagado = document.getElementById('editPagado').checked;
             const avatarUrl = generarAvatarBillar(nombre);
             try {
-                await updateDoc(doc(db, "jugadores", id), { nombre, categoria, pagado, foto: avatarUrl, meta: reglas[categoria].meta, claseColor: colorClases[categoria] });
+                await updateDoc(doc(db, "jugadores", id), { nombre, categoria, pagado, foto: avatarUrl, meta: getMeta(categoria), claseColor: colorClases[categoria] });
                 cerrarModalEdicion();
             } catch(error) { alert("Error al actualizar."); }
         });
@@ -651,7 +646,7 @@
             } catch(e) {}
         }
 
-        // --- ANIMACIÓN DE LA RULETA FÍSICA ---
+        // --- ANIMACIÓN DE LA RULETA FÍSICA A PRUEBA DE FALLOS ---
         async function animarRuleta(subtituloTexto, jugadorElegido, poolJugadores) {
             return new Promise(async (resolve) => {
                 try {
@@ -714,6 +709,7 @@
             });
         }
 
+        // MOTOR CENTRAL PARA CREAR CUALQUIER RONDA CON RULETA Y TABLERO
         window.ejecutarSorteoRondaRuleta = async function(jugadoresParaSortear, nombreFase) {
             let mezclados = [...jugadoresParaSortear].sort(() => Math.random() - 0.5);
             
@@ -908,6 +904,7 @@
             }
         }
 
+        // --- GUARDADO DE RESULTADOS ---
         window.guardarResultadoGrupo = async function(gIdx, pIdx) {
             const s1 = parseInt(document.getElementById(`g${gIdx}p${pIdx}s1`).value) || 0;
             const s2 = parseInt(document.getElementById(`g${gIdx}p${pIdx}s2`).value) || 0;
@@ -951,6 +948,7 @@
             }
         }
 
+        // --- RENDERIZADO VISUAL ---
         function renderizarGrupos() {
             const contenedor = document.getElementById('contenedorGrupos'); contenedor.innerHTML = '';
             window.grupos.forEach((grupo, gIdx) => {
