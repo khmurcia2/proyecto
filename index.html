@@ -46,12 +46,12 @@
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; color: white; text-transform: uppercase; }
         .bg-master { background: linear-gradient(45deg, #ff3f34, #ff5e57); }
         .bg-intermedio { background: linear-gradient(45deg, #ffa801, #ffc048); }
-        .bg-normal { background: linear-gradient(45deg, #8e44ad, #9b59b6); } /* NUEVO COLOR PARA NORMAL */
+        .bg-normal { background: linear-gradient(45deg, #8e44ad, #9b59b6); }
         .bg-amateur { background: linear-gradient(45deg, #0fbcf9, #4bcffa); }
 
         /* MODAL DE EDICIÓN */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
-        .modal-content { width: 90%; max-width: 450px; position: relative; }
+        .modal-content { width: 90%; max-width: 500px; position: relative; }
 
         /* TORNEO Y MESAS */
         .controls-torneo { display: flex; gap: 15px; justify-content: center; align-items: flex-end; margin-bottom: 30px; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px; flex-wrap: wrap; }
@@ -82,15 +82,26 @@
         .caja-premios h3 { color: #fff; margin: 5px 0; font-size: 20px; }
         .caja-premios span { color: #0be881; font-weight: 800; }
         
-        /* PANTALLA DE SORTEO EN VIVO (CINE) */
-        #cineSorteo { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: radial-gradient(circle at center, #1e272e 0%, #000 100%); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; color: white; }
-        .cine-mesa-titulo { font-size: 45px; color: #ffd32a; font-weight: 900; letter-spacing: 5px; text-shadow: 0 0 20px rgba(255, 211, 42, 0.5); opacity: 0; transform: translateY(-30px); transition: all 1s; }
-        .cine-hora { font-size: 24px; color: #00d8d6; margin-bottom: 40px; opacity: 0; transition: all 1s; }
-        .cine-jugador { display: flex; align-items: center; gap: 30px; font-size: 40px; font-weight: 800; background: rgba(0,0,0,0.6); padding: 20px 40px; border-radius: 15px; border-left: 5px solid #00d8d6; opacity: 0; transform: translateX(-50px); transition: all 1s; width: 600px; }
-        .cine-vs { font-size: 50px; color: #ff5e57; font-weight: 900; margin: 20px 0; opacity: 0; text-shadow: 0 0 20px rgba(255, 94, 87, 0.6); transition: all 1s; }
-        .cine-jugador-2 { transform: translateX(50px); border-left: none; border-right: 5px solid #0be881; flex-direction: row-reverse; }
-        .cine-avatar { width: 120px; height: 120px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 0 20px rgba(255,255,255,0.3); }
+        /* LA NUEVA RULETA DE SUSPENSO */
+        #ruletaSorteo { display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: radial-gradient(circle at center, #1e272e 0%, #000 100%); z-index: 9999; flex-direction: column; justify-content: center; align-items: center; color: white; }
+        .ruleta-titulo { font-size: 45px; color: #ffd32a; font-weight: 900; letter-spacing: 4px; margin-bottom: 10px; text-shadow: 0 0 20px rgba(255, 211, 42, 0.5); text-align: center; }
+        .ruleta-subtitulo { font-size: 24px; color: #00d8d6; margin-bottom: 40px; }
+        
+        .ruleta-container { position: relative; width: 90%; max-width: 900px; height: 140px; background: rgba(0,0,0,0.8); border: 4px solid #00d8d6; border-radius: 10px; overflow: hidden; box-shadow: 0 0 40px rgba(0,216,214,0.3); }
+        .ruleta-aguja { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); color: #ff3f34; font-size: 50px; z-index: 10; text-shadow: 0 4px 10px rgba(0,0,0,0.9); }
+        .ruleta-linea-centro { position: absolute; top: 0; left: 50%; width: 4px; height: 100%; background: rgba(255, 63, 52, 0.5); transform: translateX(-50%); z-index: 1; }
+        
+        .ruleta-track { display: flex; height: 100%; align-items: center; /* La transición se aplica desde JS */ }
+        .ruleta-item { min-width: 160px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid rgba(255,255,255,0.1); opacity: 0.6; transition: 0.3s; position: relative; z-index: 2; }
+        .ruleta-item img { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #fff; margin-bottom: 8px; background: #2f3640; }
+        .ruleta-item span { font-size: 14px; font-weight: 800; text-align: center; width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
+        .ruleta-elegido { display: flex; flex-direction: column; align-items: center; margin-top: 40px; opacity: 0; transform: scale(0.5); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .ruleta-elegido.show { opacity: 1; transform: scale(1); }
+        .ruleta-elegido img { width: 140px; height: 140px; border-radius: 50%; border: 6px solid #0be881; box-shadow: 0 0 30px rgba(11,232,129,0.8); margin-bottom: 15px; }
+        .ruleta-elegido span { font-size: 35px; font-weight: 900; color: #0be881; text-transform: uppercase; text-shadow: 0 4px 15px rgba(0,0,0,0.9); }
 
+        /* ESTADO CAMPEÓN */
         .campeon-box { background: linear-gradient(45deg, #05c46b, #0be881); padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center; color: #000; font-size: 24px; font-weight: 900; box-shadow: 0 0 25px rgba(11,232,129,0.8); animation: latido 1.5s infinite; }
         @keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
     </style>
@@ -103,28 +114,29 @@
         <button class="tab-btn" id="tab-finales" onclick="cambiarPestana('finales', this)">🏆 Gran Final</button>
     </div>
 
-    <!-- PANTALLA CINE SORTEO EN VIVO -->
-    <div id="cineSorteo">
-        <div class="cine-mesa-titulo" id="cineMesa">MESA 1</div>
-        <div class="cine-hora" id="cineHora">🕒 18:00 PM</div>
+    <!-- PANTALLA DE LA RULETA EN VIVO -->
+    <div id="ruletaSorteo">
+        <div class="ruleta-titulo" id="ruletaMesa">MESA 1</div>
+        <div class="ruleta-subtitulo" id="ruletaSub">Seleccionando Jugador...</div>
         
-        <div class="cine-jugador" id="cineJ1">
-            <img src="" class="cine-avatar" id="cineImg1">
-            <span id="cineNombre1">Jugador 1</span>
+        <div class="ruleta-container">
+            <div class="ruleta-aguja">▼</div>
+            <div class="ruleta-linea-centro"></div>
+            <div class="ruleta-track" id="ruletaTrack">
+                <!-- Los avatares que giran irán aquí -->
+            </div>
         </div>
-        
-        <div class="cine-vs" id="cineVs">VS</div>
-        
-        <div class="cine-jugador cine-jugador-2" id="cineJ2">
-            <img src="" class="cine-avatar" id="cineImg2">
-            <span id="cineNombre2">Jugador 2</span>
+
+        <div class="ruleta-elegido" id="ruletaElegido">
+            <img src="" id="ruletaElegidoImg">
+            <span id="ruletaElegidoNombre">NOMBRE</span>
         </div>
     </div>
 
-    <!-- MODAL DE EDICIÓN DE JUGADORES -->
+    <!-- MODAL DE EDICIÓN Y ELIMINACIÓN DE JUGADORES -->
     <div id="modalEdicion" class="modal-overlay">
         <div class="card modal-content">
-            <h2 style="margin-top: 0; color: #ffd32a;">✏️ Editar Jugador</h2>
+            <h2 style="margin-top: 0; color: #ffd32a;">✏️ Gestionar Jugador</h2>
             <form id="formEdicion">
                 <input type="hidden" id="editId">
                 <div class="form-group">
@@ -146,9 +158,12 @@
                         <label for="editPagado">Inscripción Pagada (Al día)</label>
                     </div>
                 </div>
-                <div style="display: flex; gap: 15px; margin-top: 20px;">
-                    <button type="submit" class="btn-accion">💾 Guardar</button>
-                    <button type="button" class="btn-accion" style="background: #e74c3c; box-shadow: none;" onclick="cerrarModalEdicion()">❌ Cancelar</button>
+                
+                <!-- BOTONES DE ACCIÓN DEL MODAL -->
+                <div style="display: flex; gap: 10px; margin-top: 25px; flex-wrap: wrap;">
+                    <button type="submit" class="btn-accion" style="flex: 1; min-width: 120px;">💾 Guardar</button>
+                    <button type="button" class="btn-accion" style="flex: 1; min-width: 120px; background: linear-gradient(45deg, #e74c3c, #c0392b);" onclick="eliminarJugador()">🗑️ Eliminar</button>
+                    <button type="button" class="btn-accion" style="flex: 1; min-width: 120px; background: #7f8c8d; box-shadow: none;" onclick="cerrarModalEdicion()">❌ Cerrar</button>
                 </div>
             </form>
         </div>
@@ -185,7 +200,7 @@
 
         <div class="card">
             <h2>Participantes Registrados (<span id="contador" style="color: #00d8d6;">0</span>)</h2>
-            <p style="text-align: center; color: #aaa; font-size: 14px;">Aptos para el sorteo: <strong id="contadorAptos" style="color:#0be881;">0</strong><br><em>(Haz clic en la foto de un jugador para editar sus datos o pago)</em></p>
+            <p style="text-align: center; color: #aaa; font-size: 14px;">Aptos para el sorteo: <strong id="contadorAptos" style="color:#0be881;">0</strong><br><em>(Haz clic en la foto de un jugador para editar o <b>eliminar</b>)</em></p>
             <table>
                 <thead><tr><th>Jugador</th><th>Nivel</th><th>Meta</th><th style="text-align: center;">Estado</th></tr></thead>
                 <tbody id="listaJugadores"></tbody>
@@ -213,7 +228,7 @@
                     <input type="text" id="inPremio2" placeholder="Ej: $200.000">
                 </div>
             </div>
-            <button class="btn-sorteo" id="btnSorteo" style="width: 100%; margin-top: 15px; padding: 15px; font-size: 18px;">🎲 Generar Sorteo (Clave requerida)</button>
+            <button class="btn-sorteo" id="btnSorteo" style="width: 100%; margin-top: 15px; padding: 15px; font-size: 18px;">🎲 Iniciar Ruleta de Sorteo (Clave requerida)</button>
         </div>
 
         <div style="text-align: center; margin-bottom: 20px;">
@@ -239,8 +254,9 @@
     </div>
 
     <script type="module">
+        // Importamos deleteDoc para poder borrar inscritos
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, setDoc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, setDoc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
         // ¡RECUERDA PONER TUS CLAVES EXACTAS DE FIREBASE AQUÍ!
         const firebaseConfig = {
@@ -256,7 +272,6 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- REGLAS ACTUALIZADAS CON CATEGORÍA "NORMAL" ---
         const reglas = { 
             "Master": { meta: 25, color: "bg-master" }, 
             "Intermedio": { meta: 20, color: "bg-intermedio" }, 
@@ -271,7 +286,7 @@
         window.premiacion = { primero: "", segundo: "" };
         window.ultimaHoraGlobal = "18:00";
 
-        // --- SISTEMA DE GUARDADO BLINDADO CONTRA ERRORES ---
+        // --- SISTEMA DE GUARDADO BLINDADO ---
         async function guardarEstadoTorneo() {
             try { 
                 const datosLimpios = JSON.parse(JSON.stringify({ 
@@ -282,7 +297,7 @@
                     ultimaHora: window.ultimaHoraGlobal
                 }));
                 await setDoc(doc(db, "torneos", "actual"), datosLimpios); 
-            } catch (error) { console.error("Error al guardar estado en Firebase:", error); }
+            } catch (error) { console.error("Error al guardar estado:", error); }
         }
 
         async function cargarEstadoTorneo() {
@@ -317,11 +332,10 @@
                         }
                     }
                 }
-            } catch (error) { console.error("Error crítico al cargar torneo:", error); }
+            } catch (error) { console.error("Error al cargar torneo:", error); }
         }
         cargarEstadoTorneo();
 
-        // --- FINALIZAR TORNEO CON CLAVE ---
         window.terminarTorneoOficial = async function() {
             const password = prompt("Seguridad del Sistema:\nIngrese la contraseña de administrador para finalizar el torneo:");
             if (password !== "2026*") { alert("❌ Contraseña incorrecta. Operación cancelada."); return; }
@@ -331,7 +345,6 @@
             }
         };
 
-        // --- NAVEGACIÓN ---
         window.cambiarPestana = function(idSeccion, botonRef) {
             document.querySelectorAll('.seccion').forEach(sec => sec.classList.remove('activa'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('activa'));
@@ -339,7 +352,7 @@
             botonRef.classList.add('activa');
         };
 
-        // --- MANEJO DE INSCRITOS Y EDICIÓN ---
+        // --- MANEJO DE INSCRITOS, EDICIÓN Y ELIMINACIÓN ---
         document.getElementById('registroForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar'); btn.disabled = true; btn.textContent = 'Guardando...';
@@ -378,6 +391,21 @@
             } catch(error) { alert("Error al actualizar la información."); }
         });
 
+        // NUEVA FUNCIÓN: ELIMINAR JUGADOR
+        window.eliminarJugador = async function() {
+            const id = document.getElementById('editId').value;
+            const nombre = document.getElementById('editNombre').value;
+            if(confirm(`⚠️ ¿Estás completamente seguro de que deseas ELIMINAR a ${nombre}?\nEsta acción no se puede deshacer y borrará al jugador de la base de datos.`)) {
+                try {
+                    await deleteDoc(doc(db, "jugadores", id));
+                    cerrarModalEdicion();
+                } catch(error) {
+                    alert("Error al eliminar al jugador.");
+                    console.error(error);
+                }
+            }
+        };
+
         onSnapshot(query(collection(db, "jugadores"), orderBy("fechaRegistro", "desc")), (snapshot) => {
             const tbody = document.getElementById('listaJugadores'); tbody.innerHTML = ''; window.inscritosGlobal = []; 
             let aptosParaSorteo = 0;
@@ -388,7 +416,7 @@
                 
                 tbody.innerHTML += `<tr>
                     <td><div style="display:flex; align-items:center;">
-                        <img src="${data.foto}" class="avatar avatar-clic" onclick="abrirModalEdicion('${doc.id}')" title="Clic para editar"> 
+                        <img src="${data.foto}" class="avatar avatar-clic" onclick="abrirModalEdicion('${doc.id}')" title="Clic para editar o eliminar"> 
                         <strong>${data.nombre}</strong>
                     </div></td>
                     <td><span class="badge ${data.claseColor}">${data.categoria}</span></td>
@@ -417,7 +445,65 @@
             return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
         }
 
-        // --- EL GRAN SORTEO EN VIVO (CINE MODE) ---
+        // MOTOR DE LA RULETA (ANIMACIÓN HORIZONTAL)
+        async function animarRuleta(subtituloTexto, jugadorElegido, poolJugadores) {
+            return new Promise(async (resolve) => {
+                const track = document.getElementById('ruletaTrack');
+                const contenedor = document.querySelector('.ruleta-container');
+                const cajaElegido = document.getElementById('ruletaElegido');
+                
+                // Preparar UI
+                document.getElementById('ruletaSub').textContent = subtituloTexto;
+                cajaElegido.classList.remove('show');
+                track.style.transition = 'none';
+                track.style.transform = 'translateX(0)';
+
+                // Generar los elementos de la ruleta
+                let itemsHTML = '';
+                const totalItems = 50; 
+                const winnerIndex = 42; // Donde va a detenerse
+
+                for(let i = 0; i < totalItems; i++) {
+                    let j = (i === winnerIndex) ? jugadorElegido : poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
+                    itemsHTML += `<div class="ruleta-item" id="rItem-${i}">
+                        <img src="${j.foto}">
+                        <span>${j.nombre}</span>
+                    </div>`;
+                }
+                track.innerHTML = itemsHTML;
+
+                await sleep(50); // Dar tiempo al navegador a pintar el HTML
+
+                // Calcular dónde parar
+                const itemWidth = 160; 
+                const centroDelGanador = (winnerIndex * itemWidth) + (itemWidth / 2);
+                const centroDelContenedor = contenedor.offsetWidth / 2;
+                
+                // Variación aleatoria (-60 a 60px) para que no pare en el centro milimétrico (más realismo)
+                const offsetAleatorio = Math.floor(Math.random() * 120) - 60;
+                const distanciaFinal = centroDelContenedor - centroDelGanador + offsetAleatorio;
+
+                // Lanzar animación de giro (5 segundos)
+                track.style.transition = 'transform 5s cubic-bezier(0.1, 0.7, 0.1, 1)';
+                track.style.transform = `translateX(${distanciaFinal}px)`;
+
+                await sleep(5000); // Esperar que frene
+
+                // Iluminar al ganador en la cinta
+                document.getElementById(`rItem-${winnerIndex}`).style.opacity = '1';
+                document.getElementById(`rItem-${winnerIndex}`).style.background = 'rgba(11, 232, 129, 0.2)';
+
+                // Mostrar la tarjeta en grande abajo
+                document.getElementById('ruletaElegidoImg').src = jugadorElegido.foto;
+                document.getElementById('ruletaElegidoNombre').textContent = jugadorElegido.nombre;
+                cajaElegido.classList.add('show');
+
+                await sleep(2500); // Tiempo para aplausos
+                resolve();
+            });
+        }
+
+        // --- EL GRAN SORTEO EN VIVO (CON RULETA) ---
         document.getElementById('btnSorteo').addEventListener('click', async () => {
             if(window.torneoActivo) { alert("Ya hay un torneo en curso."); return; }
 
@@ -425,9 +511,9 @@
             if (password !== "2026*") { alert("❌ Clave incorrecta."); return; }
 
             const jugadoresAptos = window.inscritosGlobal.filter(j => j.pagado === true);
-            if (jugadoresAptos.length < 4) { alert(`Mínimo 4 jugadores pagados.`); return; }
+            if (jugadoresAptos.length < 4) { alert(`Mínimo 4 jugadores pagados para iniciar.`); return; }
             
-            if (confirm(`Se iniciará la transmisión en vivo del sorteo con ${jugadoresAptos.length} jugadores. ¿Todo listo en la pantalla principal?`)) {
+            if (confirm(`Se iniciará la RULETA EN VIVO con ${jugadoresAptos.length} jugadores. ¿Proyectar en pantalla gigante?`)) {
                 window.torneoActivo = true; 
                 window.premiacion.primero = document.getElementById('inPremio1').value || "Trofeo y Efectivo";
                 window.premiacion.segundo = document.getElementById('inPremio2').value || "Efectivo";
@@ -438,10 +524,15 @@
 
                 let globalIndex = 0;
                 let partidosParaAnimar = []; 
+                let mesasAnimadas = new Set();
+                let tiemposMesas = [horaInicioStr, horaInicioStr, horaInicioStr, horaInicioStr, horaInicioStr];
 
+                // Organizar la lógica detrás de escena
                 for (let i = 0; i < mezclados.length; i += 4) {
+                    let gIdx = i / 4;
                     let p = mezclados.slice(i, i + 4).map(j => ({ ...j, pts: 0, car: 0, pj: 0 }));
                     let partidosGrupo = [];
+                    
                     if(p.length >= 2) partidosGrupo.push({ j1: p[0], j2: p[1], s1: '', s2: '', jugado: false });
                     if(p.length >= 3) partidosGrupo.push({ j1: p[0], j2: p[2], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[2], s1: '', s2: '', jugado: false });
                     if(p.length === 4) {
@@ -452,55 +543,60 @@
                         ];
                     }
                     
-                    partidosGrupo.forEach(partido => {
-                        let lote = Math.floor(globalIndex / 5); 
-                        partido.horaInt = sumarMinutos(horaInicioStr, lote * 45); 
-                        partido.mesa = (globalIndex % 5) + 1; 
+                    let mesaIndex = gIdx % 5; 
+                    let mesaNumero = mesaIndex + 1;
+                    let nombreGrupo = `GRUPO ${String.fromCharCode(65 + gIdx)}`;
+
+                    partidosGrupo.forEach((partido, pIdx) => {
+                        partido.horaInt = tiemposMesas[mesaIndex]; 
+                        partido.mesa = mesaNumero; 
                         
-                        if(lote === 0) { partidosParaAnimar.push({ ...partido, nombreGrupo: `GRUPO ${String.fromCharCode(65 + (i/4))}` }); }
-                        globalIndex++;
+                        // Guardar solo el partido inaugural de cada mesa para la ruleta
+                        if(pIdx === 0 && !mesasAnimadas.has(mesaNumero)) {
+                            mesasAnimadas.add(mesaNumero);
+                            partidosParaAnimar.push({ ...partido, nombreGrupo: nombreGrupo });
+                        }
+                        tiemposMesas[mesaIndex] = sumarMinutos(tiemposMesas[mesaIndex], 45);
                     });
-                    window.grupos.push({ nombre: `GRUPO ${String.fromCharCode(65 + (i/4))}`, participantes: p, partidos: partidosGrupo });
+                    window.grupos.push({ nombre: nombreGrupo, participantes: p, partidos: partidosGrupo });
                 }
                 
-                let totalLotes = Math.ceil(globalIndex / 5);
-                window.ultimaHoraGlobal = sumarMinutos(horaInicioStr, totalLotes * 45);
+                let maxMinutos = 0;
+                tiemposMesas.forEach(t => {
+                    let min = (t.split(':')[0]*60) + Number(t.split(':')[1]);
+                    if(min > maxMinutos) { maxMinutos = min; window.ultimaHoraGlobal = t; }
+                });
 
-                // ANIMACIÓN DE CINE
-                const cine = document.getElementById('cineSorteo');
+                // --- SHOW DE LA RULETA ---
+                const cine = document.getElementById('ruletaSorteo');
                 cine.style.display = 'flex';
                 
                 for(let i=0; i < partidosParaAnimar.length; i++) {
                     let p = partidosParaAnimar[i];
-                    document.getElementById('cineMesa').style.opacity = '0'; document.getElementById('cineMesa').style.transform = 'translateY(-30px)';
-                    document.getElementById('cineHora').style.opacity = '0'; document.getElementById('cineJ1').style.opacity = '0';
-                    document.getElementById('cineJ1').style.transform = 'translateX(-50px)'; document.getElementById('cineVs').style.opacity = '0';
-                    document.getElementById('cineJ2').style.opacity = '0'; document.getElementById('cineJ2').style.transform = 'translateX(50px)';
-                    await sleep(500);
-
-                    document.getElementById('cineMesa').innerHTML = `ASIGNANDO MESA ${p.mesa} <br><span style="font-size:20px; color:#fff;">${p.nombreGrupo}</span>`;
-                    document.getElementById('cineHora').innerHTML = `🕒 Inicio: ${formatoAMPM(p.horaInt)}`;
-                    document.getElementById('cineMesa').style.opacity = '1'; document.getElementById('cineMesa').style.transform = 'translateY(0)';
-                    document.getElementById('cineHora').style.opacity = '1';
+                    
+                    document.getElementById('ruletaMesa').innerHTML = `ASIGNANDO MESA ${p.mesa} <br><span style="font-size:22px; color:#fff;">${p.nombreGrupo} | ${formatoAMPM(p.horaInt)}</span>`;
+                    
+                    // Tirar Ruleta para Jugador 1
+                    await animarRuleta("Sorteando Jugador 1...", p.j1, jugadoresAptos);
+                    
+                    // Tirar Ruleta para Jugador 2
+                    await animarRuleta("Sorteando Oponente (Jugador 2)...", p.j2, jugadoresAptos);
+                    
+                    // Pequeña pausa antes de saltar a la siguiente mesa
+                    document.getElementById('ruletaSub').textContent = `¡Mesa ${p.mesa} definida! Preparando la siguiente...`;
+                    document.getElementById('ruletaElegido').classList.remove('show');
                     await sleep(2000);
-
-                    document.getElementById('cineImg1').src = p.j1.foto; document.getElementById('cineNombre1').innerHTML = p.j1.nombre;
-                    document.getElementById('cineJ1').style.opacity = '1'; document.getElementById('cineJ1').style.transform = 'translateX(0)';
-                    await sleep(2500);
-
-                    document.getElementById('cineVs').style.opacity = '1';
-                    await sleep(1500);
-
-                    document.getElementById('cineImg2').src = p.j2.foto; document.getElementById('cineNombre2').innerHTML = p.j2.nombre;
-                    document.getElementById('cineJ2').style.opacity = '1'; document.getElementById('cineJ2').style.transform = 'translateX(0)';
-                    await sleep(4000);
                 }
 
-                document.getElementById('cineMesa').innerHTML = `¡SORTEO FINALIZADO! 🎱<br><span style="font-size:20px; color:#fff;">El torneo ha comenzado. Que gane el mejor.</span>`;
-                document.getElementById('cineHora').style.opacity = '0'; document.getElementById('cineJ1').style.opacity = '0';
-                document.getElementById('cineVs').style.opacity = '0'; document.getElementById('cineJ2').style.opacity = '0';
-                await sleep(3000); cine.style.display = 'none';
+                document.getElementById('ruletaMesa').innerHTML = `¡SORTEO FINALIZADO! 🎱`;
+                document.getElementById('ruletaSub').textContent = `Las mesas están asignadas. El torneo puede comenzar.`;
+                document.getElementById('ruletaTrack').innerHTML = ''; // Vaciar carril
                 
+                await sleep(3500); 
+                cine.style.display = 'none';
+                
+                // --- FIN DEL SHOW ---
+
                 document.getElementById('panelConfiguracion').style.display = 'none';
                 document.getElementById('btnTerminarTorneo').style.display = 'inline-block';
                 document.getElementById('btnGenerarFinales').style.display = 'block';
@@ -565,7 +661,7 @@
             });
         }
 
-        // --- FASE FINAL DE ELIMINACIÓN BLINDADA ---
+        // --- FASE FINAL DE ELIMINACIÓN ---
         window.generarFaseFinal = async function() {
             let clasificados = [];
             window.grupos.forEach(grupo => {
