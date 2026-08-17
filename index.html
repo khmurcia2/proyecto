@@ -46,6 +46,7 @@
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; color: white; text-transform: uppercase; }
         .bg-master { background: linear-gradient(45deg, #ff3f34, #ff5e57); }
         .bg-intermedio { background: linear-gradient(45deg, #ffa801, #ffc048); }
+        .bg-normal { background: linear-gradient(45deg, #8e44ad, #9b59b6); } /* NUEVO COLOR PARA NORMAL */
         .bg-amateur { background: linear-gradient(45deg, #0fbcf9, #4bcffa); }
 
         /* MODAL DE EDICIÓN */
@@ -135,6 +136,7 @@
                     <select id="editCategoria" required>
                         <option value="Master">⭐ Master (Meta: 25)</option>
                         <option value="Intermedio">⚡ Intermedio (Meta: 20)</option>
+                        <option value="Normal">🟢 Normal (Meta: 15)</option>
                         <option value="Amateur">🎯 Amateur (Meta: 12)</option>
                     </select>
                 </div>
@@ -167,6 +169,7 @@
                         <option value="">Selecciona el nivel...</option>
                         <option value="Master">⭐ Master (Meta: 25)</option>
                         <option value="Intermedio">⚡ Intermedio (Meta: 20)</option>
+                        <option value="Normal">🟢 Normal (Meta: 15)</option>
                         <option value="Amateur">🎯 Amateur (Meta: 12)</option>
                     </select>
                 </div>
@@ -253,7 +256,14 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const reglas = { "Master": { meta: 25, color: "bg-master" }, "Intermedio": { meta: 20, color: "bg-intermedio" }, "Amateur": { meta: 12, color: "bg-amateur" } };
+        // --- REGLAS ACTUALIZADAS CON CATEGORÍA "NORMAL" ---
+        const reglas = { 
+            "Master": { meta: 25, color: "bg-master" }, 
+            "Intermedio": { meta: 20, color: "bg-intermedio" }, 
+            "Normal": { meta: 15, color: "bg-normal" },
+            "Amateur": { meta: 12, color: "bg-amateur" } 
+        };
+
         window.inscritosGlobal = [];
         window.grupos = [];
         window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
@@ -262,8 +272,6 @@
         window.ultimaHoraGlobal = "18:00";
 
         // --- SISTEMA DE GUARDADO BLINDADO CONTRA ERRORES ---
-        // Firebase prohíbe Arrays anidados. Al envolver los partidos en un objeto ({ partidos: [...] }),
-        // Firebase lo acepta sin rechazar el guardado.
         async function guardarEstadoTorneo() {
             try { 
                 const datosLimpios = JSON.parse(JSON.stringify({ 
@@ -301,7 +309,6 @@
                             document.getElementById('btnGenerarFinales').style.display = tieneFinales ? 'none' : 'block';
                         }
                         
-                        // Retraso seguro para forzar el cambio de pestaña después de pintar el DOM
                         if (tieneFinales) { 
                             renderizarFaseFinal(); 
                             setTimeout(() => { cambiarPestana('finales', document.getElementById('tab-finales')); }, 200);
@@ -581,7 +588,6 @@
             }
 
             window.ultimaHoraGlobal = sumarMinutos(window.ultimaHoraGlobal, Math.ceil(partidosRonda1.length / 5) * 45);
-            // ENVOLVEMOS EL ARRAY DE PARTIDOS EN UN OBJETO PARA QUE FIREBASE NO FALLE
             window.faseEliminacion.rondas = [ { partidos: partidosRonda1 } ];
             window.faseEliminacion.rondaActiva = 0;
             window.faseEliminacion.campeon = null;
@@ -597,7 +603,6 @@
             const s2 = parseInt(document.getElementById(`f_r${rIdx}p${pIdx}s2`).value) || 0;
             if(s1 === s2) { alert("Sin empates. Determine un ganador."); return; }
 
-            // LECTURA DEL NUEVO FORMATO DE OBJETO
             let partido = window.faseEliminacion.rondas[rIdx].partidos[pIdx];
             partido.s1 = s1;
             partido.s2 = s2;
