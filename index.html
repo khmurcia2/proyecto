@@ -61,13 +61,13 @@
         /* TORNEO Y MESAS */
         .controls-torneo { display: flex; gap: 15px; justify-content: center; align-items: flex-end; margin-bottom: 30px; background: rgba(0,0,0,0.5); padding: 20px; border-radius: 10px; flex-wrap: wrap; }
         .btn-sorteo { background: linear-gradient(45deg, #ffa801, #ffd32a); color: #000; border: none; padding: 12px 25px; font-size: 14px; font-weight: 800; border-radius: 8px; cursor: pointer; transition: 0.3s; }
-        .btn-sorteo:hover { transform: scale(1.05); }
+        .btn-sorteo:hover { transform: scale(1.05); box-shadow: 0 0 15px rgba(255, 211, 42, 0.6); }
         .btn-terminar { background: linear-gradient(45deg, #ff3f34, #ff5e57); color: white; border: none; padding: 12px 25px; font-size: 14px; font-weight: 800; border-radius: 8px; cursor: pointer; display: none; transition: 0.3s; }
         .btn-terminar:hover { box-shadow: 0 0 15px rgba(255, 63, 52, 0.8); }
 
         .fase-grupos { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 25px; justify-items: center; }
         .grupo { width: 100%; max-width: 450px; background: rgba(20, 25, 30, 0.8); border-top: 4px solid #00d8d6; border-radius: 10px; padding: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        .grupo h3 { margin-top: 0; color: #ffd32a; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; font-size: 18px; }
+        .grupo h3 { margin-top: 0; color: #ffd32a; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; font-size: 18px; text-align: center; }
         
         .mesa-billar { width: 100%; box-sizing: border-box; background: url('https://www.transparenttextures.com/patterns/felt.png'), linear-gradient(to bottom, #006266, #004d40); border: 10px solid #5c2c16; border-radius: 10px; padding: 15px; padding-top: 35px; margin-bottom: 15px; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); text-align: center; position: relative; }
         .horario { position: absolute; top: 0; left: 50%; transform: translateX(-50%); background: #000; color: #ffd32a; padding: 4px 15px; font-size: 12px; font-weight: bold; border-radius: 0 0 8px 8px; letter-spacing: 1px; width: 80%; white-space: nowrap; border: 1px solid #ffd32a; border-top: none; }
@@ -76,10 +76,9 @@
         .jugador-info { display: flex; align-items: center; gap: 10px; font-size: 14px; font-weight: bold; }
         
         .inputs-marcador { display: flex; justify-content: space-between; margin-top: 10px; gap: 10px; }
-        .input-score { width: 45%; text-align: center; font-size: 18px; font-weight: bold; background: rgba(255,255,255,0.9); color: #000; }
-        .btn-guardar-score { background: #05c46b; border: none; color: white; width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-guardar-score:hover { filter: brightness(1.1); }
-        .btn-fase-final { background: linear-gradient(45deg, #ff3f34, #ff5e57); color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; display: none; box-shadow: 0 5px 15px rgba(255, 63, 52, 0.4); text-transform: uppercase; }
+        .input-score { width: 45%; text-align: center; font-size: 18px; font-weight: bold; background: rgba(255,255,255,0.9); color: #000; border-radius: 5px; border:none; }
+        .btn-guardar-score { background: #05c46b; border: none; color: white; width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .btn-guardar-score:hover { filter: brightness(1.1); box-shadow: 0 0 10px #05c46b; }
         
         /* PLACA DE PREMIACIÓN */
         .caja-premios { background: linear-gradient(45deg, rgba(255,215,0,0.1), rgba(255,215,0,0.3)); border: 2px solid #ffd32a; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; display: none; box-shadow: 0 0 20px rgba(255,215,0,0.2); }
@@ -121,20 +120,18 @@
     <div class="navbar">
         <button class="tab-btn activa" id="tab-inscripcion" onclick="cambiarPestana('inscripcion', this)">📝 Registro Oficial</button>
         <button class="tab-btn" id="tab-torneo" onclick="cambiarPestana('torneo', this)">🎱 Fase de Grupos</button>
-        <button class="tab-btn" id="tab-finales" onclick="cambiarPestana('finales', this)">🏆 Gran Final</button>
+        <button class="tab-btn" id="tab-finales" onclick="cambiarPestana('finales', this)">🏆 Muerte Súbita</button>
     </div>
 
     <!-- PANTALLA DE LA RULETA EN VIVO -->
     <div id="ruletaSorteo">
         <div class="ruleta-titulo" id="ruletaMesa">MESA 1</div>
         <div class="ruleta-subtitulo" id="ruletaSub">Seleccionando Jugador...</div>
-        
         <div class="ruleta-container">
             <div class="ruleta-aguja">▼</div>
             <div class="ruleta-linea-centro"></div>
             <div class="ruleta-track" id="ruletaTrack"></div>
         </div>
-
         <div class="ruleta-elegido" id="ruletaElegido">
             <img src="" id="ruletaElegidoImg">
             <span id="ruletaElegidoNombre">NOMBRE</span>
@@ -154,10 +151,10 @@
                 <div class="form-group">
                     <label>Categoría</label>
                     <select id="editCategoria" required>
-                        <option value="Master">⭐ Master (Meta: 25)</option>
-                        <option value="Intermedio">⚡ Intermedio (Meta: 20)</option>
-                        <option value="Normal">🟢 Normal (Meta: 15)</option>
-                        <option value="Amateur">🎯 Amateur (Meta: 12)</option>
+                        <option value="Master">⭐ Master</option>
+                        <option value="Intermedio">⚡ Intermedio</option>
+                        <option value="Normal">🟢 Normal</option>
+                        <option value="Amateur">🎯 Amateur</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -188,10 +185,10 @@
                     <label for="categoria">Categoría Asignada</label>
                     <select id="categoria" required>
                         <option value="">Selecciona el nivel...</option>
-                        <option value="Master">⭐ Master (Meta: 25)</option>
-                        <option value="Intermedio">⚡ Intermedio (Meta: 20)</option>
-                        <option value="Normal">🟢 Normal (Meta: 15)</option>
-                        <option value="Amateur">🎯 Amateur (Meta: 12)</option>
+                        <option value="Master">⭐ Master</option>
+                        <option value="Intermedio">⚡ Intermedio</option>
+                        <option value="Normal">🟢 Normal</option>
+                        <option value="Amateur">🎯 Amateur</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -208,7 +205,7 @@
             <h2>Participantes Registrados (<span id="contador" style="color: #00d8d6;">0</span>)</h2>
             <p style="text-align: center; color: #aaa; font-size: 14px;">Aptos para el sorteo: <strong id="contadorAptos" style="color:#0be881;">0</strong><br><em>(Haz clic en la foto de un jugador para editar o <b>eliminar</b>)</em></p>
             <table>
-                <thead><tr><th>Jugador</th><th>Nivel</th><th>Meta</th><th style="text-align: center;">Estado</th></tr></thead>
+                <thead><tr><th>Jugador</th><th>Nivel</th><th style="text-align: center;">Estado</th></tr></thead>
                 <tbody id="listaJugadores"></tbody>
             </table>
         </div>
@@ -216,10 +213,18 @@
 
     <!-- SECCIÓN 2: FASE DE GRUPOS -->
     <div id="seccion-torneo" class="seccion">
-        <h1>Logística y Grupos</h1>
-        
-        <div class="card" id="panelConfiguracion">
-            <h3 style="color: #fff; margin-top:0;">Configuración Inicial (Administrador)</h3>
+        <div class="card" id="panelConfiguracion" style="border-top: 5px solid #00d8d6;">
+            <h2 style="color: #00d8d6; margin-top:0;">⚙️ Configuración del Torneo</h2>
+            
+            <div class="form-group" style="margin-bottom: 25px;">
+                <label style="color: #ffd32a; font-size: 16px;">Selecciona la Modalidad</label>
+                <select id="tipoTorneoConfig" style="border-color: #ffd32a; font-weight: bold;">
+                    <option value="clasico">🏆 Torneo Clásico (Fase de Grupos + Eliminación)</option>
+                    <option value="matamata">⚡ Mata Mata (Eliminación Directa Relámpago desde el inicio)</option>
+                </select>
+                <p style="color: #aaa; font-size: 12px; margin-top: 5px;">* En <b>Mata Mata</b> las metas cambian automáticamente: Master(12), Intermedio(9), Normal(7), Amateur(5).</p>
+            </div>
+
             <div class="controls-torneo" style="background: none; padding:0; margin:0; justify-content: space-between;">
                 <div class="form-group" style="width: 25%;">
                     <label>Hora Inicio</label>
@@ -234,7 +239,7 @@
                     <input type="text" id="inPremio2" placeholder="Ej: $200.000">
                 </div>
             </div>
-            <button class="btn-sorteo" id="btnSorteo" style="width: 100%; margin-top: 15px; padding: 15px; font-size: 18px;">🎲 Iniciar Ruleta de Sorteo (Clave requerida)</button>
+            <button class="btn-sorteo" id="btnSorteo" style="width: 100%; margin-top: 15px; padding: 15px; font-size: 18px;">🎲 Iniciar Sorteo Oficial (Clave requerida)</button>
         </div>
 
         <div style="text-align: center; margin-bottom: 20px;">
@@ -242,7 +247,7 @@
         </div>
 
         <div class="fase-grupos" id="contenedorGrupos"></div>
-        <button class="btn-fase-final" id="btnGenerarFinales" onclick="generarFaseFinal()">🏆 Finalizar Grupos e Iniciar Muerte Súbita</button>
+        <button class="btn-sorteo" id="btnGenerarFinales" onclick="generarFaseFinal()" style="width: 100%; display: none; margin-top: 20px; padding: 15px; font-size: 16px;">🏆 Finalizar Grupos e Iniciar Muerte Súbita</button>
     </div>
 
     <!-- SECCIÓN 3: FASE FINAL -->
@@ -253,9 +258,14 @@
             <h3 style="font-size: 16px; color:#ccc;">🥈 Subcampeón: <span id="txtPremio2"></span></h3>
         </div>
 
-        <h1>Cuadro de Eliminación</h1>
+        <h1>Cuadro de Muerte Súbita</h1>
         <div id="contenedorFinales">
             <p style="text-align: center; width: 100%;">La fase final se construirá aquí automáticamente.</p>
+        </div>
+
+        <!-- BOTÓN MÁGICO PARA SORTEAR LA SIGUIENTE RONDA -->
+        <div style="text-align: center; margin-top: 30px;">
+            <button class="btn-sorteo" id="btnSiguienteRonda" style="display: none; padding: 15px 30px; font-size: 18px;" onclick="sortearSiguienteRonda()">🎲 Sortear Siguiente Ronda en Vivo</button>
         </div>
     </div>
 
@@ -277,25 +287,29 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        const reglas = { 
-            "Master": { meta: 25, color: "bg-master" }, 
-            "Intermedio": { meta: 20, color: "bg-intermedio" }, 
-            "Normal": { meta: 15, color: "bg-normal" },
-            "Amateur": { meta: 12, color: "bg-amateur" } 
-        };
+        // --- METAS DINÁMICAS ---
+        const colorClases = { "Master": "bg-master", "Intermedio": "bg-intermedio", "Normal": "bg-normal", "Amateur": "bg-amateur" };
+        const metasClasico = { "Master": 25, "Intermedio": 20, "Normal": 15, "Amateur": 12 };
+        const metasMataMata = { "Master": 12, "Intermedio": 9, "Normal": 7, "Amateur": 5 };
 
         window.inscritosGlobal = [];
         window.grupos = [];
         window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
         window.torneoActivo = false;
+        window.tipoTorneo = 'clasico'; // 'clasico' o 'matamata'
         window.premiacion = { primero: "", segundo: "" };
         window.ultimaHoraGlobal = "18:00";
+
+        function getMeta(categoria) {
+            return window.tipoTorneo === 'matamata' ? metasMataMata[categoria] : metasClasico[categoria];
+        }
 
         // --- SISTEMA DE GUARDADO BLINDADO ---
         async function guardarEstadoTorneo() {
             try { 
                 const datosLimpios = JSON.parse(JSON.stringify({ 
                     activo: window.torneoActivo, 
+                    tipoTorneo: window.tipoTorneo,
                     grupos: window.grupos, 
                     faseEliminacion: window.faseEliminacion, 
                     premiacion: window.premiacion, 
@@ -313,6 +327,7 @@
                     window.torneoActivo = data.activo || false;
                     
                     if(window.torneoActivo) {
+                        window.tipoTorneo = data.tipoTorneo || 'clasico';
                         window.grupos = data.grupos || [];
                         window.faseEliminacion = data.faseEliminacion || { rondas: [], rondaActiva: 0, campeon: null };
                         window.premiacion = data.premiacion || { primero: "", segundo: "" };
@@ -324,16 +339,23 @@
 
                         let tieneFinales = window.faseEliminacion.rondas && window.faseEliminacion.rondas.length > 0;
 
-                        if (window.grupos.length > 0) { 
-                            renderizarGrupos(); 
-                            document.getElementById('btnGenerarFinales').style.display = tieneFinales ? 'none' : 'block';
-                        }
-                        
-                        if (tieneFinales) { 
-                            renderizarFaseFinal(); 
+                        if(window.tipoTorneo === 'clasico') {
+                            if (window.grupos.length > 0) { 
+                                renderizarGrupos(); 
+                                document.getElementById('btnGenerarFinales').style.display = tieneFinales ? 'none' : 'block';
+                            }
+                            if (tieneFinales) { 
+                                renderizarFaseFinal(); 
+                                setTimeout(() => { cambiarPestana('finales', document.getElementById('tab-finales')); }, 200);
+                            } else if (window.grupos.length > 0) {
+                                setTimeout(() => { cambiarPestana('torneo', document.getElementById('tab-torneo')); }, 200);
+                            }
+                        } else {
+                            // En Mata Mata no hay grupos, va directo a Finales
+                            document.getElementById('contenedorGrupos').innerHTML = '<h3 style="color:#aaa;">Modo MATA MATA Activo. Continúa en la pestaña de Gran Final.</h3>';
+                            document.getElementById('btnGenerarFinales').style.display = 'none';
+                            renderizarFaseFinal();
                             setTimeout(() => { cambiarPestana('finales', document.getElementById('tab-finales')); }, 200);
-                        } else if (window.grupos.length > 0) {
-                            setTimeout(() => { cambiarPestana('torneo', document.getElementById('tab-torneo')); }, 200);
                         }
                     }
                 }
@@ -343,7 +365,7 @@
 
         window.terminarTorneoOficial = async function() {
             const password = prompt("Seguridad del Sistema:\nIngrese la contraseña de administrador para finalizar el torneo:");
-            if (password !== "2026*") { alert("❌ Contraseña incorrecta. Operación cancelada."); return; }
+            if (password !== "2026*") { alert("❌ Contraseña incorrecta."); return; }
             if(confirm("¡ATENCIÓN! ¿Seguro que deseas finalizar el torneo? Esto limpiará el cuadro por completo para un nuevo evento.")) {
                 window.torneoActivo = false; window.grupos = []; window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
                 await guardarEstadoTorneo(); location.reload(); 
@@ -367,7 +389,7 @@
             const semilla = encodeURIComponent(nombre + Math.random());
             const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${semilla}`;
             try {
-                await addDoc(collection(db, "jugadores"), { nombre, categoria, pagado, foto: avatarUrl, meta: reglas[categoria].meta, claseColor: reglas[categoria].color, fechaRegistro: new Date() });
+                await addDoc(collection(db, "jugadores"), { nombre, categoria, pagado, foto: avatarUrl, claseColor: colorClases[categoria], fechaRegistro: new Date() });
                 this.reset();
             } catch (error) { alert("Error."); } finally { btn.disabled = false; btn.textContent = 'Registrar Jugador'; }
         });
@@ -391,7 +413,7 @@
             const categoria = document.getElementById('editCategoria').value;
             const pagado = document.getElementById('editPagado').checked;
             try {
-                await updateDoc(doc(db, "jugadores", id), { nombre, categoria, pagado, meta: reglas[categoria].meta, claseColor: reglas[categoria].color });
+                await updateDoc(doc(db, "jugadores", id), { nombre, categoria, pagado, claseColor: colorClases[categoria] });
                 cerrarModalEdicion();
             } catch(error) { alert("Error al actualizar la información."); }
         });
@@ -399,11 +421,11 @@
         window.eliminarJugador = async function() {
             const id = document.getElementById('editId').value;
             const nombre = document.getElementById('editNombre').value;
-            if(confirm(`⚠️ ¿Estás completamente seguro de que deseas ELIMINAR a ${nombre}?\nEsta acción no se puede deshacer y borrará al jugador de la base de datos.`)) {
+            if(confirm(`⚠️ ¿Deseas ELIMINAR a ${nombre}?\nEsta acción no se puede deshacer.`)) {
                 try {
                     await deleteDoc(doc(db, "jugadores", id));
                     cerrarModalEdicion();
-                } catch(error) { alert("Error al eliminar al jugador."); console.error(error); }
+                } catch(error) { alert("Error al eliminar al jugador."); }
             }
         };
 
@@ -413,7 +435,7 @@
             snapshot.forEach((doc) => {
                 const data = doc.data(); window.inscritosGlobal.push({ id: doc.id, ...data });
                 if (data.pagado) aptosParaSorteo++;
-                const iconoEstado = data.pagado ? '<span style="color: #0be881; font-size: 20px;" title="Pagado">✅</span>' : '<span style="color: #ff3f34; font-size: 20px;" title="Debe inscripción">❌</span>';
+                const iconoEstado = data.pagado ? '<span style="color: #0be881; font-size: 20px;">✅</span>' : '<span style="color: #ff3f34; font-size: 20px;">❌</span>';
                 
                 tbody.innerHTML += `<tr>
                     <td><div style="display:flex; align-items:center;">
@@ -421,7 +443,6 @@
                         <strong>${data.nombre}</strong>
                     </div></td>
                     <td><span class="badge ${data.claseColor}">${data.categoria}</span></td>
-                    <td>${data.meta}</td>
                     <td style="text-align: center;">${iconoEstado}</td>
                 </tr>`;
             });
@@ -429,7 +450,7 @@
             document.getElementById('contadorAptos').textContent = aptosParaSorteo;
         });
 
-        // --- FUNCIONES DE TIEMPO Y ANIMACIÓN ---
+        // --- FUNCIONES DE TIEMPO Y ANIMACIÓN RULETA ---
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
         
         function sumarMinutos(hora24, minutos) {
@@ -445,8 +466,11 @@
             h = h % 12 || 12;
             return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
         }
+        function obtenerMinutos(hora24) {
+            let [h, m] = hora24.split(':').map(Number);
+            return h * 60 + m;
+        }
 
-        // MOTOR DE LA RULETA (ANIMACIÓN HORIZONTAL)
         async function animarRuleta(subtituloTexto, jugadorElegido, poolJugadores) {
             return new Promise(async (resolve) => {
                 const track = document.getElementById('ruletaTrack');
@@ -455,31 +479,26 @@
                 
                 document.getElementById('ruletaSub').textContent = subtituloTexto;
                 cajaElegido.classList.remove('show');
-                track.style.transition = 'none';
-                track.style.transform = 'translateX(0)';
+                track.style.transition = 'none'; track.style.transform = 'translateX(0)';
 
                 let itemsHTML = '';
-                const totalItems = 50; 
-                const winnerIndex = 42; 
+                const totalItems = 50; const winnerIndex = 42; 
 
                 for(let i = 0; i < totalItems; i++) {
                     let j = (i === winnerIndex) ? jugadorElegido : poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
                     itemsHTML += `<div class="ruleta-item" id="rItem-${i}"><img src="${j.foto}"><span>${j.nombre}</span></div>`;
                 }
                 track.innerHTML = itemsHTML;
-
                 await sleep(50); 
 
                 const itemWidth = 160; 
                 const centroDelGanador = (winnerIndex * itemWidth) + (itemWidth / 2);
                 const centroDelContenedor = contenedor.offsetWidth / 2;
-                
                 const offsetAleatorio = Math.floor(Math.random() * 120) - 60;
                 const distanciaFinal = centroDelContenedor - centroDelGanador + offsetAleatorio;
 
                 track.style.transition = 'transform 5s cubic-bezier(0.1, 0.7, 0.1, 1)';
                 track.style.transform = `translateX(${distanciaFinal}px)`;
-
                 await sleep(5000); 
 
                 document.getElementById(`rItem-${winnerIndex}`).style.opacity = '1';
@@ -488,126 +507,200 @@
                 document.getElementById('ruletaElegidoImg').src = jugadorElegido.foto;
                 document.getElementById('ruletaElegidoNombre').textContent = jugadorElegido.nombre;
                 cajaElegido.classList.add('show');
-
-                await sleep(2500); 
-                resolve();
+                await sleep(2500); resolve();
             });
         }
 
-        // --- EL GRAN SORTEO EN VIVO (CON RULETA) ---
+        // MOTOR CENTRAL PARA CREAR CUALQUIER RONDA CON RULETA
+        window.ejecutarSorteoRondaRuleta = async function(jugadoresParaSortear, nombreFase) {
+            // Mezclar aleatoriamente el pool de jugadores
+            let mezclados = [...jugadoresParaSortear].sort(() => Math.random() - 0.5);
+            
+            // Si hay impar, agregar el comodín "LIBRE" al final
+            if(mezclados.length % 2 !== 0) {
+                mezclados.push({ id: 'libre', nombre: 'LIBRE (Avanza)', categoria: 'Amateur', foto: 'https://api.dicebear.com/7.x/adventurer/svg?seed=libre', claseColor: 'bg-amateur', esLibre: true });
+            }
+
+            let partidosNuevos = [];
+            let tiemposMesas = [window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal];
+            
+            // El show de la ruleta solo se anima para un maximo de 5 partidos para no aburrir
+            let maxAnimaciones = Math.min(mezclados.length / 2, 5);
+            const cine = document.getElementById('ruletaSorteo');
+            cine.style.display = 'flex';
+
+            for(let i=0; i < mezclados.length; i+=2) {
+                let j1 = mezclados[i];
+                let j2 = mezclados[i+1];
+                let lote = Math.floor((i/2) / 5);
+                let mesaIndex = (i/2) % 5;
+                let mesaNumero = mesaIndex + 1;
+                
+                let partido = {
+                    j1: j1, j2: j2,
+                    s1: 0, s2: 0, jugado: false, ganador: null,
+                    horaInt: tiemposMesas[mesaIndex],
+                    mesa: mesaNumero
+                };
+
+                // Si uno es Libre, autocompletar el partido para que pase directo
+                if(j2.esLibre) {
+                    partido.jugado = true;
+                    partido.ganador = j1;
+                    partido.s1 = '-'; partido.s2 = '-';
+                }
+
+                // Animar si está en los primeros 5
+                if((i/2) < maxAnimaciones && !j2.esLibre) {
+                    document.getElementById('ruletaMesa').innerHTML = `${nombreFase} - MESA ${mesaNumero} <br><span style="font-size:22px; color:#fff;">🕒 ${formatoAMPM(partido.horaInt)}</span>`;
+                    await animarRuleta("Sorteando Jugador 1...", j1, jugadoresParaSortear);
+                    await animarRuleta("Sorteando Oponente...", j2, jugadoresParaSortear);
+                    document.getElementById('ruletaSub').textContent = `¡Partido definido! Preparando el siguiente...`;
+                    document.getElementById('ruletaElegido').classList.remove('show');
+                    await sleep(2000);
+                }
+
+                partidosNuevos.push(partido);
+                tiemposMesas[mesaIndex] = sumarMinutos(tiemposMesas[mesaIndex], 45);
+            }
+
+            // Actualizar la hora global para la próxima ronda
+            let maxMinutos = 0;
+            tiemposMesas.forEach(t => {
+                let min = obtenerMinutos(t);
+                if(min > maxMinutos) { maxMinutos = min; window.ultimaHoraGlobal = t; }
+            });
+
+            document.getElementById('ruletaMesa').innerHTML = `¡SORTEO FINALIZADO! 🎱`;
+            document.getElementById('ruletaSub').textContent = `Las mesas están listas. ¡A jugar!`;
+            document.getElementById('ruletaTrack').innerHTML = ''; 
+            await sleep(3000); 
+            cine.style.display = 'none';
+
+            window.faseEliminacion.rondas.push({ partidos: partidosNuevos });
+            window.faseEliminacion.rondaActiva = window.faseEliminacion.rondas.length - 1;
+            
+            document.getElementById('btnSiguienteRonda').style.display = 'none';
+            renderizarFaseFinal();
+            cambiarPestana('finales', document.getElementById('tab-finales'));
+            await guardarEstadoTorneo();
+        };
+
+        // --- BOTÓN PRINCIPAL: INICIAR TORNEO ---
         document.getElementById('btnSorteo').addEventListener('click', async () => {
             if(window.torneoActivo) { alert("Ya hay un torneo en curso."); return; }
 
-            const password = prompt("Ingrese clave de administrador para iniciar sorteo:");
+            const password = prompt("Ingrese clave de administrador:");
             if (password !== "2026*") { alert("❌ Clave incorrecta."); return; }
 
             const jugadoresAptos = window.inscritosGlobal.filter(j => j.pagado === true);
             if (jugadoresAptos.length < 4) { alert(`Mínimo 4 jugadores pagados para iniciar.`); return; }
             
-            if (confirm(`Se iniciará la RULETA EN VIVO con ${jugadoresAptos.length} jugadores. ¿Proyectar en pantalla gigante?`)) {
+            window.tipoTorneo = document.getElementById('tipoTorneoConfig').value;
+            let msg = window.tipoTorneo === 'clasico' ? "Fase de Grupos" : "MATA MATA (Eliminación Directa)";
+
+            if (confirm(`Se iniciará el Torneo: ${msg} con ${jugadoresAptos.length} jugadores.\n¿Todo listo en la pantalla gigante?`)) {
                 window.torneoActivo = true; 
                 window.premiacion.primero = document.getElementById('inPremio1').value || "Trofeo y Efectivo";
                 window.premiacion.segundo = document.getElementById('inPremio2').value || "Efectivo";
-                
-                const horaInicioStr = document.getElementById('horaInicio').value; 
-                let mezclados = [...jugadoresAptos].sort(() => Math.random() - 0.5);
+                window.ultimaHoraGlobal = document.getElementById('horaInicio').value; 
                 window.grupos = []; window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
 
-                let globalIndex = 0;
-                let partidosParaAnimar = []; 
-                let mesasAnimadas = new Set();
-                let tiemposMesas = [horaInicioStr, horaInicioStr, horaInicioStr, horaInicioStr, horaInicioStr];
-
-                for (let i = 0; i < mezclados.length; i += 4) {
-                    let gIdx = i / 4;
-                    let p = mezclados.slice(i, i + 4).map(j => ({ ...j, pts: 0, car: 0, pj: 0 }));
-                    let partidosGrupo = [];
-                    
-                    if(p.length >= 2) partidosGrupo.push({ j1: p[0], j2: p[1], s1: '', s2: '', jugado: false });
-                    if(p.length >= 3) partidosGrupo.push({ j1: p[0], j2: p[2], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[2], s1: '', s2: '', jugado: false });
-                    if(p.length === 4) {
-                        partidosGrupo = [
-                            { j1: p[0], j2: p[1], s1: '', s2: '', jugado: false }, { j1: p[2], j2: p[3], s1: '', s2: '', jugado: false },
-                            { j1: p[0], j2: p[2], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[3], s1: '', s2: '', jugado: false },
-                            { j1: p[0], j2: p[3], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[2], s1: '', s2: '', jugado: false }
-                        ];
-                    }
-                    
-                    let mesaIndex = gIdx % 5; 
-                    let mesaNumero = mesaIndex + 1;
-                    let nombreGrupo = `GRUPO ${String.fromCharCode(65 + gIdx)}`;
-
-                    partidosGrupo.forEach((partido, pIdx) => {
-                        partido.horaInt = tiemposMesas[mesaIndex]; 
-                        partido.mesa = mesaNumero; 
-                        
-                        if(pIdx === 0 && !mesasAnimadas.has(mesaNumero)) {
-                            mesasAnimadas.add(mesaNumero);
-                            partidosParaAnimar.push({ ...partido, nombreGrupo: nombreGrupo });
-                        }
-                        tiemposMesas[mesaIndex] = sumarMinutos(tiemposMesas[mesaIndex], 45);
-                    });
-                    window.grupos.push({ nombre: nombreGrupo, participantes: p, partidos: partidosGrupo });
-                }
-                
-                let maxMinutos = 0;
-                tiemposMesas.forEach(t => {
-                    let min = (t.split(':')[0]*60) + Number(t.split(':')[1]);
-                    if(min > maxMinutos) { maxMinutos = min; window.ultimaHoraGlobal = t; }
-                });
-
-                // --- SHOW DE LA RULETA ---
-                const cine = document.getElementById('ruletaSorteo');
-                cine.style.display = 'flex';
-                
-                for(let i=0; i < partidosParaAnimar.length; i++) {
-                    let p = partidosParaAnimar[i];
-                    
-                    document.getElementById('ruletaMesa').innerHTML = `ASIGNANDO MESA ${p.mesa} <br><span style="font-size:22px; color:#fff;">${p.nombreGrupo} | ${formatoAMPM(p.horaInt)}</span>`;
-                    
-                    await animarRuleta("Sorteando Jugador 1...", p.j1, jugadoresAptos);
-                    await animarRuleta("Sorteando Oponente (Jugador 2)...", p.j2, jugadoresAptos);
-                    
-                    document.getElementById('ruletaSub').textContent = `¡Mesa ${p.mesa} definida! Preparando la siguiente...`;
-                    document.getElementById('ruletaElegido').classList.remove('show');
-                    await sleep(2000);
-                }
-
-                document.getElementById('ruletaMesa').innerHTML = `¡SORTEO FINALIZADO! 🎱`;
-                document.getElementById('ruletaSub').textContent = `Las mesas están asignadas. El torneo puede comenzar.`;
-                document.getElementById('ruletaTrack').innerHTML = ''; 
-                
-                await sleep(3500); 
-                cine.style.display = 'none';
-                
                 document.getElementById('panelConfiguracion').style.display = 'none';
                 document.getElementById('btnTerminarTorneo').style.display = 'inline-block';
-                document.getElementById('btnGenerarFinales').style.display = 'block';
+                mostrarPremiacion();
 
-                mostrarPremiacion(); renderizarGrupos(); await guardarEstadoTorneo();
+                if(window.tipoTorneo === 'clasico') {
+                    // LÓGICA CLÁSICA: Sorteo de Grupos
+                    let mezclados = [...jugadoresAptos].sort(() => Math.random() - 0.5);
+                    let globalIndex = 0; let tiemposMesas = [window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal];
+                    
+                    const cine = document.getElementById('ruletaSorteo'); cine.style.display = 'flex';
+                    let maxAnimaciones = Math.min(Math.ceil(mezclados.length / 4), 5); // Anima max 5 grupos
+                    
+                    for (let i = 0; i < mezclados.length; i += 4) {
+                        let gIdx = i / 4; let p = mezclados.slice(i, i + 4).map(j => ({ ...j, pts: 0, car: 0, pj: 0 }));
+                        let mesaIndex = gIdx % 5; let mesaNumero = mesaIndex + 1;
+                        let nombreGrupo = `GRUPO ${String.fromCharCode(65 + gIdx)}`;
+                        
+                        if(gIdx < maxAnimaciones && p.length >= 2) {
+                            document.getElementById('ruletaMesa').innerHTML = `ASIGNANDO MESA ${mesaNumero} <br><span style="font-size:22px; color:#fff;">${nombreGrupo} | ${formatoAMPM(tiemposMesas[mesaIndex])}</span>`;
+                            await animarRuleta("Cabeza de Serie...", p[0], jugadoresAptos);
+                            await animarRuleta("Oponente...", p[1], jugadoresAptos);
+                            document.getElementById('ruletaSub').textContent = `Preparando siguiente mesa...`;
+                            document.getElementById('ruletaElegido').classList.remove('show');
+                            await sleep(2000);
+                        }
+
+                        let partidosGrupo = [];
+                        if(p.length >= 2) partidosGrupo.push({ j1: p[0], j2: p[1], s1: '', s2: '', jugado: false });
+                        if(p.length >= 3) partidosGrupo.push({ j1: p[0], j2: p[2], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[2], s1: '', s2: '', jugado: false });
+                        if(p.length === 4) {
+                            partidosGrupo = [ { j1: p[0], j2: p[1], s1: '', s2: '', jugado: false }, { j1: p[2], j2: p[3], s1: '', s2: '', jugado: false }, { j1: p[0], j2: p[2], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[3], s1: '', s2: '', jugado: false }, { j1: p[0], j2: p[3], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[2], s1: '', s2: '', jugado: false } ];
+                        }
+                        
+                        partidosGrupo.forEach(partido => {
+                            partido.horaInt = tiemposMesas[mesaIndex]; partido.mesa = mesaNumero; 
+                            tiemposMesas[mesaIndex] = sumarMinutos(tiemposMesas[mesaIndex], 45);
+                        });
+                        window.grupos.push({ nombre: nombreGrupo, participantes: p, partidos: partidosGrupo });
+                    }
+                    
+                    let maxMin = 0; tiemposMesas.forEach(t => { let min = obtenerMinutos(t); if(min > maxMin) { maxMin = min; window.ultimaHoraGlobal = t; }});
+                    document.getElementById('ruletaMesa').innerHTML = `¡SORTEO FINALIZADO! 🎱`; document.getElementById('ruletaSub').textContent = `Las mesas están asignadas.`; document.getElementById('ruletaTrack').innerHTML = ''; 
+                    await sleep(3000); cine.style.display = 'none';
+                    
+                    document.getElementById('btnGenerarFinales').style.display = 'block';
+                    renderizarGrupos(); await guardarEstadoTorneo();
+
+                } else {
+                    // LÓGICA MATA MATA Pura: Salta directo a la ruleta de eliminación
+                    document.getElementById('contenedorGrupos').innerHTML = '<h3 style="color:#aaa;">Modo MATA MATA Activo. El torneo se desarrolla en la pestaña de Gran Final.</h3>';
+                    await ejecutarSorteoRondaRuleta(jugadoresAptos, "RONDA 1");
+                }
             }
         });
 
-        function mostrarPremiacion() {
-            if(window.premiacion.primero !== "") {
-                document.getElementById('placaPremiacion').style.display = 'block';
-                document.getElementById('txtPremio1').textContent = window.premiacion.primero;
-                document.getElementById('txtPremio2').textContent = window.premiacion.segundo;
-            }
+        // --- DE GRUPOS A MUERTE SÚBITA (Solo Torneo Clásico) ---
+        window.generarFaseFinal = async function() {
+            let clasificados = [];
+            window.grupos.forEach(grupo => {
+                if(grupo.participantes[0]) clasificados.push(grupo.participantes[0]);
+                if(grupo.participantes[1]) clasificados.push(grupo.participantes[1]);
+            });
+
+            if(clasificados.length < 2) { alert("Mínimo 2 clasificados requeridos."); return; }
+            if(!confirm("¿Iniciar Fase Final? Se realizará el sorteo en ruleta.")) return;
+            
+            document.getElementById('btnGenerarFinales').style.display = 'none';
+            await ejecutarSorteoRondaRuleta(clasificados, "ELIMINATORIA");
+        };
+
+        // --- SORTEAR SIGUIENTE RONDA (BOTÓN MANUAL EN FINAL) ---
+        window.sortearSiguienteRonda = async function() {
+            const password = prompt("Ingrese clave para sortear la siguiente fase:");
+            if (password !== "2026*") { alert("❌ Clave incorrecta."); return; }
+            
+            let ultimaRonda = window.faseEliminacion.rondas[window.faseEliminacion.rondaActiva].partidos;
+            let ganadores = ultimaRonda.map(p => p.ganador).filter(g => g !== null);
+            
+            if(ganadores.length < 2) { alert("No hay suficientes ganadores."); return; }
+            
+            let titulo = ganadores.length === 2 ? "GRAN FINAL" : (ganadores.length <= 4 ? "SEMIFINAL" : "ELIMINATORIA");
+            await ejecutarSorteoRondaRuleta(ganadores, titulo);
         }
 
+        // --- GUARDADO DE RESULTADOS ---
         window.guardarResultadoGrupo = async function(gIdx, pIdx) {
             const s1 = parseInt(document.getElementById(`g${gIdx}p${pIdx}s1`).value) || 0;
             const s2 = parseInt(document.getElementById(`g${gIdx}p${pIdx}s2`).value) || 0;
-            const grupo = window.grupos[gIdx];
-            const partido = grupo.partidos[pIdx];
+            const grupo = window.grupos[gIdx]; const partido = grupo.partidos[pIdx];
 
             if(partido.jugado) return;
             partido.s1 = s1; partido.s2 = s2; partido.jugado = true;
 
             let j1 = grupo.participantes.find(p => p.id === partido.j1.id);
             let j2 = grupo.participantes.find(p => p.id === partido.j2.id);
-            
             j1.car += s1; j1.pj += 1; j2.car += s2; j2.pj += 1;
             if (s1 > s2) j1.pts += 3; else if (s2 > s1) j2.pts += 3; else { j1.pts += 1; j2.pts += 1; }
 
@@ -615,6 +708,36 @@
             renderizarGrupos(); await guardarEstadoTorneo();
         };
 
+        window.guardarMarcadorFinal = async function(rIdx, pIdx) {
+            const s1 = parseInt(document.getElementById(`f_r${rIdx}p${pIdx}s1`).value) || 0;
+            const s2 = parseInt(document.getElementById(`f_r${rIdx}p${pIdx}s2`).value) || 0;
+            if(s1 === s2) { alert("Sin empates en Muerte Súbita."); return; }
+
+            let partido = window.faseEliminacion.rondas[rIdx].partidos[pIdx];
+            partido.s1 = s1; partido.s2 = s2; partido.jugado = true;
+            partido.ganador = (s1 > s2) ? partido.j1 : partido.j2;
+
+            verificarAvanceRonda(rIdx); 
+            renderizarFaseFinal(); 
+            await guardarEstadoTorneo(); 
+        };
+
+        function verificarAvanceRonda(rIdx) {
+            let rondaActual = window.faseEliminacion.rondas[rIdx].partidos;
+            
+            // Si todos los partidos se jugaron
+            if(rondaActual.every(p => p.jugado)) {
+                if(rondaActual.length === 1) { 
+                    window.faseEliminacion.campeon = rondaActual[0].ganador;
+                    alert(`🎉 ¡CAMPEÓN: ${window.faseEliminacion.campeon.nombre}! 🎉`); 
+                } else {
+                    // Mostrar botón para sortear la siguiente ronda
+                    document.getElementById('btnSiguienteRonda').style.display = 'inline-block';
+                }
+            }
+        }
+
+        // --- RENDERIZADO VISUAL ---
         function renderizarGrupos() {
             const contenedor = document.getElementById('contenedorGrupos'); contenedor.innerHTML = '';
             window.grupos.forEach((grupo, gIdx) => {
@@ -625,12 +748,14 @@
                 grupo.partidos.forEach((partido, pIdx) => {
                     let horaFin = formatoAMPM(sumarMinutos(partido.horaInt, 45));
                     let horaInicioAmPm = formatoAMPM(partido.horaInt);
+                    let metaJ1 = getMeta(partido.j1.categoria);
+                    let metaJ2 = getMeta(partido.j2.categoria);
 
                     html += `<div class="mesa-billar">
                         <div class="horario">MESA ${partido.mesa} | 🕒 ${horaInicioAmPm} - 🏁 ${horaFin}</div>
                         <div style="margin-top: 15px;">
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || ''}" class="avatar">${partido.j1?.nombre || 'Jugador'}</div><span class="badge ${partido.j1?.claseColor || ''}">${partido.j1?.meta || ''}</span></div>
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || ''}" class="avatar">${partido.j2?.nombre || 'Jugador'}</div><span class="badge ${partido.j2?.claseColor || ''}">${partido.j2?.meta || ''}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || ''}" class="avatar">${partido.j1?.nombre || 'Jugador'}</div><span class="badge ${partido.j1?.claseColor || ''}">${metaJ1}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || ''}" class="avatar">${partido.j2?.nombre || 'Jugador'}</div><span class="badge ${partido.j2?.claseColor || ''}">${metaJ2}</span></div>
                         </div>`;
                     
                     if(!partido.jugado) {
@@ -644,89 +769,11 @@
             });
         }
 
-        // --- FASE FINAL DE ELIMINACIÓN ---
-        window.generarFaseFinal = async function() {
-            let clasificados = [];
-            window.grupos.forEach(grupo => {
-                if(grupo.participantes[0]) clasificados.push(grupo.participantes[0]);
-                if(grupo.participantes[1]) clasificados.push(grupo.participantes[1]);
-            });
-
-            if(clasificados.length < 2) { alert("Mínimo 2 clasificados requeridos."); return; }
-            if(!confirm("¿Iniciar Muerte Súbita?")) return;
-            
-            let partidosRonda1 = [];
-            for(let i=0; i < clasificados.length / 2; i++) {
-                let lote = Math.floor(i / 5);
-                partidosRonda1.push({
-                    j1: clasificados[i], j2: clasificados[clasificados.length - 1 - i],
-                    s1: 0, s2: 0, jugado: false, ganador: null,
-                    horaInt: sumarMinutos(window.ultimaHoraGlobal, lote * 45),
-                    mesa: (i % 5) + 1
-                });
-            }
-
-            window.ultimaHoraGlobal = sumarMinutos(window.ultimaHoraGlobal, Math.ceil(partidosRonda1.length / 5) * 45);
-            window.faseEliminacion.rondas = [ { partidos: partidosRonda1 } ];
-            window.faseEliminacion.rondaActiva = 0;
-            window.faseEliminacion.campeon = null;
-
-            document.getElementById('btnGenerarFinales').style.display = 'none';
-            renderizarFaseFinal();
-            cambiarPestana('finales', document.getElementById('tab-finales'));
-            await guardarEstadoTorneo();
-        };
-
-        window.guardarMarcadorFinal = async function(rIdx, pIdx) {
-            const s1 = parseInt(document.getElementById(`f_r${rIdx}p${pIdx}s1`).value) || 0;
-            const s2 = parseInt(document.getElementById(`f_r${rIdx}p${pIdx}s2`).value) || 0;
-            if(s1 === s2) { alert("Sin empates. Determine un ganador."); return; }
-
-            let partido = window.faseEliminacion.rondas[rIdx].partidos[pIdx];
-            partido.s1 = s1;
-            partido.s2 = s2;
-            partido.jugado = true;
-            partido.ganador = (s1 > s2) ? partido.j1 : partido.j2;
-
-            verificarAvanceRonda(rIdx); 
-            renderizarFaseFinal(); 
-            await guardarEstadoTorneo(); 
-        };
-
-        function verificarAvanceRonda(rIdx) {
-            let rondaActual = window.faseEliminacion.rondas[rIdx].partidos;
-            
-            if(rondaActual.every(p => p.jugado)) {
-                
-                if(rondaActual.length === 1) { 
-                    window.faseEliminacion.campeon = rondaActual[0].ganador;
-                    alert(`🎉 ¡CAMPEÓN: ${window.faseEliminacion.campeon.nombre}! 🎉`); 
-                    return; 
-                }
-
-                let siguienteRonda = [];
-                for(let i=0; i < rondaActual.length; i+=2) {
-                    let lote = Math.floor((i/2) / 5);
-                    let objJ1 = rondaActual[i]?.ganador || null;
-                    let objJ2 = rondaActual[i+1]?.ganador || { nombre: 'LIBRE (Avanza)', foto: 'https://api.dicebear.com/7.x/adventurer/svg?seed=libre', meta: '0', claseColor: 'bg-amateur' };
-
-                    siguienteRonda.push({
-                        j1: objJ1, j2: objJ2,
-                        s1: 0, s2: 0, jugado: false, ganador: null,
-                        horaInt: sumarMinutos(window.ultimaHoraGlobal, lote * 45),
-                        mesa: ((i/2) % 5) + 1
-                    });
-                }
-                window.ultimaHoraGlobal = sumarMinutos(window.ultimaHoraGlobal, Math.ceil(siguienteRonda.length / 5) * 45);
-                window.faseEliminacion.rondas.push({ partidos: siguienteRonda });
-                window.faseEliminacion.rondaActiva++;
-            }
-        }
-
         function renderizarFaseFinal() {
             const contenedor = document.getElementById('contenedorFinales'); contenedor.innerHTML = '';
             
             if (window.faseEliminacion.campeon) {
+                document.getElementById('btnSiguienteRonda').style.display = 'none';
                 contenedor.innerHTML = `<div class="campeon-box">
                     🏆 ¡GRAN CAMPEÓN DEL TORNEO! 🏆<br>
                     <img src="${window.faseEliminacion.campeon.foto}" class="avatar" style="width:80px;height:80px;margin-top:15px;border:3px solid #000;">
@@ -736,27 +783,26 @@
 
             window.faseEliminacion.rondas.forEach((rondaObj, rIdx) => {
                 let ronda = rondaObj.partidos;
-                let nombreRonda = ronda.length === 1 ? "🏆 GRAN FINAL" : (ronda.length === 2 ? "SEMIFINALES" : "ELIMINATORIAS");
+                let nombreRonda = ronda.length === 1 ? "🏆 GRAN FINAL" : `RONDA ${rIdx + 1}`;
                 let html = `<div style="width: 100%; margin-top: 20px; border-bottom: 2px solid #ff5e57;"><h2 style="color: #ff5e57;">${nombreRonda}</h2></div><div class="fase-grupos">`;
 
                 ronda.forEach((partido, pIdx) => {
                     let horaFin = formatoAMPM(sumarMinutos(partido.horaInt, 45));
                     let horaInicioAmPm = formatoAMPM(partido.horaInt);
 
+                    let metaJ1 = partido.j1 && !partido.j1.esLibre ? getMeta(partido.j1.categoria) : '';
+                    let metaJ2 = partido.j2 && !partido.j2.esLibre ? getMeta(partido.j2.categoria) : '';
+
                     html += `<div class="mesa-billar" style="border-color: #ff3f34; max-width: 450px; margin: 0 auto 15px;">
                         <div class="horario" style="background: #ff3f34; color: white; border: 1px solid #ff3f34; border-top: none;">MESA ${partido.mesa} | 🕒 ${horaInicioAmPm} - 🏁 ${horaFin}</div>
                         <div style="margin-top: 15px;">
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j1?.nombre || 'Esperando'}</div><span class="badge ${partido.j1?.claseColor || ''}">${partido.j1?.meta || ''}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j1?.nombre || 'Esperando...'}</div><span class="badge ${partido.j1?.claseColor || ''}">${metaJ1}</span></div>
                             <div style="color: #ff5e57; font-weight: bold; margin: 5px 0;">VS</div>
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j2?.nombre || 'Esperando'}</div><span class="badge ${partido.j2?.claseColor || ''}">${partido.j2?.meta || ''}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j2?.nombre || 'Esperando...'}</div><span class="badge ${partido.j2?.claseColor || ''}">${metaJ2}</span></div>
                         </div>`;
 
                     if(!partido.jugado) {
-                        if(partido.j1 && partido.j2 && partido.j1.nombre !== 'Esperando' && partido.j2.nombre !== 'Esperando') {
-                            html += `<div class="inputs-marcador"><input type="number" id="f_r${rIdx}p${pIdx}s1" class="input-score" placeholder="Pts"><input type="number" id="f_r${rIdx}p${pIdx}s2" class="input-score" placeholder="Pts"></div><button class="btn-guardar-score" style="background: linear-gradient(45deg, #ff3f34, #ff5e57);" onclick="guardarMarcadorFinal(${rIdx}, ${pIdx})">💾 Guardar y Avanzar</button>`;
-                        } else {
-                            html += `<div style="color: #aaa; margin-top:10px;">Esperando resultados anteriores...</div>`;
-                        }
+                        html += `<div class="inputs-marcador"><input type="number" id="f_r${rIdx}p${pIdx}s1" class="input-score" placeholder="Pts"><input type="number" id="f_r${rIdx}p${pIdx}s2" class="input-score" placeholder="Pts"></div><button class="btn-guardar-score" style="background: linear-gradient(45deg, #ff3f34, #ff5e57);" onclick="guardarMarcadorFinal(${rIdx}, ${pIdx})">💾 Guardar y Avanzar</button>`;
                     } else {
                         html += `<div style="color: #ffd32a; font-size: 24px; font-weight: bold; margin-top: 15px;">${partido.s1} - ${partido.s2}</div><div style="color: #0be881; font-size: 16px; margin-top: 5px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 5px;">⭐ Avanza: ${partido.ganador?.nombre || 'N/A'}</div>`;
                     }
@@ -764,6 +810,14 @@
                 });
                 html += `</div>`; contenedor.innerHTML += html;
             });
+            
+            // Re-evaluar visibilidad del botón de siguiente ronda
+            let rondaActivaData = window.faseEliminacion.rondas[window.faseEliminacion.rondaActiva].partidos;
+            if(rondaActivaData.every(p => p.jugado) && !window.faseEliminacion.campeon) {
+                document.getElementById('btnSiguienteRonda').style.display = 'inline-block';
+            } else {
+                document.getElementById('btnSiguienteRonda').style.display = 'none';
+            }
         }
     </script>
 </body>
