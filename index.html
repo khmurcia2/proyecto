@@ -120,7 +120,6 @@
         .input-score { width: 45%; text-align: center; font-size: 18px; font-weight: bold; background: rgba(255,255,255,0.9); color: #000; border-radius: 5px; border:none; }
         .btn-guardar-score { background: #05c46b; border: none; color: white; width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
         .btn-guardar-score:hover { filter: brightness(1.1); box-shadow: 0 0 10px #05c46b; }
-        .btn-fase-final { background: linear-gradient(45deg, #ff3f34, #ff5e57); color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; display: none; box-shadow: 0 5px 15px rgba(255, 63, 52, 0.4); text-transform: uppercase; }
         
         /* PLACA DE PREMIACIÓN */
         .caja-premios { background: linear-gradient(45deg, rgba(255,215,0,0.1), rgba(255,215,0,0.3)); border: 2px solid #ffd32a; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; display: none; box-shadow: 0 0 20px rgba(255,215,0,0.2); }
@@ -646,8 +645,8 @@
             } catch(e) {}
         }
 
-        // --- ANIMACIÓN DE LA RULETA FÍSICA A PRUEBA DE FALLOS ---
-        async function animarRuleta(subtituloTexto, jugadorElegido, poolJugadores) {
+        // --- ANIMACIÓN DE LA RULETA FÍSICA (LA QUE DESCARBTA BALOTAS Y FRENA CASI AL LÍMITE) ---
+        async function animarRuleta(subtituloTexto, jugadorElegido, poolRestante) {
             return new Promise(async (resolve) => {
                 try {
                     const track = document.getElementById('ruletaCarril');
@@ -667,9 +666,15 @@
                         if(i === winnerIndex) {
                             j = jugadorElegido;
                         } else {
-                            j = poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
-                            while(j.id === jugadorElegido.id && poolJugadores.length > 1) {
-                                j = poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
+                            if(poolRestante.length > 1) {
+                                j = poolRestante[Math.floor(Math.random() * poolRestante.length)];
+                                // Evitar que el adyacente sea el ganador para potenciar el "casi"
+                                while(j.id === jugadorElegido.id && poolRestante.length > 1) {
+                                    j = poolRestante[Math.floor(Math.random() * poolRestante.length)];
+                                }
+                            } else {
+                                // Si solo queda él, rellenamos con comodines para mantener el suspenso visual
+                                j = { foto: generarAvatarBillar('?'), nombre: 'Último...' };
                             }
                         }
                         if(!j) j = { foto: generarAvatarBillar('X'), nombre: 'Desconocido' };
@@ -685,6 +690,7 @@
                     const centroDelContenedor = anchoContenedor / 2;
                     const offsetAlCentro = centroDelContenedor - (itemWidth / 2);
                     
+                    // Aquí la aguja se detiene rozando el borde (±75px sobre 190px de ancho)
                     const offsetAleatorio = Math.floor(Math.random() * 150) - 75; 
                     const distanciaFinal = -((winnerIndex * itemWidth) - offsetAlCentro + offsetAleatorio);
 
@@ -709,7 +715,6 @@
             });
         }
 
-        // MOTOR CENTRAL PARA CREAR CUALQUIER RONDA CON RULETA Y TABLERO
         window.ejecutarSorteoRondaRuleta = async function(jugadoresParaSortear, nombreFase) {
             let mezclados = [...jugadoresParaSortear].sort(() => Math.random() - 0.5);
             
@@ -744,7 +749,8 @@
                 if((i/2) < maxAnimaciones) {
                     if(j2.esLibre) {
                         document.getElementById('ruletaMesa').innerHTML = `${nombreFase} <br><span style="font-size:22px; color:#0be881;">🎁 SORTEO DE PASE DIRECTO (BYE)</span>`;
-                        await animarRuleta("Sorteando al afortunado (Avanza sin jugar)...", j1, jugadoresParaSortear);
+                        let poolRestante = mezclados.slice(i).filter(x => !x.esLibre);
+                        await animarRuleta("Sorteando al afortunado (Avanza sin jugar)...", j1, poolRestante);
                         
                         let htmlLog = `
                             <div class="ruleta-log-item" style="border-left-color: #0be881; border-color: #0be881;">
@@ -762,8 +768,11 @@
                     } else {
                         document.getElementById('ruletaMesa').innerHTML = `${nombreFase} - MESA ${mesaNumero} <br><span style="font-size:22px; color:#fff;">🕒 ${formatoAMPM(partido.horaInt)}</span>`;
                         
-                        await animarRuleta("Sorteando Primer Jugador...", j1, jugadoresParaSortear);
-                        await animarRuleta("Sorteando al Rival...", j2, jugadoresParaSortear);
+                        let poolRestanteJ1 = mezclados.slice(i).filter(x => !x.esLibre);
+                        await animarRuleta("Sorteando Primer Jugador...", j1, poolRestanteJ1);
+                        
+                        let poolRestanteJ2 = mezclados.slice(i+1).filter(x => !x.esLibre);
+                        await animarRuleta("Sorteando al Rival...", j2, poolRestanteJ2);
                         
                         let htmlLog = `
                             <div class="ruleta-log-item">
@@ -844,8 +853,12 @@
                         
                         if(gIdx < maxAnimaciones && p.length >= 2) {
                             document.getElementById('ruletaMesa').innerHTML = `ASIGNANDO MESA ${mesaNumero} <br><span style="font-size:20px; color:#fff;">${nombreGrupo} | ${formatoAMPM(tiemposMesas[mesaIndex])}</span>`;
-                            await animarRuleta("Sorteando Cabeza de Serie...", p[0], jugadoresAptos);
-                            await animarRuleta("Sorteando Rival...", p[1], jugadoresAptos);
+                            
+                            let poolRestanteJ1 = mezclados.slice(i);
+                            await animarRuleta("Sorteando Cabeza de Serie...", p[0], poolRestanteJ1);
+                            
+                            let poolRestanteJ2 = mezclados.slice(i+1);
+                            await animarRuleta("Sorteando Rival...", p[1], poolRestanteJ2);
                             
                             let htmlLog = `
                                 <div class="ruleta-log-item">
