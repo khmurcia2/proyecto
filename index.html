@@ -327,7 +327,7 @@
         </div>
     </div>
 
-    <!-- SECCIÓN 2: FASE DE GRUPOS -->
+    <!-- SECCIÓN 2: INICIAR TORNEO -->
     <div id="seccion-torneo" class="seccion">
         <div class="card" id="panelConfiguracion" style="border-top: 5px solid #00d8d6;">
             <h2 style="color: #00d8d6; margin-top:0;">⚙️ Configuración del Torneo</h2>
@@ -660,8 +660,8 @@
             } catch(e) {}
         }
 
-        // --- ANIMACIÓN DE LA RULETA FÍSICA A PRUEBA DE FALLOS ---
-        async function animarRuleta(subtituloTexto, jugadorElegido, poolJugadores) {
+        // --- ANIMACIÓN DE LA RULETA FÍSICA Y EMOCIONANTE (CON EXCLUSIÓN REAL DE BALOTAS) ---
+        async function animarRuleta(subtituloTexto, jugadorElegido, poolRestante) {
             return new Promise(async (resolve) => {
                 try {
                     const track = document.getElementById('ruletaCarril');
@@ -681,12 +681,14 @@
                         if(i === winnerIndex) {
                             j = jugadorElegido;
                         } else {
-                            if(poolJugadores.length > 1) {
-                                j = poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
-                                while(j.id === jugadorElegido.id && poolJugadores.length > 1) {
-                                    j = poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
+                            if(poolRestante.length > 1) {
+                                j = poolRestante[Math.floor(Math.random() * poolRestante.length)];
+                                // Evitar que el adyacente sea el ganador para potenciar el "casi"
+                                while(j.id === jugadorElegido.id && poolRestante.length > 1) {
+                                    j = poolRestante[Math.floor(Math.random() * poolRestante.length)];
                                 }
                             } else {
+                                // Si solo queda él, rellenamos con comodines para mantener el suspenso visual
                                 j = { foto: generarAvatarBillar('?'), nombre: 'Último...' };
                             }
                         }
@@ -695,6 +697,7 @@
                     }
                     track.innerHTML = itemsHTML;
                     
+                    // FORZAR REFLOW MAGICO (Soluciona el bug de la ruleta que no gira)
                     track.getBoundingClientRect(); 
                     await new Promise(r => requestAnimationFrame(r));
                     await new Promise(r => requestAnimationFrame(r));
@@ -703,6 +706,7 @@
                     const centroDelContenedor = anchoContenedor / 2;
                     const offsetAlCentro = centroDelContenedor - (itemWidth / 2);
                     
+                    // Tensión extrema: Puede detenerse a +-75px (Rozando el borde del jugador de al lado)
                     const offsetAleatorio = Math.floor(Math.random() * 150) - 75; 
                     const distanciaFinal = -((winnerIndex * itemWidth) - offsetAlCentro + offsetAleatorio);
 
@@ -737,6 +741,7 @@
             let partidosNuevos = [];
             let tiemposMesas = [window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal];
 
+            // 1. Armamos matemáticamente los partidos PRIMERO
             for(let i=0; i < mezclados.length; i+=2) {
                 let j1 = mezclados[i];
                 let j2 = mezclados[i+1];
@@ -756,20 +761,20 @@
             let maxMinutos = 0;
             tiemposMesas.forEach(t => { let min = obtenerMinutos(t); if(min > maxMinutos) { maxMinutos = min; window.ultimaHoraGlobal = t; }});
 
+            // 2. GUARDADO INMEDIATO ANTES DE ANIMAR (Si se va el internet, el torneo ya está a salvo)
             window.faseEliminacion.rondas.push({ partidos: partidosNuevos });
             window.faseEliminacion.rondaActiva = window.faseEliminacion.rondas.length - 1;
-
-            // GUARDADO INMEDIATO
             await guardarEstadoTorneo();
             renderizarFaseFinal();
 
+            // 3. LA ANIMACIÓN VISUAL PARA EL PÚBLICO
             const cine = document.getElementById('ruletaSorteo');
             const logContainer = document.getElementById('ruletaLog');
             
             logContainer.innerHTML = '';
             cine.style.display = 'flex';
             
-            let maxAnimaciones = Math.min(mezclados.length / 2, 5);
+            let maxAnimaciones = mezclados.length / 2; // Animamos a TODOS los jugadores, sin límite
 
             for(let i=0; i < partidosNuevos.length; i++) {
                 let partido = partidosNuevos[i];
@@ -780,7 +785,9 @@
                 if(i < maxAnimaciones) {
                     if(j2.esLibre) {
                         document.getElementById('ruletaMesa').innerHTML = `${nombreFase} <br><span style="font-size:22px; color:#0be881;">🎁 SORTEO DE PASE DIRECTO (BYE)</span>`;
-                        let poolRestante = mezclados.filter(x => !x.esLibre);
+                        
+                        // Solo mostramos los que no han sido sorteados aún
+                        let poolRestante = mezclados.slice(i * 2).filter(x => !x.esLibre);
                         await animarRuleta("Sorteando al afortunado (Avanza sin jugar)...", j1, poolRestante);
                         
                         let htmlLog = `
@@ -799,10 +806,10 @@
                     } else {
                         document.getElementById('ruletaMesa').innerHTML = `${nombreFase} - MESA ${mesaNumero} <br><span style="font-size:22px; color:#fff;">🕒 ${formatoAMPM(partido.horaInt)}</span>`;
                         
-                        let poolRestanteJ1 = mezclados.filter(x => !x.esLibre);
+                        let poolRestanteJ1 = mezclados.slice(i * 2).filter(x => !x.esLibre);
                         await animarRuleta("Sorteando Primer Jugador...", j1, poolRestanteJ1);
                         
-                        let poolRestanteJ2 = mezclados.filter(x => !x.esLibre);
+                        let poolRestanteJ2 = mezclados.slice((i * 2) + 1).filter(x => !x.esLibre);
                         await animarRuleta("Sorteando al Rival...", j2, poolRestanteJ2);
                         
                         let htmlLog = `
@@ -835,7 +842,7 @@
         // --- BOTÓN PRINCIPAL: INICIAR TORNEO ---
         document.getElementById('btnSorteo').addEventListener('click', async () => {
             if(window.torneoActivo) {
-                alert("⚠️ Ya hay un torneo en curso. Debes finalizar el actual con el botón rojo antes de iniciar uno nuevo.");
+                alert("⚠️ Ya hay un torneo en curso. Debes finalizar el actual con el botón rojo de administrador antes de iniciar uno nuevo.");
                 return;
             }
 
@@ -855,7 +862,7 @@
                 window.ultimaHoraGlobal = document.getElementById('horaInicio').value; 
                 window.grupos = []; window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
 
-                // GUARDADO INMEDIATO
+                // GUARDADO INMEDIATO DE ESTRUCTURA BÁSICA
                 await guardarEstadoTorneo();
 
                 document.getElementById('panelConfiguracion').style.display = 'none';
@@ -866,6 +873,7 @@
                     let mezclados = [...jugadoresAptos].sort(() => Math.random() - 0.5);
                     let tiemposMesas = [window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal];
                     
+                    // 1. ARMAMOS LOS GRUPOS Y GUARDAMOS
                     for (let i = 0; i < mezclados.length; i += 4) {
                         let gIdx = i / 4; let p = mezclados.slice(i, i + 4).map(j => ({ ...j, pts: 0, car: 0, pj: 0 }));
                         let mesaIndex = gIdx % 5; let mesaNumero = mesaIndex + 1;
@@ -885,43 +893,45 @@
                     
                     let maxMin = 0; tiemposMesas.forEach(t => { let min = obtenerMinutos(t); if(min > maxMin) { maxMin = min; window.ultimaHoraGlobal = t; }});
                     
-                    // GUARDAR ANTES DE ANIMAR
+                    // GUARDAR ANTES DE ANIMAR PARA SEGURIDAD
                     await guardarEstadoTorneo();
                     renderizarGrupos();
 
-                    // ANIMACIÓN
+                    // 2. ANIMACIÓN DE TODOS LOS GRUPOS
                     const cine = document.getElementById('ruletaSorteo'); 
                     const logContainer = document.getElementById('ruletaLog');
                     logContainer.innerHTML = ''; cine.style.display = 'flex';
 
-                    let maxAnimaciones = Math.min(Math.ceil(mezclados.length / 4), 5); 
+                    let maxAnimaciones = window.grupos.length; // ANIMAR TODOS
                     
-                    for (let i = 0; i < window.grupos.length; i++) {
-                        if(i < maxAnimaciones) {
-                            let grupo = window.grupos[i];
-                            let mesaNumero = grupo.partidos[0].mesa;
-                            let hora = grupo.partidos[0].horaInt;
-                            let p0 = grupo.participantes[0];
-                            let p1 = grupo.participantes[1];
+                    for (let i = 0; i < maxAnimaciones; i++) {
+                        let grupo = window.grupos[i];
+                        let mesaNumero = grupo.partidos[0].mesa;
+                        let hora = grupo.partidos[0].horaInt;
+                        let p0 = grupo.participantes[0];
+                        let p1 = grupo.participantes[1];
 
-                            document.getElementById('ruletaMesa').innerHTML = `ASIGNANDO MESA ${mesaNumero} <br><span style="font-size:20px; color:#fff;">${grupo.nombre} | ${formatoAMPM(hora)}</span>`;
-                            await animarRuleta("Sorteando Cabeza de Serie...", p0, jugadoresAptos);
-                            await animarRuleta("Sorteando Rival...", p1, jugadoresAptos);
-                            
-                            let htmlLog = `
-                                <div class="ruleta-log-item">
-                                    <div class="log-mesa-tag">MESA ${mesaNumero}</div>
-                                    <div class="log-player"><img src="${p0.foto}"> <span>${p0.nombre}</span></div>
-                                    <div class="log-vs">VS</div>
-                                    <div class="log-player right"><span>${p1.nombre}</span> <img src="${p1.foto}"></div>
-                                </div>
-                            `;
-                            logContainer.insertAdjacentHTML('beforeend', htmlLog);
-                            logContainer.scrollTop = logContainer.scrollHeight;
+                        document.getElementById('ruletaMesa').innerHTML = `ASIGNANDO MESA ${mesaNumero} <br><span style="font-size:20px; color:#fff;">${grupo.nombre} | ${formatoAMPM(hora)}</span>`;
+                        
+                        let poolRestanteJ1 = mezclados.slice(i * 4);
+                        await animarRuleta("Sorteando Cabeza de Serie...", p0, poolRestanteJ1);
+                        
+                        let poolRestanteJ2 = mezclados.slice((i * 4) + 1);
+                        await animarRuleta("Sorteando Rival...", p1, poolRestanteJ2);
+                        
+                        let htmlLog = `
+                            <div class="ruleta-log-item">
+                                <div class="log-mesa-tag">MESA ${mesaNumero}</div>
+                                <div class="log-player"><img src="${p0.foto}"> <span>${p0.nombre}</span></div>
+                                <div class="log-vs">VS</div>
+                                <div class="log-player right"><span>${p1.nombre}</span> <img src="${p1.foto}"></div>
+                            </div>
+                        `;
+                        logContainer.insertAdjacentHTML('beforeend', htmlLog);
+                        logContainer.scrollTop = logContainer.scrollHeight;
 
-                            document.getElementById('ruletaSub').textContent = `¡Grupo anotado! Siguiente...`;
-                            await sleep(1500);
-                        }
+                        document.getElementById('ruletaSub').textContent = `¡Grupo anotado! Siguiente...`;
+                        await sleep(1500);
                     }
 
                     document.getElementById('ruletaMesa').innerHTML = `¡SORTEO FINALIZADO! 🎱`; document.getElementById('ruletaSub').textContent = `Los grupos están asignados.`; 
