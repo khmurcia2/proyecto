@@ -79,7 +79,6 @@
         .input-score { width: 45%; text-align: center; font-size: 18px; font-weight: bold; background: rgba(255,255,255,0.9); color: #000; border-radius: 5px; border:none; }
         .btn-guardar-score { background: #05c46b; border: none; color: white; width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
         .btn-guardar-score:hover { filter: brightness(1.1); box-shadow: 0 0 10px #05c46b; }
-        .btn-fase-final { background: linear-gradient(45deg, #ff3f34, #ff5e57); color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; display: none; box-shadow: 0 5px 15px rgba(255, 63, 52, 0.4); text-transform: uppercase; }
         
         /* PLACA DE PREMIACIÓN */
         .caja-premios { background: linear-gradient(45deg, rgba(255,215,0,0.1), rgba(255,215,0,0.3)); border: 2px solid #ffd32a; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; display: none; box-shadow: 0 0 20px rgba(255,215,0,0.2); }
@@ -87,7 +86,7 @@
         .caja-premios h3 { color: #fff; margin: 5px 0; font-size: 20px; }
         .caja-premios span { color: #0be881; font-weight: 800; }
         
-        /* --- LA VERDADERA RULETA FÍSICA ESTILO CASINO --- */
+        /* --- LA VERDADERA RULETA FÍSICA ESTILO CASINO (CON AGUJA ARREGLADA) --- */
         #ruletaSorteo { 
             display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; 
             background: radial-gradient(circle at center, #1e272e 0%, #050505 100%); 
@@ -95,43 +94,56 @@
             color: white; overflow: hidden; padding-top: 20px; box-sizing: border-box; 
         }
         
-        .ruleta-header { text-align: center; margin-bottom: 25px; }
+        .ruleta-header { text-align: center; margin-bottom: 30px; }
         .ruleta-titulo { font-size: 40px; color: #ffd32a; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 20px rgba(255, 211, 42, 0.6); margin: 0; }
         .ruleta-subtitulo { font-size: 22px; color: #00d8d6; font-weight: bold; margin-top: 5px; }
 
+        /* El ENVOLTORIO EXTERNO PARA QUE LA AGUJA NO SE RECORTE */
+        .ruleta-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            justify-content: center;
+        }
+
+        /* LAS AGUJAS GIGANTES Y EL LÁSER POR FUERA DEL OVERFLOW */
+        .ruleta-aguja-top {
+            position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
+            color: #ff3f34; font-size: 70px; z-index: 100;
+            text-shadow: 0 5px 15px rgba(0,0,0,1);
+        }
+        .ruleta-aguja-bottom {
+            position: absolute; bottom: -45px; left: 50%; transform: translateX(-50%);
+            color: #ff3f34; font-size: 70px; z-index: 100;
+            text-shadow: 0 -5px 15px rgba(0,0,0,1);
+        }
+        .ruleta-linea-ganadora {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 6px; height: 100%; background: #ff3f34; z-index: 50;
+            box-shadow: 0 0 20px #ff3f34; border-radius: 5px;
+        }
+
+        /* EL CILINDRO GIRATORIO (CON OVERFLOW HIDDEN) */
         .ruleta-ventana {
             position: relative;
-            width: 100%; max-width: 1000px; height: 240px;
+            width: 100%; height: 240px;
             background: #0d1117;
             border: 6px solid #00d8d6;
             border-radius: 15px;
             box-shadow: 0 15px 50px rgba(0,216,214,0.4), inset 0 0 60px rgba(0,0,0,1);
-            /* EFECTO TUBO / DESVANECIMIENTO EN LOS BORDES */
             mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
             -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
             overflow: hidden;
         }
 
-        .ruleta-aguja {
-            position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-            color: #ff3f34; font-size: 65px; z-index: 10;
-            text-shadow: 0 5px 15px rgba(0,0,0,0.9);
-        }
-
-        .ruleta-linea-ganadora {
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 5px; height: 100%; background: rgba(255, 63, 52, 0.8); z-index: 5;
-            box-shadow: 0 0 15px #ff3f34, 0 0 5px #ff3f34;
-        }
-
         .ruleta-carril {
             display: flex; align-items: center; height: 100%; width: max-content;
             transform: translateX(0px);
-            will-change: transform; /* Optimiza la fluidez */
+            will-change: transform; 
         }
 
         .ruleta-item {
-            /* TAMAÑO EXACTO FIJO PARA MATEMÁTICAS (180px + 10px margen) */
             width: 180px; min-width: 180px; height: 90%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             background: linear-gradient(to bottom, #1e272e, #111);
@@ -151,7 +163,6 @@
             white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff;
         }
 
-        /* CUANDO FRENA Y GANA */
         .ruleta-item.ganador { 
             opacity: 1; background: linear-gradient(to bottom, #0be88133, #0be88166); 
             border: 3px solid #0be881; z-index: 2; transform: scale(1.08); 
@@ -161,7 +172,7 @@
         .ruleta-item.ganador span { color: #0be881; text-shadow: 0 0 10px rgba(11,232,129,0.8); font-size: 20px; }
 
         /* TABLERO DE RESULTADOS EN VIVO */
-        .ruleta-log-container { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; width: 95%; max-width: 800px; padding-bottom: 50px; overflow-y: auto; max-height: 40vh; }
+        .ruleta-log-container { margin-top: 50px; display: flex; flex-direction: column; gap: 12px; width: 95%; max-width: 800px; padding-bottom: 50px; overflow-y: auto; max-height: 40vh; }
         .ruleta-log-container::-webkit-scrollbar { width: 8px; }
         .ruleta-log-container::-webkit-scrollbar-thumb { background: #00d8d6; border-radius: 10px; }
         
@@ -198,11 +209,16 @@
             <div class="ruleta-subtitulo" id="ruletaSub">Sorteando Jugador...</div>
         </div>
         
-        <!-- EL CILINDRO GIRATORIO VISIBLE -->
-        <div class="ruleta-ventana" id="ruletaContenedor">
-            <div class="ruleta-aguja">▼</div>
+        <!-- EL CONTENEDOR CON LA AGUJA CORREGIDA -->
+        <div class="ruleta-wrapper">
+            <div class="ruleta-aguja-top">▼</div>
             <div class="ruleta-linea-ganadora"></div>
-            <div class="ruleta-carril" id="ruletaCarril"></div>
+            
+            <div class="ruleta-ventana" id="ruletaContenedor">
+                <div class="ruleta-carril" id="ruletaCarril"></div>
+            </div>
+            
+            <div class="ruleta-aguja-bottom">▲</div>
         </div>
 
         <!-- TABLERO DE ANOTACIONES EN VIVO -->
@@ -409,7 +425,7 @@
             return `data:image/svg+xml;base64,${btoa(svg)}`;
         }
 
-        // --- SISTEMA DE GUARDADO ---
+        // --- SISTEMA DE GUARDADO BLINDADO ---
         async function guardarEstadoTorneo() {
             try { 
                 const datosLimpios = JSON.parse(JSON.stringify({ 
@@ -480,7 +496,7 @@
             botonRef.classList.add('activa');
         };
 
-        // --- MANEJO DE INSCRITOS ---
+        // --- MANEJO DE INSCRITOS, EDICIÓN Y ELIMINACIÓN ---
         document.getElementById('registroForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar'); btn.disabled = true; btn.textContent = 'Guardando...';
@@ -597,7 +613,7 @@
             } catch(e) {}
         }
 
-        // --- ANIMACIÓN DE LA RULETA FÍSICA A PRUEBA DE FALLOS ---
+        // --- ANIMACIÓN DE LA RULETA FÍSICA Y EMOCIONANTE (REFLOW FORZADO) ---
         async function animarRuleta(subtituloTexto, jugadorElegido, poolJugadores) {
             return new Promise(async (resolve) => {
                 try {
@@ -629,12 +645,12 @@
                     }
                     track.innerHTML = itemsHTML;
                     
-                    // FORZAR REFLOW MAGICO (Soluciona el bug de la ruleta que no gira)
+                    // FORZAR REFLOW MAGICO PARA QUE NUNCA SE SALTE LA ANIMACIÓN
                     track.getBoundingClientRect(); 
                     await new Promise(r => requestAnimationFrame(r));
                     await new Promise(r => requestAnimationFrame(r));
 
-                    // Matemáticas precisas
+                    // Matemáticas precisas de centrado con la Aguja Fija en el medio
                     const anchoContenedor = contenedor.offsetWidth || window.innerWidth * 0.9; 
                     const centroDelContenedor = anchoContenedor / 2;
                     const offsetAlCentro = centroDelContenedor - (itemWidth / 2);
@@ -666,7 +682,7 @@
             });
         }
 
-        // --- MOTOR CENTRAL PARA CREAR CUALQUIER RONDA CON RULETA Y TABLERO ---
+        // MOTOR CENTRAL PARA CREAR CUALQUIER RONDA CON RULETA Y TABLERO
         window.ejecutarSorteoRondaRuleta = async function(jugadoresParaSortear, nombreFase) {
             let mezclados = [...jugadoresParaSortear].sort(() => Math.random() - 0.5);
             
@@ -826,7 +842,6 @@
             }
         });
 
-        // --- DE GRUPOS A MUERTE SÚBITA (Solo Torneo Clásico) ---
         window.generarFaseFinal = async function() {
             let clasificados = [];
             window.grupos.forEach(grupo => {
@@ -965,9 +980,9 @@
                     html += `<div class="mesa-billar" style="border-color: #ff3f34; max-width: 450px; margin: 0 auto 15px;">
                         <div class="horario" style="background: #ff3f34; color: white; border: 1px solid #ff3f34; border-top: none;">MESA ${partido.mesa} | 🕒 ${horaInicioAmPm} - 🏁 ${horaFin}</div>
                         <div style="margin-top: 15px;">
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || generarAvatarBillar('X')}" class="avatar">${partido.j1?.nombre || 'Esperando...'}</div><span class="badge ${partido.j1?.claseColor || ''}">${metaJ1}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j1?.nombre || 'Esperando...'}</div><span class="badge ${partido.j1?.claseColor || ''}">${metaJ1}</span></div>
                             <div style="color: #ff5e57; font-weight: bold; margin: 5px 0;">VS</div>
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || generarAvatarBillar('X')}" class="avatar">${partido.j2?.nombre || 'Esperando...'}</div><span class="badge ${partido.j2?.claseColor || ''}">${metaJ2}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j2?.nombre || 'Esperando...'}</div><span class="badge ${partido.j2?.claseColor || ''}">${metaJ2}</span></div>
                         </div>`;
 
                     if(!partido.jugado) {
