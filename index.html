@@ -10,8 +10,13 @@
         body { font-family: 'Montserrat', sans-serif; background: linear-gradient(rgba(10, 15, 20, 0.85), rgba(10, 15, 20, 0.95)), url('https://images.unsplash.com/photo-1599566219227-2efe0c9b7f5f?q=80&w=2000&auto=format&fit=crop') no-repeat center center fixed; background-size: cover; color: #ecf0f1; margin: 0; padding: 0; min-height: 100vh; }
         h1, h2, h3 { text-align: center; color: #00d8d6; text-transform: uppercase; letter-spacing: 2px; }
         
+        /* LOGO HEADER */
+        .header-logo { text-align: center; padding: 20px 0 10px 0; }
+        .header-logo img { max-height: 130px; border-radius: 12px; border: 2px solid #00d8d6; box-shadow: 0 0 20px rgba(0, 216, 214, 0.6); transition: transform 0.3s; }
+        .header-logo img:hover { transform: scale(1.05); }
+
         /* NAVEGACIÓN */
-        .navbar { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); padding: 20px; text-align: center; border-bottom: 1px solid rgba(0, 216, 214, 0.3); position: sticky; top: 0; z-index: 100; }
+        .navbar { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(10px); padding: 15px; text-align: center; border-bottom: 1px solid rgba(0, 216, 214, 0.3); position: sticky; top: 0; z-index: 100; margin-top: 10px; }
         .tab-btn { background-color: transparent; color: #ecf0f1; border: 2px solid #00d8d6; padding: 10px 20px; font-size: 15px; font-weight: 600; cursor: pointer; border-radius: 30px; margin: 5px; transition: all 0.3s ease; }
         .tab-btn.activa, .tab-btn:hover { background-color: #00d8d6; color: #1e272e; box-shadow: 0 0 15px rgba(0, 216, 214, 0.6); }
 
@@ -91,7 +96,7 @@
         .ruleta-aguja { position: absolute; top: -20px; left: 50%; transform: translateX(-50%); color: #ff3f34; font-size: 50px; z-index: 10; text-shadow: 0 4px 10px rgba(0,0,0,0.9); }
         .ruleta-linea-centro { position: absolute; top: 0; left: 50%; width: 4px; height: 100%; background: rgba(255, 63, 52, 0.5); transform: translateX(-50%); z-index: 1; }
         
-        .ruleta-track { display: flex; height: 100%; align-items: center; /* La transición se aplica desde JS */ }
+        .ruleta-track { display: flex; height: 100%; align-items: center; }
         .ruleta-item { min-width: 160px; height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; border-right: 1px solid rgba(255,255,255,0.1); opacity: 0.6; transition: 0.3s; position: relative; z-index: 2; }
         .ruleta-item img { width: 70px; height: 70px; border-radius: 50%; border: 3px solid #fff; margin-bottom: 8px; background: #2f3640; }
         .ruleta-item span { font-size: 14px; font-weight: 800; text-align: center; width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -108,6 +113,11 @@
 </head>
 <body>
 
+    <!-- HEADER CON EL LOGO -->
+    <div class="header-logo">
+        <img src="https://raw.githubusercontent.com/khmurcia2/proyecto/main/la%20mansion%20logo.jpg" alt="La Mansión de la Carambola Logo">
+    </div>
+
     <div class="navbar">
         <button class="tab-btn activa" id="tab-inscripcion" onclick="cambiarPestana('inscripcion', this)">📝 Registro Oficial</button>
         <button class="tab-btn" id="tab-torneo" onclick="cambiarPestana('torneo', this)">🎱 Fase de Grupos</button>
@@ -122,9 +132,7 @@
         <div class="ruleta-container">
             <div class="ruleta-aguja">▼</div>
             <div class="ruleta-linea-centro"></div>
-            <div class="ruleta-track" id="ruletaTrack">
-                <!-- Los avatares que giran irán aquí -->
-            </div>
+            <div class="ruleta-track" id="ruletaTrack"></div>
         </div>
 
         <div class="ruleta-elegido" id="ruletaElegido">
@@ -158,8 +166,6 @@
                         <label for="editPagado">Inscripción Pagada (Al día)</label>
                     </div>
                 </div>
-                
-                <!-- BOTONES DE ACCIÓN DEL MODAL -->
                 <div style="display: flex; gap: 10px; margin-top: 25px; flex-wrap: wrap;">
                     <button type="submit" class="btn-accion" style="flex: 1; min-width: 120px;">💾 Guardar</button>
                     <button type="button" class="btn-accion" style="flex: 1; min-width: 120px; background: linear-gradient(45deg, #e74c3c, #c0392b);" onclick="eliminarJugador()">🗑️ Eliminar</button>
@@ -254,7 +260,6 @@
     </div>
 
     <script type="module">
-        // Importamos deleteDoc para poder borrar inscritos
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, setDoc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
 
@@ -391,7 +396,6 @@
             } catch(error) { alert("Error al actualizar la información."); }
         });
 
-        // NUEVA FUNCIÓN: ELIMINAR JUGADOR
         window.eliminarJugador = async function() {
             const id = document.getElementById('editId').value;
             const nombre = document.getElementById('editNombre').value;
@@ -399,10 +403,7 @@
                 try {
                     await deleteDoc(doc(db, "jugadores", id));
                     cerrarModalEdicion();
-                } catch(error) {
-                    alert("Error al eliminar al jugador.");
-                    console.error(error);
-                }
+                } catch(error) { alert("Error al eliminar al jugador."); console.error(error); }
             }
         };
 
@@ -452,53 +453,43 @@
                 const contenedor = document.querySelector('.ruleta-container');
                 const cajaElegido = document.getElementById('ruletaElegido');
                 
-                // Preparar UI
                 document.getElementById('ruletaSub').textContent = subtituloTexto;
                 cajaElegido.classList.remove('show');
                 track.style.transition = 'none';
                 track.style.transform = 'translateX(0)';
 
-                // Generar los elementos de la ruleta
                 let itemsHTML = '';
                 const totalItems = 50; 
-                const winnerIndex = 42; // Donde va a detenerse
+                const winnerIndex = 42; 
 
                 for(let i = 0; i < totalItems; i++) {
                     let j = (i === winnerIndex) ? jugadorElegido : poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
-                    itemsHTML += `<div class="ruleta-item" id="rItem-${i}">
-                        <img src="${j.foto}">
-                        <span>${j.nombre}</span>
-                    </div>`;
+                    itemsHTML += `<div class="ruleta-item" id="rItem-${i}"><img src="${j.foto}"><span>${j.nombre}</span></div>`;
                 }
                 track.innerHTML = itemsHTML;
 
-                await sleep(50); // Dar tiempo al navegador a pintar el HTML
+                await sleep(50); 
 
-                // Calcular dónde parar
                 const itemWidth = 160; 
                 const centroDelGanador = (winnerIndex * itemWidth) + (itemWidth / 2);
                 const centroDelContenedor = contenedor.offsetWidth / 2;
                 
-                // Variación aleatoria (-60 a 60px) para que no pare en el centro milimétrico (más realismo)
                 const offsetAleatorio = Math.floor(Math.random() * 120) - 60;
                 const distanciaFinal = centroDelContenedor - centroDelGanador + offsetAleatorio;
 
-                // Lanzar animación de giro (5 segundos)
                 track.style.transition = 'transform 5s cubic-bezier(0.1, 0.7, 0.1, 1)';
                 track.style.transform = `translateX(${distanciaFinal}px)`;
 
-                await sleep(5000); // Esperar que frene
+                await sleep(5000); 
 
-                // Iluminar al ganador en la cinta
                 document.getElementById(`rItem-${winnerIndex}`).style.opacity = '1';
                 document.getElementById(`rItem-${winnerIndex}`).style.background = 'rgba(11, 232, 129, 0.2)';
 
-                // Mostrar la tarjeta en grande abajo
                 document.getElementById('ruletaElegidoImg').src = jugadorElegido.foto;
                 document.getElementById('ruletaElegidoNombre').textContent = jugadorElegido.nombre;
                 cajaElegido.classList.add('show');
 
-                await sleep(2500); // Tiempo para aplausos
+                await sleep(2500); 
                 resolve();
             });
         }
@@ -527,7 +518,6 @@
                 let mesasAnimadas = new Set();
                 let tiemposMesas = [horaInicioStr, horaInicioStr, horaInicioStr, horaInicioStr, horaInicioStr];
 
-                // Organizar la lógica detrás de escena
                 for (let i = 0; i < mezclados.length; i += 4) {
                     let gIdx = i / 4;
                     let p = mezclados.slice(i, i + 4).map(j => ({ ...j, pts: 0, car: 0, pj: 0 }));
@@ -551,7 +541,6 @@
                         partido.horaInt = tiemposMesas[mesaIndex]; 
                         partido.mesa = mesaNumero; 
                         
-                        // Guardar solo el partido inaugural de cada mesa para la ruleta
                         if(pIdx === 0 && !mesasAnimadas.has(mesaNumero)) {
                             mesasAnimadas.add(mesaNumero);
                             partidosParaAnimar.push({ ...partido, nombreGrupo: nombreGrupo });
@@ -576,13 +565,9 @@
                     
                     document.getElementById('ruletaMesa').innerHTML = `ASIGNANDO MESA ${p.mesa} <br><span style="font-size:22px; color:#fff;">${p.nombreGrupo} | ${formatoAMPM(p.horaInt)}</span>`;
                     
-                    // Tirar Ruleta para Jugador 1
                     await animarRuleta("Sorteando Jugador 1...", p.j1, jugadoresAptos);
-                    
-                    // Tirar Ruleta para Jugador 2
                     await animarRuleta("Sorteando Oponente (Jugador 2)...", p.j2, jugadoresAptos);
                     
-                    // Pequeña pausa antes de saltar a la siguiente mesa
                     document.getElementById('ruletaSub').textContent = `¡Mesa ${p.mesa} definida! Preparando la siguiente...`;
                     document.getElementById('ruletaElegido').classList.remove('show');
                     await sleep(2000);
@@ -590,13 +575,11 @@
 
                 document.getElementById('ruletaMesa').innerHTML = `¡SORTEO FINALIZADO! 🎱`;
                 document.getElementById('ruletaSub').textContent = `Las mesas están asignadas. El torneo puede comenzar.`;
-                document.getElementById('ruletaTrack').innerHTML = ''; // Vaciar carril
+                document.getElementById('ruletaTrack').innerHTML = ''; 
                 
                 await sleep(3500); 
                 cine.style.display = 'none';
                 
-                // --- FIN DEL SHOW ---
-
                 document.getElementById('panelConfiguracion').style.display = 'none';
                 document.getElementById('btnTerminarTorneo').style.display = 'inline-block';
                 document.getElementById('btnGenerarFinales').style.display = 'block';
