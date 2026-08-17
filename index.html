@@ -3,11 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Torneo de Billar 3 Bandas Pro</title>
+    
+    <!-- ========================================== -->
+    <!-- OPTIMIZACIÓN SEO LOCAL (LA MANSIÓN DE LA CARAMBOLA) -->
+    <!-- ========================================== -->
+    <title>La Mansión de la Carambola | Club de Billar 3 Bandas en Funza</title>
+    <meta name="description" content="El mejor club de billar a 3 bandas en Funza, Cundinamarca. Únete a nuestros torneos profesionales y aficionados. Visítanos en Cl 13 # 8-45.">
+    <meta name="keywords" content="billar, billar 3 bandas, torneos de billar, club de billar, Funza, Cundinamarca, carambola, La Mansión de la Carambola, billar Funza">
+    <meta name="author" content="La Mansión de la Carambola">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Etiquetas Open Graph (Para compartir bonito en WhatsApp/Facebook) -->
+    <meta property="og:title" content="La Mansión de la Carambola | Torneos de Billar 3 Bandas">
+    <meta property="og:description" content="Únete al torneo. El mejor nivel de billar a 3 bandas en Funza, Cundinamarca. Cl 13 # 8-45.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/khmurcia2/proyecto/main/la%20mansion%20logo.jpg">
+    <meta property="og:url" content="https://www.instagram.com/lamansiondelacarambola/">
+    <meta property="og:type" content="website">
+
+    <!-- Datos Estructurados Schema.org (Para Google Maps y Búsqueda Local) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SportsClub",
+      "name": "La Mansión de la Carambola",
+      "image": "https://raw.githubusercontent.com/khmurcia2/proyecto/main/la%20mansion%20logo.jpg",
+      "@id": "",
+      "url": "https://www.instagram.com/lamansiondelacarambola/",
+      "telephone": "+573002158036",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Cl 13 # 8-45",
+        "addressLocality": "Funza",
+        "addressRegion": "Cundinamarca",
+        "addressCountry": "CO"
+      },
+      "sameAs": [
+        "https://www.instagram.com/lamansiondelacarambola/"
+      ],
+      "sport": "Billar a 3 Bandas"
+    }
+    </script>
+    <!-- ========================================== -->
+
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
         /* TEMA GLOBAL */
-        body { font-family: 'Montserrat', sans-serif; background: linear-gradient(rgba(10, 15, 20, 0.85), rgba(10, 15, 20, 0.95)), url('https://images.unsplash.com/photo-1599566219227-2efe0c9b7f5f?q=80&w=2000&auto=format&fit=crop') no-repeat center center fixed; background-size: cover; color: #ecf0f1; margin: 0; padding: 0; min-height: 100vh; }
+        body { font-family: 'Montserrat', sans-serif; background: linear-gradient(rgba(10, 15, 20, 0.85), rgba(10, 15, 20, 0.95)), url('https://images.unsplash.com/photo-1599566219227-2efe0c9b7f5f?q=80&w=2000&auto=format&fit=crop') no-repeat center center fixed; background-size: cover; color: #ecf0f1; margin: 0; padding: 0; min-height: 100vh; display: flex; flex-direction: column; }
         h1, h2, h3 { text-align: center; color: #00d8d6; text-transform: uppercase; letter-spacing: 2px; }
         
         /* LOGO HEADER */
@@ -21,7 +62,7 @@
         .tab-btn.activa, .tab-btn:hover { background-color: #00d8d6; color: #1e272e; box-shadow: 0 0 15px rgba(0, 216, 214, 0.6); }
 
         /* CONTENEDORES */
-        .seccion { display: none; padding: 20px; max-width: 1100px; margin: 0 auto; animation: fadeIn 0.5s ease-in-out; }
+        .seccion { display: none; padding: 20px; max-width: 1100px; margin: 0 auto; animation: fadeIn 0.5s ease-in-out; flex-grow: 1; width: 100%; box-sizing: border-box; }
         .seccion.activa { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .card { background: rgba(30, 39, 46, 0.75); backdrop-filter: blur(15px); padding: 25px; border-radius: 15px; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 10px 30px rgba(0,0,0,0.5); margin-bottom: 30px; }
@@ -38,6 +79,12 @@
 
         button.btn-accion { width: 100%; padding: 15px; background: linear-gradient(45deg, #05c46b, #0be881); color: #000; border: none; border-radius: 8px; font-size: 16px; font-weight: 800; text-transform: uppercase; cursor: pointer; transition: all 0.3s ease; }
         button.btn-accion:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(11, 232, 129, 0.6); }
+
+        /* AVISOS */
+        .aviso-importante { background: rgba(232, 65, 24, 0.15); border-left: 5px solid #e84118; padding: 15px; margin-bottom: 25px; border-radius: 5px; }
+        .aviso-importante p { margin: 5px 0; color: #fff; font-size: 14px; line-height: 1.5; }
+        .aviso-importante a { color: #ffd32a; font-weight: 800; text-decoration: none; transition: 0.3s; }
+        .aviso-importante a:hover { color: #fff; text-shadow: 0 0 10px #ffd32a; }
 
         /* TABLAS Y AVATARES */
         table { width: 100%; border-collapse: collapse; margin-top: 15px; background: rgba(0,0,0,0.4); border-radius: 8px; overflow: hidden; }
@@ -86,7 +133,7 @@
         .caja-premios h3 { color: #fff; margin: 5px 0; font-size: 20px; }
         .caja-premios span { color: #0be881; font-weight: 800; }
         
-        /* --- LA VERDADERA RULETA FÍSICA ESTILO CASINO (CON AGUJA ARREGLADA) --- */
+        /* RULETA FÍSICA ESTILO CASINO */
         #ruletaSorteo { 
             display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; 
             background: radial-gradient(circle at center, #1e272e 0%, #050505 100%); 
@@ -98,58 +145,29 @@
         .ruleta-titulo { font-size: 40px; color: #ffd32a; font-weight: 900; letter-spacing: 4px; text-shadow: 0 0 20px rgba(255, 211, 42, 0.6); margin: 0; }
         .ruleta-subtitulo { font-size: 22px; color: #00d8d6; font-weight: bold; margin-top: 5px; }
 
-        /* El ENVOLTORIO EXTERNO PARA QUE LA AGUJA NO SE RECORTE */
-        .ruleta-wrapper {
-            position: relative;
-            width: 100%;
-            max-width: 1000px;
-            display: flex;
-            justify-content: center;
-        }
+        .ruleta-wrapper { position: relative; width: 100%; max-width: 1000px; display: flex; justify-content: center; }
 
-        /* LAS AGUJAS GIGANTES Y EL LÁSER POR FUERA DEL OVERFLOW */
-        .ruleta-aguja-top {
-            position: absolute; top: -45px; left: 50%; transform: translateX(-50%);
-            color: #ff3f34; font-size: 70px; z-index: 100;
-            text-shadow: 0 5px 15px rgba(0,0,0,1);
-        }
-        .ruleta-aguja-bottom {
-            position: absolute; bottom: -45px; left: 50%; transform: translateX(-50%);
-            color: #ff3f34; font-size: 70px; z-index: 100;
-            text-shadow: 0 -5px 15px rgba(0,0,0,1);
-        }
-        .ruleta-linea-ganadora {
-            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 6px; height: 100%; background: #ff3f34; z-index: 50;
-            box-shadow: 0 0 20px #ff3f34; border-radius: 5px;
-        }
+        .ruleta-aguja-top { position: absolute; top: -45px; left: 50%; transform: translateX(-50%); color: #ff3f34; font-size: 70px; z-index: 100; text-shadow: 0 5px 15px rgba(0,0,0,1); }
+        .ruleta-aguja-bottom { position: absolute; bottom: -45px; left: 50%; transform: translateX(-50%); color: #ff3f34; font-size: 70px; z-index: 100; text-shadow: 0 -5px 15px rgba(0,0,0,1); }
+        .ruleta-linea-ganadora { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 6px; height: 100%; background: #ff3f34; z-index: 50; box-shadow: 0 0 20px #ff3f34; border-radius: 5px; }
 
-        /* EL CILINDRO GIRATORIO (CON OVERFLOW HIDDEN) */
         .ruleta-ventana {
-            position: relative;
-            width: 100%; height: 240px;
-            background: #0d1117;
-            border: 6px solid #00d8d6;
-            border-radius: 15px;
+            position: relative; width: 100%; height: 240px; background: #0d1117;
+            border: 6px solid #00d8d6; border-radius: 15px;
             box-shadow: 0 15px 50px rgba(0,216,214,0.4), inset 0 0 60px rgba(0,0,0,1);
             mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
             -webkit-mask-image: linear-gradient(to right, transparent 0%, black 15%, black 85%, transparent 100%);
             overflow: hidden;
         }
 
-        .ruleta-carril {
-            display: flex; align-items: center; height: 100%; width: max-content;
-            transform: translateX(0px);
-            will-change: transform; 
-        }
+        .ruleta-carril { display: flex; align-items: center; height: 100%; width: max-content; transform: translateX(0px); will-change: transform; }
 
         .ruleta-item {
             width: 180px; min-width: 180px; height: 90%;
             display: flex; flex-direction: column; justify-content: center; align-items: center;
             background: linear-gradient(to bottom, #1e272e, #111);
             border-left: 2px solid rgba(255,255,255,0.1); border-right: 2px solid rgba(255,255,255,0.1);
-            border-radius: 12px; margin: 0 5px;
-            box-sizing: border-box; opacity: 0.6; transition: 0.4s ease;
+            border-radius: 12px; margin: 0 5px; box-sizing: border-box; opacity: 0.6; transition: 0.4s ease;
         }
 
         .ruleta-item img {
@@ -158,18 +176,11 @@
             filter: drop-shadow(0 5px 8px rgba(0,0,0,0.7));
         }
 
-        .ruleta-item span {
-            font-size: 18px; font-weight: 900; text-align: center; width: 95%;
-            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff;
-        }
+        .ruleta-item span { font-size: 18px; font-weight: 900; text-align: center; width: 95%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #fff; }
 
-        .ruleta-item.ganador { 
-            opacity: 1; background: linear-gradient(to bottom, #0be88133, #0be88166); 
-            border: 3px solid #0be881; z-index: 2; transform: scale(1.08); 
-            box-shadow: 0 0 30px rgba(11, 232, 129, 0.4);
-        }
+        .ruleta-item.ganador { opacity: 1; background: linear-gradient(to bottom, #0be88133, #0be88166); border: 3px solid #0be881; z-index: 2; transform: scale(1.08); box-shadow: 0 0 30px rgba(11, 232, 129, 0.4); }
         .ruleta-item.ganador img { border-color: #0be881; filter: drop-shadow(0 0 20px #0be881); }
-        .ruleta-item.ganador span { color: #0be881; text-shadow: 0 0 10px rgba(11,232,129,0.8); font-size: 20px; }
+        .ruleta-item.ganador span { color: #0be881; text-shadow: 0 0 10px rgba(11,232,129,0.5); font-size: 20px; }
 
         /* TABLERO DE RESULTADOS EN VIVO */
         .ruleta-log-container { margin-top: 50px; display: flex; flex-direction: column; gap: 12px; width: 95%; max-width: 800px; padding-bottom: 50px; overflow-y: auto; max-height: 40vh; }
@@ -187,9 +198,27 @@
 
         .campeon-box { background: linear-gradient(45deg, #05c46b, #0be881); padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center; color: #000; font-size: 24px; font-weight: 900; box-shadow: 0 0 25px rgba(11,232,129,0.8); animation: latido 1.5s infinite; }
         @keyframes latido { 0% { transform: scale(1); } 50% { transform: scale(1.02); } 100% { transform: scale(1); } }
+
+        /* FOOTER SEO LOCAL */
+        .footer-seo { background: rgba(0,0,0,0.9); border-top: 2px solid #00d8d6; padding: 20px; text-align: center; font-size: 12px; color: #aaa; margin-top: auto; }
+        .footer-seo p { margin: 5px 0; }
+        .footer-seo a { color: #00d8d6; text-decoration: none; font-weight: bold; }
+        .footer-seo a:hover { text-decoration: underline; }
+
+        /* WHATSAPP FLOTANTE */
+        .whatsapp-btn { position: fixed; bottom: 20px; right: 20px; background-color: #25d366; color: white; border-radius: 50%; width: 60px; height: 60px; display: flex; justify-content: center; align-items: center; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 1000; transition: transform 0.3s; }
+        .whatsapp-btn:hover { transform: scale(1.15); box-shadow: 0 6px 20px rgba(37, 211, 102, 0.6); }
+        .whatsapp-btn svg { width: 35px; height: 35px; fill: currentColor; }
     </style>
 </head>
 <body>
+
+    <!-- BOTÓN WHATSAPP -->
+    <a href="https://wa.me/573002158036" class="whatsapp-btn" target="_blank" title="Contactar Organizador">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
+          <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c-.003 1.396.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c.004-3.623 2.953-6.57 6.577-6.57a6.59 6.59 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.572 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
+        </svg>
+    </a>
 
     <!-- HEADER CON EL LOGO -->
     <div class="header-logo">
@@ -209,7 +238,6 @@
             <div class="ruleta-subtitulo" id="ruletaSub">Sorteando Jugador...</div>
         </div>
         
-        <!-- EL CONTENEDOR CON LA AGUJA CORREGIDA -->
         <div class="ruleta-wrapper">
             <div class="ruleta-aguja-top">▼</div>
             <div class="ruleta-linea-ganadora"></div>
@@ -221,7 +249,6 @@
             <div class="ruleta-aguja-bottom">▲</div>
         </div>
 
-        <!-- TABLERO DE ANOTACIONES EN VIVO -->
         <div class="ruleta-log-container" id="ruletaLog"></div>
     </div>
 
@@ -263,13 +290,20 @@
     <div id="seccion-inscripcion" class="seccion activa">
         <h1>Inscripción al Torneo</h1>
         <div class="card">
+            
+            <!-- AVISO DE AUTORIZACIÓN E INSTAGRAM -->
+            <div class="aviso-importante">
+                <p>⚠️ <strong>IMPORTANTE:</strong> La categoría seleccionada debe ser previamente consultada y autorizada por la administración.</p>
+                <p>📌 <strong>REQUISITO OBLIGATORIO:</strong> Todos los participantes deben seguir nuestra cuenta oficial de Instagram: <br><a href="https://www.instagram.com/lamansiondelacarambola/" target="_blank">@lamansiondelacarambola</a></p>
+            </div>
+
             <form id="registroForm">
                 <div class="form-group">
                     <label for="nombre">Nombre Completo</label>
                     <input type="text" id="nombre" placeholder="Ej. Torbjörn Blomdahl" required>
                 </div>
                 <div class="form-group">
-                    <label for="categoria">Categoría Asignada</label>
+                    <label for="categoria">Categoría Asignada (Sujeta a Verificación)</label>
                     <select id="categoria" required>
                         <option value="">Selecciona el nivel...</option>
                         <option value="Master">⭐ Master</option>
@@ -309,7 +343,7 @@
                     <option value="clasico">🏆 Torneo Clásico (Fase de Grupos + Eliminación)</option>
                     <option value="matamata">⚡ Mata Mata (Eliminación Directa Relámpago desde el inicio)</option>
                 </select>
-                <p style="color: #aaa; font-size: 12px; margin-top: 5px;">* En <b>Mata Mata</b> las metas cambian automáticamente.</p>
+                <p style="color: #aaa; font-size: 12px; margin-top: 5px;">* En <b>Mata Mata</b> las metas cambian automáticamente: Master(12), Intermedio(9), Normal(7), Amateur(5).</p>
             </div>
 
             <div class="controls-torneo" style="background: none; padding:0; margin:0; justify-content: space-between;">
@@ -355,6 +389,13 @@
         </div>
     </div>
 
+    <!-- FOOTER SEO LOCAL -->
+    <footer class="footer-seo">
+        <p><strong>La Mansión de la Carambola</strong> | Club de Billar a 3 Bandas</p>
+        <p>📍 Cl 13 # 8-45, Funza, Cundinamarca, Colombia</p>
+        <p>📱 Síguenos en <a href="https://www.instagram.com/lamansiondelacarambola/" target="_blank">Instagram</a> para más torneos.</p>
+    </footer>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
         import { getFirestore, collection, addDoc, onSnapshot, query, orderBy, doc, setDoc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
@@ -388,7 +429,6 @@
 
         function getMeta(categoria) { return window.tipoTorneo === 'matamata' ? metasMataMata[categoria] : metasClasico[categoria]; }
 
-        // --- GENERADOR DE BOLAS DE BILLAR 3 BANDAS EN SVG ---
         function generarAvatarBillar(nombre) {
             if(!nombre) nombre = "X";
             let charCode = 0;
@@ -425,7 +465,6 @@
             return `data:image/svg+xml;base64,${btoa(svg)}`;
         }
 
-        // --- SISTEMA DE GUARDADO BLINDADO ---
         async function guardarEstadoTorneo() {
             try { 
                 const datosLimpios = JSON.parse(JSON.stringify({ 
@@ -496,7 +535,6 @@
             botonRef.classList.add('activa');
         };
 
-        // --- MANEJO DE INSCRITOS, EDICIÓN Y ELIMINACIÓN ---
         document.getElementById('registroForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar'); btn.disabled = true; btn.textContent = 'Guardando...';
@@ -613,7 +651,7 @@
             } catch(e) {}
         }
 
-        // --- ANIMACIÓN DE LA RULETA FÍSICA Y EMOCIONANTE (REFLOW FORZADO) ---
+        // --- ANIMACIÓN DE LA RULETA FÍSICA ---
         async function animarRuleta(subtituloTexto, jugadorElegido, poolJugadores) {
             return new Promise(async (resolve) => {
                 try {
@@ -627,7 +665,7 @@
                     let itemsHTML = '';
                     const totalItems = 60; 
                     const winnerIndex = 50; 
-                    const itemWidth = 190; // Ancho del item (180 + 10 margin)
+                    const itemWidth = 190; 
 
                     for(let i = 0; i < totalItems; i++) {
                         let j;
@@ -635,7 +673,6 @@
                             j = jugadorElegido;
                         } else {
                             j = poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
-                            // Evitar que el adyacente sea el ganador para potenciar el "casi"
                             while(j.id === jugadorElegido.id && poolJugadores.length > 1) {
                                 j = poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
                             }
@@ -645,25 +682,20 @@
                     }
                     track.innerHTML = itemsHTML;
                     
-                    // FORZAR REFLOW MAGICO PARA QUE NUNCA SE SALTE LA ANIMACIÓN
                     track.getBoundingClientRect(); 
                     await new Promise(r => requestAnimationFrame(r));
                     await new Promise(r => requestAnimationFrame(r));
 
-                    // Matemáticas precisas de centrado con la Aguja Fija en el medio
                     const anchoContenedor = contenedor.offsetWidth || window.innerWidth * 0.9; 
                     const centroDelContenedor = anchoContenedor / 2;
                     const offsetAlCentro = centroDelContenedor - (itemWidth / 2);
                     
-                    // Tensión extrema: Puede detenerse a +-75px (Rozando el borde del jugador de al lado)
                     const offsetAleatorio = Math.floor(Math.random() * 150) - 75; 
                     const distanciaFinal = -((winnerIndex * itemWidth) - offsetAlCentro + offsetAleatorio);
 
-                    // A rodar (6.5 segundos de tensión)
                     track.style.transition = 'transform 6.5s cubic-bezier(0.1, 0.85, 0.1, 1)';
                     track.style.transform = `translateX(${distanciaFinal}px)`;
                     
-                    // Sonido opcional
                     let ticks = setInterval(playTick, 250);
                     setTimeout(() => clearInterval(ticks), 5500);
 
@@ -682,7 +714,6 @@
             });
         }
 
-        // MOTOR CENTRAL PARA CREAR CUALQUIER RONDA CON RULETA Y TABLERO
         window.ejecutarSorteoRondaRuleta = async function(jugadoresParaSortear, nombreFase) {
             let mezclados = [...jugadoresParaSortear].sort(() => Math.random() - 0.5);
             
@@ -877,7 +908,6 @@
             }
         }
 
-        // --- GUARDADO DE RESULTADOS ---
         window.guardarResultadoGrupo = async function(gIdx, pIdx) {
             const s1 = parseInt(document.getElementById(`g${gIdx}p${pIdx}s1`).value) || 0;
             const s2 = parseInt(document.getElementById(`g${gIdx}p${pIdx}s2`).value) || 0;
@@ -921,7 +951,6 @@
             }
         }
 
-        // --- RENDERIZADO VISUAL ---
         function renderizarGrupos() {
             const contenedor = document.getElementById('contenedorGrupos'); contenedor.innerHTML = '';
             window.grupos.forEach((grupo, gIdx) => {
@@ -980,9 +1009,9 @@
                     html += `<div class="mesa-billar" style="border-color: #ff3f34; max-width: 450px; margin: 0 auto 15px;">
                         <div class="horario" style="background: #ff3f34; color: white; border: 1px solid #ff3f34; border-top: none;">MESA ${partido.mesa} | 🕒 ${horaInicioAmPm} - 🏁 ${horaFin}</div>
                         <div style="margin-top: 15px;">
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j1?.nombre || 'Esperando...'}</div><span class="badge ${partido.j1?.claseColor || ''}">${metaJ1}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || generarAvatarBillar('X')}" class="avatar">${partido.j1?.nombre || 'Esperando...'}</div><span class="badge ${partido.j1?.claseColor || ''}">${metaJ1}</span></div>
                             <div style="color: #ff5e57; font-weight: bold; margin: 5px 0;">VS</div>
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j2?.nombre || 'Esperando...'}</div><span class="badge ${partido.j2?.claseColor || ''}">${metaJ2}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || generarAvatarBillar('X')}" class="avatar">${partido.j2?.nombre || 'Esperando...'}</div><span class="badge ${partido.j2?.claseColor || ''}">${metaJ2}</span></div>
                         </div>`;
 
                     if(!partido.jugado) {
