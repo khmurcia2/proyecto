@@ -128,7 +128,7 @@
         .caja-premios h3 { color: #fff; margin: 5px 0; font-size: 20px; }
         .caja-premios span { color: #0be881; font-weight: 800; }
         
-        /* --- RULETA FÍSICA ESTILO CASINO --- */
+        /* --- LA VERDADERA RULETA FÍSICA ESTILO CASINO --- */
         #ruletaSorteo { 
             display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; 
             background: radial-gradient(circle at center, #1e272e 0%, #050505 100%); 
@@ -457,7 +457,7 @@
                 <circle cx="50" cy="50" r="20" fill="none" stroke="#ccc" stroke-width="1"/>
                 <text x="50" y="57" font-family="Montserrat, Arial, sans-serif" font-weight="900" font-size="22" fill="#2f3640" text-anchor="middle">${inicial}</text>
             </svg>`;
-            return `data:image/svg+xml;base64,${btoa(svg)}`;
+            return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
         }
 
         async function guardarEstadoTorneo() {
@@ -540,7 +540,7 @@
             try {
                 await addDoc(collection(db, "jugadores"), { nombre, categoria, pagado, foto: avatarUrl, meta: getMeta(categoria), claseColor: colorClases[categoria], fechaRegistro: new Date() });
                 this.reset();
-            } catch (error) { alert("Error."); } finally { btn.disabled = false; btn.textContent = 'Registrar Jugador'; }
+            } catch (error) { alert("Error al guardar: " + error.message); } finally { btn.disabled = false; btn.textContent = 'Registrar Jugador'; }
         });
 
         window.abrirModalEdicion = function(id) {
@@ -565,7 +565,7 @@
             try {
                 await updateDoc(doc(db, "jugadores", id), { nombre, categoria, pagado, foto: avatarUrl, meta: getMeta(categoria), claseColor: colorClases[categoria] });
                 cerrarModalEdicion();
-            } catch(error) { alert("Error al actualizar."); }
+            } catch(error) { alert("Error al actualizar: " + error.message); }
         });
 
         window.eliminarJugador = async function() {
@@ -741,25 +741,44 @@
                     partido.s1 = '-'; partido.s2 = '-';
                 }
 
-                if((i/2) < maxAnimaciones && !j2.esLibre) {
-                    document.getElementById('ruletaMesa').innerHTML = `${nombreFase} - MESA ${mesaNumero} <br><span style="font-size:22px; color:#fff;">🕒 ${formatoAMPM(partido.horaInt)}</span>`;
-                    
-                    await animarRuleta("Sorteando Primer Jugador...", j1, jugadoresParaSortear);
-                    await animarRuleta("Sorteando al Rival...", j2, jugadoresParaSortear);
-                    
-                    let htmlLog = `
-                        <div class="ruleta-log-item">
-                            <div class="log-mesa-tag">MESA ${mesaNumero}</div>
-                            <div class="log-player"><img src="${j1.foto}"> <span>${j1.nombre}</span></div>
-                            <div class="log-vs">VS</div>
-                            <div class="log-player right"><span>${j2.nombre}</span> <img src="${j2.foto}"></div>
-                        </div>
-                    `;
-                    logContainer.insertAdjacentHTML('beforeend', htmlLog);
-                    logContainer.scrollTop = logContainer.scrollHeight;
+                if((i/2) < maxAnimaciones) {
+                    if(j2.esLibre) {
+                        document.getElementById('ruletaMesa').innerHTML = `${nombreFase} <br><span style="font-size:22px; color:#0be881;">🎁 SORTEO DE PASE DIRECTO (BYE)</span>`;
+                        await animarRuleta("Sorteando al afortunado (Avanza sin jugar)...", j1, jugadoresParaSortear);
+                        
+                        let htmlLog = `
+                            <div class="ruleta-log-item" style="border-left-color: #0be881; border-color: #0be881;">
+                                <div class="log-mesa-tag" style="color: #0be881;">LIBRE</div>
+                                <div class="log-player"><img src="${j1.foto}"> <span style="color: #0be881;">${j1.nombre}</span></div>
+                                <div class="log-vs" style="color: #0be881;">►</div>
+                                <div class="log-player right"><span style="color:#0be881;">AVANZA</span> <img src="${j2.foto}"></div>
+                            </div>
+                        `;
+                        logContainer.insertAdjacentHTML('beforeend', htmlLog);
+                        logContainer.scrollTop = logContainer.scrollHeight;
 
-                    document.getElementById('ruletaSub').textContent = `¡Partido fijado! Siguiente...`;
-                    await sleep(1500);
+                        document.getElementById('ruletaSub').textContent = `¡Pase directo asignado! Siguiente...`;
+                        await sleep(2000);
+                    } else {
+                        document.getElementById('ruletaMesa').innerHTML = `${nombreFase} - MESA ${mesaNumero} <br><span style="font-size:22px; color:#fff;">🕒 ${formatoAMPM(partido.horaInt)}</span>`;
+                        
+                        await animarRuleta("Sorteando Primer Jugador...", j1, jugadoresParaSortear);
+                        await animarRuleta("Sorteando al Rival...", j2, jugadoresParaSortear);
+                        
+                        let htmlLog = `
+                            <div class="ruleta-log-item">
+                                <div class="log-mesa-tag">MESA ${mesaNumero}</div>
+                                <div class="log-player"><img src="${j1.foto}"> <span>${j1.nombre}</span></div>
+                                <div class="log-vs">VS</div>
+                                <div class="log-player right"><span>${j2.nombre}</span> <img src="${j2.foto}"></div>
+                            </div>
+                        `;
+                        logContainer.insertAdjacentHTML('beforeend', htmlLog);
+                        logContainer.scrollTop = logContainer.scrollHeight;
+
+                        document.getElementById('ruletaSub').textContent = `¡Partido fijado! Siguiente...`;
+                        await sleep(1500);
+                    }
                 }
 
                 partidosNuevos.push(partido);
@@ -1007,9 +1026,9 @@
                     html += `<div class="mesa-billar" style="border-color: #ff3f34; max-width: 450px; margin: 0 auto 15px;">
                         <div class="horario" style="background: #ff3f34; color: white; border: 1px solid #ff3f34; border-top: none;">MESA ${partido.mesa} | 🕒 ${horaInicioAmPm} - 🏁 ${horaFin}</div>
                         <div style="margin-top: 15px;">
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || generarAvatarBillar('X')}" class="avatar">${partido.j1?.nombre || 'Esperando...'}</div><span class="badge ${partido.j1?.claseColor || ''}">${metaJ1}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j1?.nombre || 'Esperando...'}</div><span class="badge ${partido.j1?.claseColor || ''}">${metaJ1}</span></div>
                             <div style="color: #ff5e57; font-weight: bold; margin: 5px 0;">VS</div>
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || generarAvatarBillar('X')}" class="avatar">${partido.j2?.nombre || 'Esperando...'}</div><span class="badge ${partido.j2?.claseColor || ''}">${metaJ2}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j2?.nombre || 'Esperando...'}</div><span class="badge ${partido.j2?.claseColor || ''}">${metaJ2}</span></div>
                         </div>`;
 
                     if(!partido.jugado) {
