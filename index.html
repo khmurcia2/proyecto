@@ -44,9 +44,10 @@
         th, td { text-align: left; padding: 12px; border-bottom: 1px solid rgba(255,255,255,0.05); vertical-align: middle; }
         th { background-color: rgba(0, 216, 214, 0.2); color: #00d8d6; text-transform: uppercase; font-size: 12px; }
         
-        .avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid #00d8d6; margin-right: 10px; vertical-align: middle; background-color: #2f3640; }
+        /* AVATARES BILLAR */
+        .avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; margin-right: 10px; vertical-align: middle; background-color: transparent; filter: drop-shadow(0px 4px 4px rgba(0,0,0,0.5)); }
         .avatar-clic { cursor: pointer; transition: all 0.3s; }
-        .avatar-clic:hover { transform: scale(1.2); box-shadow: 0 0 15px #0be881; border-color: #0be881; }
+        .avatar-clic:hover { transform: scale(1.2); filter: drop-shadow(0px 0px 10px #0be881); }
 
         .badge { padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 800; color: white; text-transform: uppercase; }
         .bg-master { background: linear-gradient(45deg, #ff3f34, #ff5e57); }
@@ -79,7 +80,6 @@
         .input-score { width: 45%; text-align: center; font-size: 18px; font-weight: bold; background: rgba(255,255,255,0.9); color: #000; border-radius: 5px; border:none; }
         .btn-guardar-score { background: #05c46b; border: none; color: white; width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
         .btn-guardar-score:hover { filter: brightness(1.1); box-shadow: 0 0 10px #05c46b; }
-        .btn-fase-final { background: linear-gradient(45deg, #ff3f34, #ff5e57); color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; display: none; box-shadow: 0 5px 15px rgba(255, 63, 52, 0.4); text-transform: uppercase; }
         
         /* PLACA DE PREMIACIÓN */
         .caja-premios { background: linear-gradient(45deg, rgba(255,215,0,0.1), rgba(255,215,0,0.3)); border: 2px solid #ffd32a; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; display: none; box-shadow: 0 0 20px rgba(255,215,0,0.2); }
@@ -87,25 +87,53 @@
         .caja-premios h3 { color: #fff; margin: 5px 0; font-size: 20px; }
         .caja-premios span { color: #0be881; font-weight: 800; }
         
-        /* RULETA DIGITAL CON TABLERO EN VIVO */
-        #ruletaSorteo { display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; background: radial-gradient(circle at center, #1e272e 0%, #050505 100%); z-index: 999999; flex-direction: column; justify-content: flex-start; align-items: center; color: white; overflow-y: auto; padding-top: 30px; }
-        .ruleta-titulo { font-size: 35px; color: #ffd32a; font-weight: 900; letter-spacing: 3px; margin-bottom: 5px; text-shadow: 0 0 20px rgba(255, 211, 42, 0.6); text-align: center; }
-        .ruleta-subtitulo { font-size: 20px; color: #00d8d6; margin-bottom: 20px; font-weight: bold; }
+        /* --- RULETA FÍSICA ESTILO CASINO --- */
+        #ruletaSorteo { display: none; position: fixed; top:0; left:0; width:100vw; height:100vh; background: radial-gradient(circle at center, #1e272e 0%, #050505 100%); z-index: 999999; flex-direction: column; justify-content: flex-start; align-items: center; color: white; overflow: hidden; padding-top: 20px; box-sizing: border-box; }
         
-        .ruleta-box-central { width: 250px; height: 250px; background: rgba(0,0,0,0.85); border: 5px solid #00d8d6; border-radius: 20px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 0 40px rgba(0,216,214,0.4); transition: all 0.3s ease; }
-        .ruleta-box-central img { width: 100px; height: 100px; border-radius: 50%; border: 4px solid #fff; margin-bottom: 10px; background: #2f3640; }
-        .ruleta-box-central .nombre { font-size: 20px; font-weight: 900; color: #fff; text-align: center; text-transform: uppercase; width: 90%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .ruleta-box-central .categoria { font-size: 14px; color: #ffd32a; font-weight: 800; margin-top: 5px; text-transform: uppercase; }
+        .ruleta-header { text-align: center; margin-bottom: 20px; }
+        .ruleta-titulo { font-size: 35px; color: #ffd32a; font-weight: 900; letter-spacing: 3px; text-shadow: 0 0 20px rgba(255, 211, 42, 0.6); margin: 0; }
+        .ruleta-subtitulo { font-size: 20px; color: #00d8d6; font-weight: bold; margin-top: 5px; }
 
-        /* TABLERO DE RESULTADOS EN VIVO (LOG) */
-        .ruleta-log-container { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; width: 95%; max-width: 800px; padding-bottom: 50px; }
+        .ruleta-ventana {
+            position: relative;
+            width: 95%; max-width: 900px; height: 180px;
+            background: #111;
+            border: 6px solid #00d8d6;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,216,214,0.4), inset 0 0 30px rgba(0,0,0,0.9);
+            mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            -webkit-mask-image: linear-gradient(to right, transparent, black 15%, black 85%, transparent);
+            overflow: hidden;
+        }
+
+        .ruleta-aguja { position: absolute; top: -15px; left: 50%; transform: translateX(-50%); color: #ff3f34; font-size: 60px; z-index: 10; text-shadow: 0 5px 10px rgba(0,0,0,0.8); }
+        .ruleta-linea-ganadora { position: absolute; top: 0; left: 50%; transform: translateX(-50%); width: 4px; height: 100%; background: rgba(255, 63, 52, 0.7); z-index: 5; box-shadow: 0 0 10px #ff3f34; }
+
+        .ruleta-carril { display: flex; align-items: center; height: 100%; width: max-content; transform: translateX(0); }
+
+        .ruleta-item {
+            width: 160px; min-width: 160px; height: 100%;
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            border-left: 1px solid rgba(255,255,255,0.05); border-right: 1px solid rgba(255,255,255,0.05);
+            box-sizing: border-box; opacity: 0.5; transition: 0.3s;
+        }
+
+        .ruleta-item img { width: 90px; height: 90px; border-radius: 50%; margin-bottom: 10px; background: transparent; transition: 0.3s; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8)); }
+        .ruleta-item span { font-size: 15px; font-weight: 800; text-align: center; width: 90%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; color: #ccc; }
+
+        .ruleta-item.ganador { opacity: 1; background: rgba(11, 232, 129, 0.15); border: 2px solid #0be881; z-index: 2; transform: scale(1.05); }
+        .ruleta-item.ganador img { filter: drop-shadow(0 0 15px #0be881); }
+        .ruleta-item.ganador span { color: #0be881; text-shadow: 0 0 10px rgba(11,232,129,0.5); }
+
+        /* TABLERO EN VIVO */
+        .ruleta-log-container { margin-top: 30px; display: flex; flex-direction: column; gap: 12px; width: 95%; max-width: 800px; padding-bottom: 50px; overflow-y: auto; max-height: 45vh; }
         .ruleta-log-item { background: rgba(0, 0, 0, 0.7); border: 2px solid #00d8d6; border-left: 8px solid #00d8d6; border-radius: 10px; padding: 15px 20px; display: flex; justify-content: space-between; align-items: center; animation: slideIn 0.5s ease-out forwards; box-shadow: 0 5px 15px rgba(0,0,0,0.5); }
         @keyframes slideIn { from { opacity: 0; transform: translateX(-50px); } to { opacity: 1; transform: translateX(0); } }
         
         .log-mesa-tag { color: #ffd32a; font-weight: 900; font-size: 18px; width: 120px; }
         .log-player { display: flex; align-items: center; gap: 12px; color: white; font-weight: 800; font-size: 16px; flex: 1; }
         .log-player.right { flex-direction: row-reverse; text-align: right; }
-        .log-player img { width: 40px; height: 40px; border-radius: 50%; border: 2px solid #fff; }
+        .log-player img { width: 45px; height: 45px; border-radius: 50%; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8)); }
         .log-vs { color: #ff5e57; font-weight: 900; font-size: 20px; padding: 0 15px; }
 
         .campeon-box { background: linear-gradient(45deg, #05c46b, #0be881); padding: 20px; border-radius: 10px; margin-top: 20px; text-align: center; color: #000; font-size: 24px; font-weight: 900; box-shadow: 0 0 25px rgba(11,232,129,0.8); animation: latido 1.5s infinite; }
@@ -125,21 +153,19 @@
         <button class="tab-btn" id="tab-finales" onclick="cambiarPestana('finales', this)">🏆 Muerte Súbita</button>
     </div>
 
-    <!-- PANTALLA DE LA RULETA EN VIVO CON TABLERO -->
+    <!-- PANTALLA DE LA RULETA EN VIVO FÍSICA -->
     <div id="ruletaSorteo">
-        <div class="ruleta-titulo" id="ruletaMesa">MESA 1</div>
-        <div class="ruleta-subtitulo" id="ruletaSub">Sorteando Jugador...</div>
-        
-        <div class="ruleta-box-central" id="ruletaBoxCentral">
-            <img src="" id="ruletaAvatarActual">
-            <div class="nombre" id="ruletaNombreActual">GIRANDO...</div>
-            <div class="categoria" id="ruletaCategoriaActual">RULETA</div>
+        <div class="ruleta-header">
+            <div class="ruleta-titulo" id="ruletaMesa">MESA 1</div>
+            <div class="ruleta-subtitulo" id="ruletaSub">Sorteando Jugador...</div>
         </div>
-
+        <div class="ruleta-ventana" id="ruletaContenedor">
+            <div class="ruleta-aguja">▼</div>
+            <div class="ruleta-linea-ganadora"></div>
+            <div class="ruleta-carril" id="ruletaCarril"></div>
+        </div>
         <!-- TABLERO DE ANOTACIONES EN VIVO -->
-        <div class="ruleta-log-container" id="ruletaLog">
-            <!-- Aquí irán apareciendo los partidos confirmados -->
-        </div>
+        <div class="ruleta-log-container" id="ruletaLog"></div>
     </div>
 
     <!-- MODAL DE EDICIÓN Y ELIMINACIÓN DE JUGADORES -->
@@ -209,7 +235,7 @@
             <h2>Participantes Registrados (<span id="contador" style="color: #00d8d6;">0</span>)</h2>
             <p style="text-align: center; color: #aaa; font-size: 14px;">Aptos para el sorteo: <strong id="contadorAptos" style="color:#0be881;">0</strong><br><em>(Haz clic en la foto de un jugador para editar o <b>eliminar</b>)</em></p>
             <table>
-                <thead><tr><th>Jugador</th><th>Nivel</th><th style="text-align: center;">Estado</th></tr></thead>
+                <thead><tr><th>Jugador</th><th>Nivel</th><th>Meta</th><th style="text-align: center;">Estado</th></tr></thead>
                 <tbody id="listaJugadores"></tbody>
             </table>
         </div>
@@ -224,7 +250,7 @@
                 <label style="color: #ffd32a; font-size: 16px;">Selecciona la Modalidad</label>
                 <select id="tipoTorneoConfig" style="border-color: #ffd32a; font-weight: bold;">
                     <option value="clasico">🏆 Torneo Clásico (Fase de Grupos + Eliminación)</option>
-                    <option value="matamata">⚡ Mata Mata (Eliminación Directa Relámpago desde el inicio)</option>
+                    <option value="matamata">⚡ Mata Mata (Eliminación Directa Relámpago)</option>
                 </select>
                 <p style="color: #aaa; font-size: 12px; margin-top: 5px;">* En <b>Mata Mata</b> las metas cambian automáticamente: Master(12), Intermedio(9), Normal(7), Amateur(5).</p>
             </div>
@@ -290,7 +316,7 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // --- METAS DINÁMICAS ---
+        // --- REGLAS ---
         const colorClases = { "Master": "bg-master", "Intermedio": "bg-intermedio", "Normal": "bg-normal", "Amateur": "bg-amateur" };
         const metasClasico = { "Master": 25, "Intermedio": 20, "Normal": 15, "Amateur": 12 };
         const metasMataMata = { "Master": 12, "Intermedio": 9, "Normal": 7, "Amateur": 5 };
@@ -303,55 +329,60 @@
         window.premiacion = { primero: "", segundo: "" };
         window.ultimaHoraGlobal = "18:00";
 
-        function getMeta(categoria) {
-            return window.tipoTorneo === 'matamata' ? metasMataMata[categoria] : metasClasico[categoria];
-        }
+        function getMeta(categoria) { return window.tipoTorneo === 'matamata' ? metasMataMata[categoria] : metasClasico[categoria]; }
 
-        // --- EFECTOS DE SONIDO NATIVOS ---
-        function playTick() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(800, audioCtx.currentTime);
-                gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start();
-                osc.stop(audioCtx.currentTime + 0.05);
-            } catch(e) {}
-        }
+        // --- GENERADOR DE BOLAS DE BILLAR 3 BANDAS EN SVG ---
+        // Genera avatares hiper-realistas (Bola Blanca, Amarilla o Roja con inicial y puntos)
+        function generarAvatarBillar(nombre) {
+            let charCode = 0;
+            for(let i=0; i<nombre.length; i++) charCode += nombre.charCodeAt(i);
+            
+            const tipo = charCode % 3; // 0: Blanca, 1: Amarilla, 2: Roja
+            let colorBase;
+            if(tipo === 0) colorBase = '#f5f6fa'; // Blanca
+            else if(tipo === 1) colorBase = '#fbc531'; // Amarilla
+            else colorBase = '#e84118'; // Roja
 
-        function playFanfare() {
-            try {
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
-                    const osc = audioCtx.createOscillator();
-                    const gain = audioCtx.createGain();
-                    osc.type = 'sine';
-                    osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
-                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime + i * 0.1);
-                    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.1 + 0.3);
-                    osc.connect(gain);
-                    gain.connect(audioCtx.destination);
-                    osc.start(audioCtx.currentTime + i * 0.1);
-                    osc.stop(audioCtx.currentTime + i * 0.1 + 0.3);
-                });
-            } catch(e) {}
+            let inicial = nombre.charAt(0).toUpperCase();
+
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+                <defs>
+                    <radialGradient id="luz_${tipo}_${charCode}" cx="30%" cy="30%" r="70%">
+                        <stop offset="0%" stop-color="#ffffff" stop-opacity="1"/>
+                        <stop offset="40%" stop-color="${colorBase}" stop-opacity="1"/>
+                        <stop offset="100%" stop-color="${tipo===0?'#dcdde1':tipo===1?'#e1b12c':'#c23616'}" stop-opacity="1"/>
+                    </radialGradient>
+                    <radialGradient id="sombra_${charCode}" cx="50%" cy="50%" r="50%">
+                        <stop offset="70%" stop-color="#000" stop-opacity="0"/>
+                        <stop offset="100%" stop-color="#000" stop-opacity="0.7"/>
+                    </radialGradient>
+                </defs>
+                <circle cx="50" cy="50" r="48" fill="url(#luz_${tipo}_${charCode})"/>
+                <!-- Puntos tipicos del billar 3 bandas -->
+                ${tipo !== 2 ? `
+                    <circle cx="50" cy="12" r="5" fill="#e84118"/>
+                    <circle cx="83" cy="69" r="5" fill="#e84118"/>
+                    <circle cx="17" cy="69" r="5" fill="#e84118"/>
+                ` : `
+                    <circle cx="50" cy="12" r="5" fill="#fbc531"/>
+                    <circle cx="83" cy="69" r="5" fill="#fbc531"/>
+                    <circle cx="17" cy="69" r="5" fill="#fbc531"/>
+                `}
+                <circle cx="50" cy="50" r="48" fill="url(#sombra_${charCode})"/>
+                <circle cx="50" cy="50" r="20" fill="#ffffff" opacity="0.9"/>
+                <circle cx="50" cy="50" r="20" fill="none" stroke="#ccc" stroke-width="1"/>
+                <text x="50" y="57" font-family="Montserrat, Arial, sans-serif" font-weight="900" font-size="22" fill="#2f3640" text-anchor="middle">${inicial}</text>
+            </svg>`;
+            return `data:image/svg+xml;base64,${btoa(svg)}`;
         }
 
         // --- SISTEMA DE GUARDADO BLINDADO ---
         async function guardarEstadoTorneo() {
             try { 
                 const datosLimpios = JSON.parse(JSON.stringify({ 
-                    activo: window.torneoActivo, 
-                    tipoTorneo: window.tipoTorneo,
-                    grupos: window.grupos, 
-                    faseEliminacion: window.faseEliminacion, 
-                    premiacion: window.premiacion, 
-                    ultimaHora: window.ultimaHoraGlobal
+                    activo: window.torneoActivo, tipoTorneo: window.tipoTorneo,
+                    grupos: window.grupos, faseEliminacion: window.faseEliminacion, 
+                    premiacion: window.premiacion, ultimaHora: window.ultimaHoraGlobal
                 }));
                 await setDoc(doc(db, "torneos", "actual"), datosLimpios); 
             } catch (error) { console.error("Error al guardar estado:", error); }
@@ -416,17 +447,19 @@
             botonRef.classList.add('activa');
         };
 
-        // --- MANEJO DE INSCRITOS, EDICIÓN Y ELIMINACIÓN ---
+        // --- MANEJO DE INSCRITOS Y AUTO-ACTUALIZADOR DE AVATARES ---
         document.getElementById('registroForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const btn = document.getElementById('btnGuardar'); btn.disabled = true; btn.textContent = 'Guardando...';
             const nombre = document.getElementById('nombre').value;
             const categoria = document.getElementById('categoria').value;
             const pagado = document.getElementById('pagado').checked; 
-            const semilla = encodeURIComponent(nombre + Math.random());
-            const avatarUrl = `https://api.dicebear.com/7.x/adventurer/svg?seed=${semilla}`;
+            
+            // Creamos LA BOLA DE BILLAR
+            const avatarUrl = generarAvatarBillar(nombre);
+            
             try {
-                await addDoc(collection(db, "jugadores"), { nombre, categoria, pagado, foto: avatarUrl, claseColor: colorClases[categoria], fechaRegistro: new Date() });
+                await addDoc(collection(db, "jugadores"), { nombre, categoria, pagado, foto: avatarUrl, meta: reglas[categoria].meta, claseColor: colorClases[categoria], fechaRegistro: new Date() });
                 this.reset();
             } catch (error) { alert("Error."); } finally { btn.disabled = false; btn.textContent = 'Registrar Jugador'; }
         });
@@ -449,8 +482,12 @@
             const nombre = document.getElementById('editNombre').value;
             const categoria = document.getElementById('editCategoria').value;
             const pagado = document.getElementById('editPagado').checked;
+            
+            // Actualizamos la bola por si le cambiaron el nombre
+            const avatarUrl = generarAvatarBillar(nombre);
+
             try {
-                await updateDoc(doc(db, "jugadores", id), { nombre, categoria, pagado, claseColor: colorClases[categoria] });
+                await updateDoc(doc(db, "jugadores", id), { nombre, categoria, pagado, foto: avatarUrl, meta: reglas[categoria].meta, claseColor: colorClases[categoria] });
                 cerrarModalEdicion();
             } catch(error) { alert("Error al actualizar la información."); }
         });
@@ -469,17 +506,28 @@
         onSnapshot(query(collection(db, "jugadores"), orderBy("fechaRegistro", "desc")), (snapshot) => {
             const tbody = document.getElementById('listaJugadores'); tbody.innerHTML = ''; window.inscritosGlobal = []; 
             let aptosParaSorteo = 0;
-            snapshot.forEach((doc) => {
-                const data = doc.data(); window.inscritosGlobal.push({ id: doc.id, ...data });
+            
+            snapshot.forEach((docSnap) => {
+                const data = docSnap.data(); 
+                
+                // AUTO-ACTUALIZADOR: Si no tiene foto o tiene una de dicebear (viejos) la actualizamos a bola de billar
+                let fotoFinal = data.foto;
+                if(!fotoFinal || fotoFinal.includes('dicebear')) {
+                    fotoFinal = generarAvatarBillar(data.nombre);
+                    updateDoc(doc(db, "jugadores", docSnap.id), { foto: fotoFinal }).catch(e => console.log(e));
+                }
+
+                window.inscritosGlobal.push({ id: docSnap.id, ...data, foto: fotoFinal });
                 if (data.pagado) aptosParaSorteo++;
                 const iconoEstado = data.pagado ? '<span style="color: #0be881; font-size: 20px;" title="Pagado">✅</span>' : '<span style="color: #ff3f34; font-size: 20px;" title="Debe inscripción">❌</span>';
                 
                 tbody.innerHTML += `<tr>
                     <td><div style="display:flex; align-items:center;">
-                        <img src="${data.foto}" class="avatar avatar-clic" onclick="abrirModalEdicion('${doc.id}')" title="Clic para editar o eliminar"> 
+                        <img src="${fotoFinal}" class="avatar avatar-clic" onclick="abrirModalEdicion('${docSnap.id}')" title="Clic para editar o eliminar"> 
                         <strong>${data.nombre}</strong>
                     </div></td>
                     <td><span class="badge ${data.claseColor}">${data.categoria}</span></td>
+                    <td>${data.meta || getMeta(data.categoria)}</td>
                     <td style="text-align: center;">${iconoEstado}</td>
                 </tr>`;
             });
@@ -487,9 +535,8 @@
             document.getElementById('contadorAptos').textContent = aptosParaSorteo;
         });
 
-        // --- FUNCIONES DE TIEMPO Y ANIMACIÓN RULETA (NUEVA CON TABLERO EN VIVO) ---
+        // --- FUNCIONES DE TIEMPO Y AUDIO ---
         const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
-        
         function sumarMinutos(hora24, minutos) {
             if(!hora24) hora24 = "18:00";
             const [h, m] = hora24.split(':').map(Number);
@@ -503,50 +550,91 @@
             h = h % 12 || 12;
             return `${h}:${String(m).padStart(2, '0')} ${ampm}`;
         }
-        function obtenerMinutos(hora24) {
-            let [h, m] = hora24.split(':').map(Number);
-            return h * 60 + m;
+        function obtenerMinutos(hora24) { let [h, m] = hora24.split(':').map(Number); return h * 60 + m; }
+
+        function playTick() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                osc.type = 'triangle'; osc.frequency.setValueAtTime(800, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.1, audioCtx.currentTime); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
+                osc.connect(gain); gain.connect(audioCtx.destination); osc.start(); osc.stop(audioCtx.currentTime + 0.05);
+            } catch(e) {}
+        }
+        function playFanfare() {
+            try {
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                [523.25, 659.25, 783.99, 1046.50].forEach((freq, i) => {
+                    const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain();
+                    osc.type = 'sine'; osc.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
+                    gain.gain.setValueAtTime(0.15, audioCtx.currentTime + i * 0.1); gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + i * 0.1 + 0.3);
+                    osc.connect(gain); gain.connect(audioCtx.destination); osc.start(audioCtx.currentTime + i * 0.1); osc.stop(audioCtx.currentTime + i * 0.1 + 0.3);
+                });
+            } catch(e) {}
         }
 
+        // --- ANIMACIÓN DE LA RULETA FÍSICA Y EMOCIONANTE ---
         async function animarRuleta(subtituloTexto, jugadorElegido, poolJugadores) {
-            document.getElementById('ruletaSub').textContent = subtituloTexto;
-            const imgElem = document.getElementById('ruletaAvatarActual');
-            const nomElem = document.getElementById('ruletaNombreActual');
-            const catElem = document.getElementById('ruletaCategoriaActual');
-            const boxElem = document.getElementById('ruletaBoxCentral');
-            
-            boxElem.style.borderColor = '#00d8d6';
-            boxElem.style.boxShadow = '0 0 30px rgba(0, 216, 214, 0.5)';
-            
-            let pool = poolJugadores.length > 0 ? poolJugadores : [jugadorElegido];
-            let delays = [50, 50, 50, 60, 60, 70, 80, 100, 130, 170, 220, 290, 380, 500, 700];
-            
-            for(let i = 0; i < delays.length; i++) {
-                let randomJ = pool[Math.floor(Math.random() * pool.length)];
-                imgElem.src = randomJ.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=x';
-                nomElem.textContent = randomJ.nombre || '???';
-                catElem.textContent = randomJ.categoria || '';
-                playTick();
-                await sleep(delays[i]);
-            }
-            
-            imgElem.src = jugadorElegido.foto;
-            nomElem.textContent = jugadorElegido.nombre;
-            catElem.textContent = jugadorElegido.categoria || '';
-            
-            boxElem.style.borderColor = '#0be881';
-            boxElem.style.boxShadow = '0 0 50px rgba(11, 232, 129, 0.9)';
-            playFanfare();
-            
-            await sleep(2000); // Pausa para celebrar
+            return new Promise(async (resolve) => {
+                try {
+                    const track = document.getElementById('ruletaCarril');
+                    const contenedor = document.getElementById('ruletaContenedor');
+                    document.getElementById('ruletaSub').textContent = subtituloTexto;
+                    
+                    track.style.transition = 'none'; track.style.transform = 'translateX(0)';
+
+                    let itemsHTML = '';
+                    const totalItems = 60; 
+                    const winnerIndex = 50; 
+                    const itemWidth = 160; 
+
+                    for(let i = 0; i < totalItems; i++) {
+                        let j = (i === winnerIndex) ? jugadorElegido : poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
+                        if(!j) j = { foto: generarAvatarBillar('X'), nombre: 'Desconocido' };
+                        itemsHTML += `<div class="ruleta-item" id="rItem-${i}"><img src="${j.foto}"><span>${j.nombre}</span></div>`;
+                    }
+                    track.innerHTML = itemsHTML;
+                    
+                    void track.offsetWidth; 
+                    await sleep(50); 
+
+                    // Matemática del Suspenso: Que la aguja pueda parar CASI pasándose a otro jugador (±55px)
+                    const anchoContenedor = contenedor.offsetWidth || 800; 
+                    const centroDelContenedor = anchoContenedor / 2;
+                    const offsetAlCentro = centroDelContenedor - (itemWidth / 2);
+                    const offsetAleatorio = Math.floor(Math.random() * 110) - 55; 
+                    
+                    const distanciaFinal = -((winnerIndex * itemWidth) - offsetAlCentro + offsetAleatorio);
+
+                    // A rodar (6 segundos de tensión)
+                    track.style.transition = 'transform 6s cubic-bezier(0.15, 0.85, 0.15, 1)';
+                    track.style.transform = `translateX(${distanciaFinal}px)`;
+                    
+                    // Opcional: Play tick sounds every 200ms approx while spinning
+                    let ticks = setInterval(playTick, 250);
+                    setTimeout(() => clearInterval(ticks), 5500);
+
+                    await sleep(6200); 
+
+                    let winnerElement = document.getElementById(`rItem-${winnerIndex}`);
+                    if(winnerElement) winnerElement.classList.add('ganador');
+                    playFanfare();
+                    
+                    await sleep(2500); 
+                    resolve();
+                } catch(error) {
+                    console.error("Error en animación", error);
+                    resolve(); 
+                }
+            });
         }
 
-        // MOTOR CENTRAL PARA CREAR CUALQUIER RONDA CON RULETA Y TABLERO
+        // MOTOR CENTRAL PARA CREAR CUALQUIER RONDA CON RULETA
         window.ejecutarSorteoRondaRuleta = async function(jugadoresParaSortear, nombreFase) {
             let mezclados = [...jugadoresParaSortear].sort(() => Math.random() - 0.5);
             
             if(mezclados.length % 2 !== 0) {
-                mezclados.push({ id: 'libre', nombre: 'LIBRE (Avanza)', categoria: 'Amateur', foto: 'https://api.dicebear.com/7.x/adventurer/svg?seed=libre', claseColor: 'bg-amateur', esLibre: true });
+                mezclados.push({ id: 'libre', nombre: 'LIBRE (Avanza)', categoria: 'Amateur', foto: generarAvatarBillar('Libre'), claseColor: 'bg-amateur', esLibre: true });
             }
 
             let partidosNuevos = [];
@@ -555,11 +643,9 @@
             const cine = document.getElementById('ruletaSorteo');
             const logContainer = document.getElementById('ruletaLog');
             
-            // Preparar UI del Show
-            logContainer.innerHTML = ''; // Limpiar tablero
+            logContainer.innerHTML = '';
             cine.style.display = 'flex';
-            cine.style.zIndex = '999999';
-
+            
             let maxAnimaciones = Math.min(mezclados.length / 2, 5);
 
             for(let i=0; i < mezclados.length; i+=2) {
@@ -568,47 +654,31 @@
                 let mesaIndex = (i/2) % 5;
                 let mesaNumero = mesaIndex + 1;
                 
-                let partido = {
-                    j1: j1, j2: j2,
-                    s1: 0, s2: 0, jugado: false, ganador: null,
-                    horaInt: tiemposMesas[mesaIndex],
-                    mesa: mesaNumero
-                };
+                let partido = { j1: j1, j2: j2, s1: 0, s2: 0, jugado: false, ganador: null, horaInt: tiemposMesas[mesaIndex], mesa: mesaNumero };
 
                 if(j2.esLibre) {
-                    partido.jugado = true;
-                    partido.ganador = j1;
+                    partido.jugado = true; partido.ganador = j1;
                     partido.s1 = '-'; partido.s2 = '-';
                 }
 
-                // ANIMAR Y ANOTAR EN EL TABLERO SI ESTÁ EN LOS PRIMEROS 5
                 if((i/2) < maxAnimaciones && !j2.esLibre) {
-                    document.getElementById('ruletaMesa').innerHTML = `${nombreFase} - MESA ${mesaNumero} <br><span style="font-size:20px; color:#fff;">🕒 ${formatoAMPM(partido.horaInt)}</span>`;
+                    document.getElementById('ruletaMesa').innerHTML = `${nombreFase} - MESA ${mesaNumero} <br><span style="font-size:22px; color:#fff;">🕒 ${formatoAMPM(partido.horaInt)}</span>`;
                     
-                    // Sortea J1
-                    await animarRuleta("Sorteando Jugador 1...", j1, jugadoresParaSortear);
+                    await animarRuleta("Sorteando Primer Jugador...", j1, jugadoresParaSortear);
+                    await animarRuleta("Sorteando al Rival...", j2, jugadoresParaSortear);
                     
-                    // Sortea J2
-                    await animarRuleta("Sorteando Oponente (Jugador 2)...", j2, jugadoresParaSortear);
-                    
-                    // AGREGAR AL TABLERO EN VIVO
                     let htmlLog = `
                         <div class="ruleta-log-item">
                             <div class="log-mesa-tag">MESA ${mesaNumero}</div>
-                            <div class="log-player">
-                                <img src="${j1.foto}"> <span>${j1.nombre}</span>
-                            </div>
+                            <div class="log-player"><img src="${j1.foto}"> <span>${j1.nombre}</span></div>
                             <div class="log-vs">VS</div>
-                            <div class="log-player right">
-                                <span>${j2.nombre}</span> <img src="${j2.foto}">
-                            </div>
+                            <div class="log-player right"><span>${j2.nombre}</span> <img src="${j2.foto}"></div>
                         </div>
                     `;
                     logContainer.insertAdjacentHTML('beforeend', htmlLog);
-                    // Bajar el scroll suavemente para ver el nuevo partido
                     logContainer.scrollTop = logContainer.scrollHeight;
 
-                    document.getElementById('ruletaSub').textContent = `¡Mesa ${mesaNumero} confirmada!`;
+                    document.getElementById('ruletaSub').textContent = `¡Partido fijado! Siguiente...`;
                     await sleep(1500);
                 }
 
@@ -617,15 +687,11 @@
             }
 
             let maxMinutos = 0;
-            tiemposMesas.forEach(t => {
-                let min = obtenerMinutos(t);
-                if(min > maxMinutos) { maxMinutos = min; window.ultimaHoraGlobal = t; }
-            });
+            tiemposMesas.forEach(t => { let min = obtenerMinutos(t); if(min > maxMinutos) { maxMinutos = min; window.ultimaHoraGlobal = t; }});
 
             document.getElementById('ruletaMesa').innerHTML = `¡SORTEO FINALIZADO! 🎱`;
-            document.getElementById('ruletaSub').textContent = `Las mesas están anotadas en el tablero. ¡A jugar!`;
+            document.getElementById('ruletaSub').textContent = `Las mesas están en el tablero inferior. ¡Que gane el mejor!`;
             
-            // Pausa larga para que todos lean el tablero final
             await sleep(5000); 
             cine.style.display = 'none';
 
@@ -640,9 +706,7 @@
 
         // --- BOTÓN PRINCIPAL: INICIAR TORNEO ---
         document.getElementById('btnSorteo').addEventListener('click', async () => {
-            if(window.torneoActivo) {
-                if(!confirm("Ya hay un torneo en curso registrado. ¿Deseas reiniciar y realizar un nuevo sorteo?")) return;
-            }
+            if(window.torneoActivo) { if(!confirm("Ya hay un torneo en curso registrado. ¿Reiniciar por completo?")) return; }
 
             const password = prompt("Ingrese clave de administrador:");
             if (password !== "2026*") { alert("❌ Clave incorrecta."); return; }
@@ -653,7 +717,7 @@
             window.tipoTorneo = document.getElementById('tipoTorneoConfig').value;
             let msg = window.tipoTorneo === 'clasico' ? "Fase de Grupos" : "MATA MATA (Eliminación Directa)";
 
-            if (confirm(`Se iniciará el Torneo: ${msg} con ${jugadoresAptos.length} jugadores.\n¿Todo listo en la pantalla gigante?`)) {
+            if (confirm(`Se iniciará la RULETA EN VIVO: ${msg} con ${jugadoresAptos.length} jugadores.\n¿Proyectar en pantalla gigante?`)) {
                 window.torneoActivo = true; 
                 window.premiacion.primero = document.getElementById('inPremio1').value || "Trofeo y Efectivo";
                 window.premiacion.segundo = document.getElementById('inPremio2').value || "Efectivo";
@@ -665,16 +729,12 @@
                 mostrarPremiacion();
 
                 if(window.tipoTorneo === 'clasico') {
-                    // LÓGICA CLÁSICA: Sorteo de Grupos
                     let mezclados = [...jugadoresAptos].sort(() => Math.random() - 0.5);
                     let globalIndex = 0; let tiemposMesas = [window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal];
                     
                     const cine = document.getElementById('ruletaSorteo'); 
                     const logContainer = document.getElementById('ruletaLog');
-                    
-                    logContainer.innerHTML = '';
-                    cine.style.display = 'flex';
-                    cine.style.zIndex = '999999';
+                    logContainer.innerHTML = ''; cine.style.display = 'flex';
 
                     let maxAnimaciones = Math.min(Math.ceil(mezclados.length / 4), 5); 
                     
@@ -686,34 +746,27 @@
                         if(gIdx < maxAnimaciones && p.length >= 2) {
                             document.getElementById('ruletaMesa').innerHTML = `ASIGNANDO MESA ${mesaNumero} <br><span style="font-size:20px; color:#fff;">${nombreGrupo} | ${formatoAMPM(tiemposMesas[mesaIndex])}</span>`;
                             await animarRuleta("Sorteando Cabeza de Serie...", p[0], jugadoresAptos);
-                            await animarRuleta("Sorteando Oponente...", p[1], jugadoresAptos);
+                            await animarRuleta("Sorteando Rival...", p[1], jugadoresAptos);
                             
-                            // AÑADIR AL TABLERO
                             let htmlLog = `
                                 <div class="ruleta-log-item">
                                     <div class="log-mesa-tag">MESA ${mesaNumero}</div>
-                                    <div class="log-player">
-                                        <img src="${p[0].foto}"> <span>${p[0].nombre}</span>
-                                    </div>
+                                    <div class="log-player"><img src="${p[0].foto}"> <span>${p[0].nombre}</span></div>
                                     <div class="log-vs">VS</div>
-                                    <div class="log-player right">
-                                        <span>${p[1].nombre}</span> <img src="${p[1].foto}">
-                                    </div>
+                                    <div class="log-player right"><span>${p[1].nombre}</span> <img src="${p[1].foto}"></div>
                                 </div>
                             `;
                             logContainer.insertAdjacentHTML('beforeend', htmlLog);
                             logContainer.scrollTop = logContainer.scrollHeight;
 
-                            document.getElementById('ruletaSub').textContent = `¡Partido anotado! Preparando siguiente mesa...`;
+                            document.getElementById('ruletaSub').textContent = `¡Grupo anotado! Siguiente...`;
                             await sleep(1500);
                         }
 
                         let partidosGrupo = [];
                         if(p.length >= 2) partidosGrupo.push({ j1: p[0], j2: p[1], s1: '', s2: '', jugado: false });
                         if(p.length >= 3) partidosGrupo.push({ j1: p[0], j2: p[2], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[2], s1: '', s2: '', jugado: false });
-                        if(p.length === 4) {
-                            partidosGrupo = [ { j1: p[0], j2: p[1], s1: '', s2: '', jugado: false }, { j1: p[2], j2: p[3], s1: '', s2: '', jugado: false }, { j1: p[0], j2: p[2], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[3], s1: '', s2: '', jugado: false }, { j1: p[0], j2: p[3], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[2], s1: '', s2: '', jugado: false } ];
-                        }
+                        if(p.length === 4) { partidosGrupo = [ { j1: p[0], j2: p[1], s1: '', s2: '', jugado: false }, { j1: p[2], j2: p[3], s1: '', s2: '', jugado: false }, { j1: p[0], j2: p[2], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[3], s1: '', s2: '', jugado: false }, { j1: p[0], j2: p[3], s1: '', s2: '', jugado: false }, { j1: p[1], j2: p[2], s1: '', s2: '', jugado: false } ]; }
                         
                         partidosGrupo.forEach(partido => {
                             partido.horaInt = tiemposMesas[mesaIndex]; partido.mesa = mesaNumero; 
@@ -723,22 +776,19 @@
                     }
                     
                     let maxMin = 0; tiemposMesas.forEach(t => { let min = obtenerMinutos(t); if(min > maxMin) { maxMin = min; window.ultimaHoraGlobal = t; }});
-                    document.getElementById('ruletaMesa').innerHTML = `¡SORTEO FINALIZADO! 🎱`; 
-                    document.getElementById('ruletaSub').textContent = `Partidos listados en el tablero.`; 
+                    document.getElementById('ruletaMesa').innerHTML = `¡SORTEO FINALIZADO! 🎱`; document.getElementById('ruletaSub').textContent = `Los grupos están asignados.`; 
                     await sleep(4000); cine.style.display = 'none';
                     
                     document.getElementById('btnGenerarFinales').style.display = 'block';
                     renderizarGrupos(); await guardarEstadoTorneo();
 
                 } else {
-                    // MATA MATA
                     document.getElementById('contenedorGrupos').innerHTML = '<h3 style="color:#aaa;">Modo MATA MATA Activo. El torneo se desarrolla en la pestaña de Gran Final.</h3>';
                     await ejecutarSorteoRondaRuleta(jugadoresAptos, "RONDA 1");
                 }
             }
         });
 
-        // --- DE GRUPOS A MUERTE SÚBITA (Solo Torneo Clásico) ---
         window.generarFaseFinal = async function() {
             let clasificados = [];
             window.grupos.forEach(grupo => {
@@ -753,7 +803,6 @@
             await ejecutarSorteoRondaRuleta(clasificados, "ELIMINATORIA");
         };
 
-        // --- SORTEAR SIGUIENTE RONDA (BOTÓN MANUAL EN FINAL) ---
         window.sortearSiguienteRonda = async function() {
             const password = prompt("Ingrese clave para sortear la siguiente fase:");
             if (password !== "2026*") { alert("❌ Clave incorrecta."); return; }
@@ -799,19 +848,14 @@
             if(s1 === s2) { alert("Sin empates en Muerte Súbita."); return; }
 
             let partido = window.faseEliminacion.rondas[rIdx].partidos[pIdx];
-            partido.s1 = s1;
-            partido.s2 = s2;
-            partido.jugado = true;
+            partido.s1 = s1; partido.s2 = s2; partido.jugado = true;
             partido.ganador = (s1 > s2) ? partido.j1 : partido.j2;
 
-            verificarAvanceRonda(rIdx); 
-            renderizarFaseFinal(); 
-            await guardarEstadoTorneo(); 
+            verificarAvanceRonda(rIdx); renderizarFaseFinal(); await guardarEstadoTorneo(); 
         };
 
         function verificarAvanceRonda(rIdx) {
             let rondaActual = window.faseEliminacion.rondas[rIdx].partidos;
-            
             if(rondaActual.every(p => p.jugado)) {
                 if(rondaActual.length === 1) { 
                     window.faseEliminacion.campeon = rondaActual[0].ganador;
@@ -881,9 +925,9 @@
                     html += `<div class="mesa-billar" style="border-color: #ff3f34; max-width: 450px; margin: 0 auto 15px;">
                         <div class="horario" style="background: #ff3f34; color: white; border: 1px solid #ff3f34; border-top: none;">MESA ${partido.mesa} | 🕒 ${horaInicioAmPm} - 🏁 ${horaFin}</div>
                         <div style="margin-top: 15px;">
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j1?.nombre || 'Esperando...'}</div><span class="badge ${partido.j1?.claseColor || ''}">${metaJ1}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j1?.foto || generarAvatarBillar('X')}" class="avatar">${partido.j1?.nombre || 'Esperando...'}</div><span class="badge ${partido.j1?.claseColor || ''}">${metaJ1}</span></div>
                             <div style="color: #ff5e57; font-weight: bold; margin: 5px 0;">VS</div>
-                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || 'https://api.dicebear.com/7.x/adventurer/svg?seed=esp'}" class="avatar">${partido.j2?.nombre || 'Esperando...'}</div><span class="badge ${partido.j2?.claseColor || ''}">${metaJ2}</span></div>
+                            <div class="jugador-mesa"><div class="jugador-info"><img src="${partido.j2?.foto || generarAvatarBillar('X')}" class="avatar">${partido.j2?.nombre || 'Esperando...'}</div><span class="badge ${partido.j2?.claseColor || ''}">${metaJ2}</span></div>
                         </div>`;
 
                     if(!partido.jugado) {
@@ -900,7 +944,6 @@
                 html += `</div>`; contenedor.innerHTML += html;
             });
             
-            // Re-evaluar visibilidad del botón de siguiente ronda
             let rondaActivaData = window.faseEliminacion.rondas[window.faseEliminacion.rondaActiva].partidos;
             if(rondaActivaData.every(p => p.jugado) && !window.faseEliminacion.campeon) {
                 document.getElementById('btnSiguienteRonda').style.display = 'inline-block';
