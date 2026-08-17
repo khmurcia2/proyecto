@@ -260,10 +260,7 @@
                 <div class="form-group">
                     <label>Categoría</label>
                     <select id="editCategoria" required>
-                        <option value="Master">⭐ Master</option>
-                        <option value="Intermedio">⚡ Intermedio</option>
-                        <option value="Normal">🟢 Normal</option>
-                        <option value="Amateur">🎯 Amateur</option>
+                        <!-- Las opciones se inyectan via JS -->
                     </select>
                 </div>
                 <div class="form-group">
@@ -301,10 +298,10 @@
                     <label for="categoria">Categoría Asignada (Sujeta a Verificación)</label>
                     <select id="categoria" required>
                         <option value="">Selecciona el nivel...</option>
-                        <option value="Master">⭐ Master</option>
-                        <option value="Intermedio">⚡ Intermedio</option>
-                        <option value="Normal">🟢 Normal</option>
-                        <option value="Amateur">🎯 Amateur</option>
+                        <option value="Master">⭐ Master (Meta: 12)</option>
+                        <option value="Intermedio">⚡ Intermedio (Meta: 9)</option>
+                        <option value="Normal">🟢 Normal (Meta: 7)</option>
+                        <option value="Amateur">🎯 Amateur (Meta: 5)</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -338,7 +335,7 @@
                     <option value="matamata" selected>⚡ Mata Mata (Eliminación Directa Relámpago desde el inicio)</option>
                     <option value="clasico">🏆 Torneo Clásico (Fase de Grupos + Eliminación)</option>
                 </select>
-                <p style="color: #aaa; font-size: 12px; margin-top: 5px;">* En <b>Mata Mata</b> las metas cambian automáticamente: Master(12), Intermedio(9), Normal(7), Amateur(5).</p>
+                <p style="color: #aaa; font-size: 12px; margin-top: 5px;">* Las metas de carambolas se ajustarán automáticamente según tu elección.</p>
             </div>
 
             <div class="controls-torneo" style="background: none; padding:0; margin:0; justify-content: space-between;">
@@ -424,6 +421,26 @@
 
         function getMeta(categoria) { return window.tipoTorneo === 'matamata' ? metasMataMata[categoria] : metasClasico[categoria]; }
 
+        // --- FUNCIÓN PARA ACTUALIZAR SELECTS DINÁMICAMENTE ---
+        window.actualizarSelectsCategorias = function() {
+            const selects = [document.getElementById('categoria'), document.getElementById('editCategoria')];
+            selects.forEach(sel => {
+                if(!sel) return;
+                let val = sel.value;
+                sel.innerHTML = `
+                    <option value="">Selecciona el nivel...</option>
+                    <option value="Master">⭐ Master (Meta: ${getMeta('Master')})</option>
+                    <option value="Intermedio">⚡ Intermedio (Meta: ${getMeta('Intermedio')})</option>
+                    <option value="Normal">🟢 Normal (Meta: ${getMeta('Normal')})</option>
+                    <option value="Amateur">🎯 Amateur (Meta: ${getMeta('Amateur')})</option>
+                `;
+                sel.value = val;
+            });
+        };
+        
+        // Ejecutar inicialmente para poblar ambos menus
+        window.actualizarSelectsCategorias();
+
         function generarAvatarBillar(nombre) {
             if(!nombre) nombre = "X";
             let charCode = 0;
@@ -480,6 +497,8 @@
                     
                     if(window.torneoActivo) {
                         window.tipoTorneo = data.tipoTorneo || 'matamata';
+                        window.actualizarSelectsCategorias(); // Actualizar menús según lo cargado
+
                         window.grupos = data.grupos || [];
                         window.faseEliminacion = data.faseEliminacion || { rondas: [], rondaActiva: 0, campeon: null };
                         window.premiacion = data.premiacion || { primero: "", segundo: "" };
@@ -533,7 +552,8 @@
 
         document.getElementById('tipoTorneoConfig').addEventListener('change', function(e) {
             window.tipoTorneo = e.target.value;
-            window.renderizarTablaInscritos();
+            window.actualizarSelectsCategorias(); // Actualiza los menús de registro en vivo
+            window.renderizarTablaInscritos();    // Actualiza la tabla en vivo
         });
 
         window.renderizarTablaInscritos = function() {
@@ -660,8 +680,8 @@
             } catch(e) {}
         }
 
-        // --- ANIMACIÓN DE LA RULETA FÍSICA Y EMOCIONANTE (CON EXCLUSIÓN REAL DE BALOTAS) ---
-        async function animarRuleta(subtituloTexto, jugadorElegido, poolRestante) {
+        // --- ANIMACIÓN DE LA RULETA FÍSICA A PRUEBA DE FALLOS ---
+        async function animarRuleta(subtituloTexto, jugadorElegido, poolJugadores) {
             return new Promise(async (resolve) => {
                 try {
                     const track = document.getElementById('ruletaCarril');
@@ -681,14 +701,12 @@
                         if(i === winnerIndex) {
                             j = jugadorElegido;
                         } else {
-                            if(poolRestante.length > 1) {
-                                j = poolRestante[Math.floor(Math.random() * poolRestante.length)];
-                                // Evitar que el adyacente sea el ganador para potenciar el "casi"
-                                while(j.id === jugadorElegido.id && poolRestante.length > 1) {
-                                    j = poolRestante[Math.floor(Math.random() * poolRestante.length)];
+                            if(poolJugadores.length > 1) {
+                                j = poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
+                                while(j.id === jugadorElegido.id && poolJugadores.length > 1) {
+                                    j = poolJugadores[Math.floor(Math.random() * poolJugadores.length)];
                                 }
                             } else {
-                                // Si solo queda él, rellenamos con comodines para mantener el suspenso visual
                                 j = { foto: generarAvatarBillar('?'), nombre: 'Último...' };
                             }
                         }
@@ -697,7 +715,6 @@
                     }
                     track.innerHTML = itemsHTML;
                     
-                    // FORZAR REFLOW MAGICO (Soluciona el bug de la ruleta que no gira)
                     track.getBoundingClientRect(); 
                     await new Promise(r => requestAnimationFrame(r));
                     await new Promise(r => requestAnimationFrame(r));
@@ -706,7 +723,6 @@
                     const centroDelContenedor = anchoContenedor / 2;
                     const offsetAlCentro = centroDelContenedor - (itemWidth / 2);
                     
-                    // Tensión extrema: Puede detenerse a +-75px (Rozando el borde del jugador de al lado)
                     const offsetAleatorio = Math.floor(Math.random() * 150) - 75; 
                     const distanciaFinal = -((winnerIndex * itemWidth) - offsetAlCentro + offsetAleatorio);
 
@@ -761,7 +777,7 @@
             let maxMinutos = 0;
             tiemposMesas.forEach(t => { let min = obtenerMinutos(t); if(min > maxMinutos) { maxMinutos = min; window.ultimaHoraGlobal = t; }});
 
-            // 2. GUARDADO INMEDIATO ANTES DE ANIMAR (Si se va el internet, el torneo ya está a salvo)
+            // 2. GUARDADO INMEDIATO ANTES DE ANIMAR
             window.faseEliminacion.rondas.push({ partidos: partidosNuevos });
             window.faseEliminacion.rondaActiva = window.faseEliminacion.rondas.length - 1;
             await guardarEstadoTorneo();
@@ -774,7 +790,7 @@
             logContainer.innerHTML = '';
             cine.style.display = 'flex';
             
-            let maxAnimaciones = mezclados.length / 2; // Animamos a TODOS los jugadores, sin límite
+            let maxAnimaciones = mezclados.length / 2;
 
             for(let i=0; i < partidosNuevos.length; i++) {
                 let partido = partidosNuevos[i];
@@ -786,7 +802,6 @@
                     if(j2.esLibre) {
                         document.getElementById('ruletaMesa').innerHTML = `${nombreFase} <br><span style="font-size:22px; color:#0be881;">🎁 SORTEO DE PASE DIRECTO (BYE)</span>`;
                         
-                        // Solo mostramos los que no han sido sorteados aún
                         let poolRestante = mezclados.slice(i * 2).filter(x => !x.esLibre);
                         await animarRuleta("Sorteando al afortunado (Avanza sin jugar)...", j1, poolRestante);
                         
@@ -862,7 +877,7 @@
                 window.ultimaHoraGlobal = document.getElementById('horaInicio').value; 
                 window.grupos = []; window.faseEliminacion = { rondas: [], rondaActiva: 0, campeon: null };
 
-                // GUARDADO INMEDIATO DE ESTRUCTURA BÁSICA
+                // GUARDADO INMEDIATO
                 await guardarEstadoTorneo();
 
                 document.getElementById('panelConfiguracion').style.display = 'none';
@@ -873,7 +888,6 @@
                     let mezclados = [...jugadoresAptos].sort(() => Math.random() - 0.5);
                     let tiemposMesas = [window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal];
                     
-                    // 1. ARMAMOS LOS GRUPOS Y GUARDAMOS
                     for (let i = 0; i < mezclados.length; i += 4) {
                         let gIdx = i / 4; let p = mezclados.slice(i, i + 4).map(j => ({ ...j, pts: 0, car: 0, pj: 0 }));
                         let mesaIndex = gIdx % 5; let mesaNumero = mesaIndex + 1;
@@ -897,12 +911,11 @@
                     await guardarEstadoTorneo();
                     renderizarGrupos();
 
-                    // 2. ANIMACIÓN DE TODOS LOS GRUPOS
                     const cine = document.getElementById('ruletaSorteo'); 
                     const logContainer = document.getElementById('ruletaLog');
                     logContainer.innerHTML = ''; cine.style.display = 'flex';
 
-                    let maxAnimaciones = window.grupos.length; // ANIMAR TODOS
+                    let maxAnimaciones = window.grupos.length; 
                     
                     for (let i = 0; i < maxAnimaciones; i++) {
                         let grupo = window.grupos[i];
@@ -912,12 +925,8 @@
                         let p1 = grupo.participantes[1];
 
                         document.getElementById('ruletaMesa').innerHTML = `ASIGNANDO MESA ${mesaNumero} <br><span style="font-size:20px; color:#fff;">${grupo.nombre} | ${formatoAMPM(hora)}</span>`;
-                        
-                        let poolRestanteJ1 = mezclados.slice(i * 4);
-                        await animarRuleta("Sorteando Cabeza de Serie...", p0, poolRestanteJ1);
-                        
-                        let poolRestanteJ2 = mezclados.slice((i * 4) + 1);
-                        await animarRuleta("Sorteando Rival...", p1, poolRestanteJ2);
+                        await animarRuleta("Sorteando Cabeza de Serie...", p0, jugadoresAptos);
+                        await animarRuleta("Sorteando Rival...", p1, jugadoresAptos);
                         
                         let htmlLog = `
                             <div class="ruleta-log-item">
