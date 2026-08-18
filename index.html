@@ -4,36 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- ========================================== -->
-    <!-- OPTIMIZACIÓN SEO TÉCNICO AVANZADO (LA MANSIÓN DE LA CARAMBOLA) -->
-    <!-- ========================================== -->
-    <title>La Mansión de la Carambola | Torneos de Billar 3 Bandas en Funza</title>
-    <meta name="description" content="La Mansión de la Carambola es el mejor club de billar a 3 bandas en Funza, Cundinamarca. Participa en nuestros torneos, disfruta del mejor ambiente y compite. Cl 13 # 8-45.">
-    <meta name="keywords" content="mansion de la carambola, la mansion de la carambola, billar funza, billar 3 bandas, torneos de billar cundinamarca, club de billar funza, carambola funza">
+    <!-- OPTIMIZACIÓN SEO LOCAL -->
+    <title>La Mansión de la Carambola | Club de Billar 3 Bandas en Funza</title>
+    <meta name="description" content="El mejor club de billar a 3 bandas en Funza, Cundinamarca. Únete a nuestros torneos profesionales y aficionados. Visítanos en Cl 13 # 8-45.">
+    <meta name="keywords" content="billar, billar 3 bandas, torneos de billar, club de billar, Funza, Cundinamarca, carambola, La Mansión de la Carambola, billar Funza">
     <meta name="author" content="La Mansión de la Carambola">
-    <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
+    <meta name="robots" content="index, follow">
     
-    <!-- Canonical URL (Ayuda a Google a no duplicar resultados) -->
-    <link rel="canonical" href="https://khmurcia2.github.io/proyecto/">
-
-    <!-- Open Graph (WhatsApp, Facebook, Instagram) -->
-    <meta property="og:locale" content="es_CO">
-    <meta property="og:title" content="La Mansión de la Carambola | Club de Billar 3 Bandas">
-    <meta property="og:description" content="El mejor nivel de billar a 3 bandas en Funza, Cundinamarca. Inscríbete en nuestros torneos y demuestra tu nivel. ¡Te esperamos en la Cl 13 # 8-45!">
+    <meta property="og:title" content="La Mansión de la Carambola | Torneos de Billar 3 Bandas">
+    <meta property="og:description" content="Únete al torneo. El mejor nivel de billar a 3 bandas en Funza, Cundinamarca. Cl 13 # 8-45.">
     <meta property="og:image" content="https://raw.githubusercontent.com/khmurcia2/proyecto/main/la%20mansion%20logo.jpg">
-    <meta property="og:image:alt" content="Logo oficial de La Mansión de la Carambola">
-    <meta property="og:url" content="https://khmurcia2.github.io/proyecto/">
+    <meta property="og:url" content="https://www.instagram.com/lamansiondelacarambola/">
     <meta property="og:type" content="website">
 
-    <!-- Schema.org JSON-LD (Estructura de Negocio Local para Google Maps y Buscador) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "SportsClub",
       "name": "La Mansión de la Carambola",
-      "description": "Club deportivo especializado en torneos de billar a 3 bandas.",
       "image": "https://raw.githubusercontent.com/khmurcia2/proyecto/main/la%20mansion%20logo.jpg",
-      "url": "https://khmurcia2.github.io/proyecto/",
+      "url": "https://www.instagram.com/lamansiondelacarambola/",
       "telephone": "+573002158036",
       "address": {
         "@type": "PostalAddress",
@@ -42,18 +32,12 @@
         "addressRegion": "Cundinamarca",
         "addressCountry": "CO"
       },
-      "geo": {
-        "@type": "GeoCoordinates",
-        "latitude": "4.717", 
-        "longitude": "-74.211"
-      },
       "sameAs": [
         "https://www.instagram.com/lamansiondelacarambola/"
       ],
-      "sport": "Billiards"
+      "sport": "Billar a 3 Bandas"
     }
     </script>
-    <!-- ========================================== -->
 
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
     <style>
@@ -62,7 +46,6 @@
         h2, h3 { text-align: center; color: #00d8d6; text-transform: uppercase; letter-spacing: 2px; }
         h1.titulo-seccion { text-align: center; color: #00d8d6; text-transform: uppercase; letter-spacing: 2px; font-size: 2em; }
         
-        /* H1 OCULTO PARA SEO (Google lo lee, el usuario no lo ve) */
         .seo-h1-oculto { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
 
         /* LOGO HEADER */
@@ -140,7 +123,12 @@
         .input-score { width: 45%; text-align: center; font-size: 18px; font-weight: bold; background: rgba(255,255,255,0.9); color: #000; border-radius: 5px; border:none; }
         .btn-guardar-score { background: #05c46b; border: none; color: white; width: 100%; padding: 8px; margin-top: 5px; border-radius: 5px; font-weight: bold; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
         .btn-guardar-score:hover { filter: brightness(1.1); box-shadow: 0 0 10px #05c46b; }
+        .btn-fase-final { background: linear-gradient(45deg, #ff3f34, #ff5e57); color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; width: 100%; margin-top: 20px; display: none; box-shadow: 0 5px 15px rgba(255, 63, 52, 0.4); text-transform: uppercase; }
         
+        /* BOTÓN CORREGIR SCORE */
+        .btn-corregir-score { background: transparent; border: 1px solid #ff3f34; color: #ff3f34; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: bold; transition: 0.3s; }
+        .btn-corregir-score:hover { background: #ff3f34; color: #fff; }
+
         /* PLACA DE PREMIACIÓN */
         .caja-premios { background: linear-gradient(45deg, rgba(255,215,0,0.1), rgba(255,215,0,0.3)); border: 2px solid #ffd32a; padding: 20px; border-radius: 12px; text-align: center; margin-bottom: 25px; display: none; box-shadow: 0 0 20px rgba(255,215,0,0.2); }
         .caja-premios h2 { color: #ffd32a; margin: 0 0 15px 0; font-size: 26px; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
@@ -227,10 +215,8 @@
 </head>
 <body>
 
-    <!-- REQUISITO SEO: H1 OCULTO PARA EL MOTOR DE BÚSQUEDA -->
     <h1 class="seo-h1-oculto">La Mansión de la Carambola - Torneo de Billar 3 Bandas en Funza</h1>
 
-    <!-- BOTÓN WHATSAPP -->
     <a href="https://wa.me/573002158036" class="whatsapp-btn" target="_blank" title="Contactar Organizador">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16">
           <path d="M13.601 2.326A7.854 7.854 0 0 0 7.994 0C3.627 0 .068 3.558.064 7.926c-.003 1.396.366 2.76 1.057 3.965L0 16l4.204-1.102a7.933 7.933 0 0 0 3.79.965h.004c4.368 0 7.926-3.558 7.93-7.93A7.898 7.898 0 0 0 13.6 2.326zM7.994 14.521a6.573 6.573 0 0 1-3.356-.92l-.24-.144-2.494.654.666-2.433-.156-.251a6.56 6.56 0 0 1-1.007-3.505c.004-3.623 2.953-6.57 6.577-6.57a6.59 6.59 0 0 1 4.66 1.931 6.557 6.557 0 0 1 1.928 4.66c-.004 3.639-2.961 6.592-6.572 6.592zm3.615-4.934c-.197-.099-1.17-.578-1.353-.646-.182-.065-.315-.099-.445.099-.133.197-.513.646-.627.775-.114.133-.232.148-.43.05-.197-.1-.836-.308-1.592-.985-.59-.525-.985-1.175-1.103-1.372-.114-.198-.011-.304.088-.403.087-.088.197-.232.296-.346.1-.114.133-.198.198-.33.065-.134.034-.248-.015-.347-.05-.099-.445-1.076-.612-1.47-.16-.389-.323-.335-.445-.34-.114-.007-.247-.007-.38-.007a.729.729 0 0 0-.529.247c-.182.198-.691.677-.691 1.654 0 .977.71 1.916.81 2.049.098.133 1.394 2.132 3.383 2.992.47.205.84.326 1.129.418.475.152.904.129 1.246.08.38-.058 1.171-.48 1.338-.943.164-.464.164-.86.114-.943-.049-.084-.182-.133-.38-.232z"/>
@@ -269,7 +255,7 @@
         <div class="ruleta-log-container" id="ruletaLog"></div>
     </div>
 
-    <!-- MODAL DE EDICIÓN Y ELIMINACIÓN DE JUGADORES -->
+    <!-- MODAL DE EDICIÓN Y ELIMINACIÓN DE JUGADORES PROTEGIDO CON CLAVE -->
     <div id="modalEdicion" class="modal-overlay">
         <div class="card modal-content">
             <h2 style="margin-top: 0; color: #ffd32a;">✏️ Gestionar Jugador</h2>
@@ -305,7 +291,6 @@
         <h1 class="titulo-seccion">Inscripción al Torneo</h1>
         <article class="card">
             
-            <!-- AVISO DE AUTORIZACIÓN E INSTAGRAM -->
             <div class="aviso-importante">
                 <p>⚠️ <strong>IMPORTANTE:</strong> La categoría seleccionada debe ser previamente consultada y autorizada por la administración.</p>
                 <p>📌 <strong>REQUISITO OBLIGATORIO:</strong> Todos los participantes deben seguir nuestra cuenta oficial de Instagram: <br><a href="https://www.instagram.com/lamansiondelacarambola/" target="_blank">@lamansiondelacarambola</a></p>
@@ -439,7 +424,6 @@
 
         function getMeta(categoria) { return window.tipoTorneo === 'matamata' ? metasMataMata[categoria] : metasClasico[categoria]; }
 
-        // --- FUNCIÓN PARA ACTUALIZAR SELECTS DINÁMICAMENTE ---
         window.actualizarSelectsCategorias = function() {
             const selects = [document.getElementById('categoria'), document.getElementById('editCategoria')];
             selects.forEach(sel => {
@@ -455,8 +439,6 @@
                 sel.value = val;
             });
         };
-        
-        // Ejecutar inicialmente para poblar ambos menus
         window.actualizarSelectsCategorias();
 
         function generarAvatarBillar(nombre) {
@@ -464,7 +446,7 @@
             let charCode = 0;
             for(let i=0; i<nombre.length; i++) charCode += nombre.charCodeAt(i);
             
-            const tipo = charCode % 3; // 0: Blanca, 1: Amarilla, 2: Roja
+            const tipo = charCode % 3; 
             let colorBase;
             if(tipo === 0) colorBase = '#f5f6fa'; else if(tipo === 1) colorBase = '#fbc531'; else colorBase = '#e84118';
             let inicial = nombre.charAt(0).toUpperCase();
@@ -610,7 +592,16 @@
             } catch (error) { alert("Error al guardar: " + error.message); } finally { btn.disabled = false; btn.textContent = 'Registrar Jugador'; }
         });
 
+        // ==========================================
+        // 🔒 SISTEMA DE SEGURIDAD PARA EDICIÓN / ELIMINACIÓN
+        // ==========================================
         window.abrirModalEdicion = function(id) {
+            const password = prompt("🔒 Seguridad del Sistema:\nIngrese la contraseña de administrador para editar o eliminar a este jugador:");
+            if (password !== "2026*") { 
+                alert("❌ Contraseña incorrecta. Solo el administrador tiene permiso para esta acción."); 
+                return; 
+            }
+
             const jugador = window.inscritosGlobal.find(j => j.id === id);
             if (!jugador) return;
             document.getElementById('editId').value = jugador.id;
@@ -775,6 +766,7 @@
             let partidosNuevos = [];
             let tiemposMesas = [window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal, window.ultimaHoraGlobal];
 
+            // 1. Armamos matemáticamente los partidos PRIMERO
             for(let i=0; i < mezclados.length; i+=2) {
                 let j1 = mezclados[i];
                 let j2 = mezclados[i+1];
@@ -794,18 +786,20 @@
             let maxMinutos = 0;
             tiemposMesas.forEach(t => { let min = obtenerMinutos(t); if(min > maxMinutos) { maxMinutos = min; window.ultimaHoraGlobal = t; }});
 
+            // 2. GUARDADO INMEDIATO ANTES DE ANIMAR (Si se va el internet, el torneo ya está a salvo)
             window.faseEliminacion.rondas.push({ partidos: partidosNuevos });
             window.faseEliminacion.rondaActiva = window.faseEliminacion.rondas.length - 1;
             await guardarEstadoTorneo();
             renderizarFaseFinal();
 
+            // 3. LA ANIMACIÓN VISUAL PARA EL PÚBLICO
             const cine = document.getElementById('ruletaSorteo');
             const logContainer = document.getElementById('ruletaLog');
             
             logContainer.innerHTML = '';
             cine.style.display = 'flex';
             
-            let maxAnimaciones = mezclados.length / 2; 
+            let maxAnimaciones = mezclados.length / 2; // Animamos a TODOS los jugadores, sin límite
 
             for(let i=0; i < partidosNuevos.length; i++) {
                 let partido = partidosNuevos[i];
@@ -816,6 +810,8 @@
                 if(i < maxAnimaciones) {
                     if(j2.esLibre) {
                         document.getElementById('ruletaMesa').innerHTML = `${nombreFase} <br><span style="font-size:22px; color:#0be881;">🎁 SORTEO DE PASE DIRECTO (BYE)</span>`;
+                        
+                        // Solo mostramos los que no han sido sorteados aún
                         let poolRestante = mezclados.slice(i * 2).filter(x => !x.esLibre);
                         await animarRuleta("Sorteando al afortunado (Avanza sin jugar)...", j1, poolRestante);
                         
@@ -1010,7 +1006,59 @@
             }
         }
 
-        // --- GUARDADO DE RESULTADOS ---
+        // --- SISTEMA DE CORRECCIÓN ---
+        window.revertirMarcadorGrupo = async function(gIdx, pIdx) {
+            const password = prompt("Seguridad del Sistema:\nIngrese clave de administrador para corregir el marcador:");
+            if (password !== "2026*") { alert("❌ Clave incorrecta."); return; }
+
+            const grupo = window.grupos[gIdx];
+            const partido = grupo.partidos[pIdx];
+
+            if(!partido.jugado) return;
+
+            let j1 = grupo.participantes.find(p => p.id === partido.j1.id);
+            let j2 = grupo.participantes.find(p => p.id === partido.j2.id);
+
+            j1.car -= partido.s1; j1.pj -= 1;
+            j2.car -= partido.s2; j2.pj -= 1;
+
+            if (partido.s1 > partido.s2) j1.pts -= 3;
+            else if (partido.s2 > partido.s1) j2.pts -= 3;
+            else { j1.pts -= 1; j2.pts -= 1; }
+
+            partido.jugado = false;
+            partido.s1 = '';
+            partido.s2 = '';
+
+            grupo.participantes.sort((a, b) => b.pts - a.pts || b.car - a.car);
+            renderizarGrupos();
+            await guardarEstadoTorneo();
+        };
+
+        window.revertirMarcadorFinal = async function(rIdx, pIdx) {
+            const password = prompt("Seguridad del Sistema:\nIngrese clave de administrador para corregir el marcador:");
+            if (password !== "2026*") { alert("❌ Clave incorrecta."); return; }
+
+            // Si está corrigiendo una ronda anterior, borra las siguientes para no corromper el cuadro
+            if (rIdx < window.faseEliminacion.rondas.length - 1) {
+                if(!confirm("⚠️ ATENCIÓN: Estás modificando una ronda anterior. Esto eliminará los sorteos de las rondas siguientes para recalcular el cuadro. ¿Continuar?")) return;
+                window.faseEliminacion.rondas.splice(rIdx + 1);
+                window.faseEliminacion.rondaActiva = rIdx;
+                window.faseEliminacion.campeon = null;
+            } else if (window.faseEliminacion.campeon) {
+                 window.faseEliminacion.campeon = null;
+            }
+
+            let partido = window.faseEliminacion.rondas[rIdx].partidos[pIdx];
+            partido.jugado = false;
+            partido.ganador = null;
+            partido.s1 = '';
+            partido.s2 = '';
+
+            renderizarFaseFinal();
+            await guardarEstadoTorneo();
+        };
+
         window.guardarResultadoGrupo = async function(gIdx, pIdx) {
             const s1 = parseInt(document.getElementById(`g${gIdx}p${pIdx}s1`).value) || 0;
             const s2 = parseInt(document.getElementById(`g${gIdx}p${pIdx}s2`).value) || 0;
@@ -1051,6 +1099,8 @@
                 } else {
                     document.getElementById('btnSiguienteRonda').style.display = 'inline-block';
                 }
+            } else {
+                document.getElementById('btnSiguienteRonda').style.display = 'none';
             }
         }
 
@@ -1078,7 +1128,11 @@
                     if(!partido.jugado) {
                         html += `<div class="inputs-marcador"><input type="number" id="g${gIdx}p${pIdx}s1" class="input-score" placeholder="Pts"><input type="number" id="g${gIdx}p${pIdx}s2" class="input-score" placeholder="Pts"></div><button class="btn-guardar-score" onclick="guardarResultadoGrupo(${gIdx}, ${pIdx})">💾 Guardar Marcador</button>`;
                     } else {
-                        html += `<div style="color: #ffd32a; font-size: 20px; font-weight: bold; margin-top: 10px;">${partido.s1} - ${partido.s2}</div><div style="color: #05c46b; font-size: 12px;">Finalizado</div>`;
+                        html += `<div style="color: #ffd32a; font-size: 20px; font-weight: bold; margin-top: 10px;">${partido.s1} - ${partido.s2}</div>
+                                 <div style="display:flex; justify-content:center; gap:10px; align-items:center; margin-top: 5px;">
+                                     <div style="color: #05c46b; font-size: 12px;">Finalizado</div>
+                                     <button class="btn-corregir-score" onclick="revertirMarcadorGrupo(${gIdx}, ${pIdx})">✏️ Corregir</button>
+                                 </div>`;
                     }
                     html += `</div>`;
                 });
@@ -1125,7 +1179,11 @@
                             html += `<div style="color: #aaa; margin-top:10px;">Esperando resultados anteriores...</div>`;
                         }
                     } else {
-                        html += `<div style="color: #ffd32a; font-size: 24px; font-weight: bold; margin-top: 15px;">${partido.s1} - ${partido.s2}</div><div style="color: #0be881; font-size: 16px; margin-top: 5px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 5px;">⭐ Avanza: ${partido.ganador?.nombre || 'N/A'}</div>`;
+                        html += `<div style="color: #ffd32a; font-size: 24px; font-weight: bold; margin-top: 15px;">${partido.s1} - ${partido.s2}</div>
+                                 <div style="display:flex; justify-content:center; gap:10px; align-items:center; margin-top: 5px;">
+                                     <div style="color: #0be881; font-size: 16px; background: rgba(0,0,0,0.5); padding: 5px; border-radius: 5px;">⭐ Avanza: ${partido.ganador?.nombre || 'N/A'}</div>
+                                     <button class="btn-corregir-score" onclick="revertirMarcadorFinal(${rIdx}, ${pIdx})">✏️ Corregir</button>
+                                 </div>`;
                     }
                     html += `</div>`;
                 });
